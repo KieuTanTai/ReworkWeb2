@@ -1,0 +1,37 @@
+# Ignore các script Python tự động
+auto_merge.py
+auto_remove.py
+auto_update.py
+auto_commit.py
+
+# Ignore các file nhạy cảm
+.env
+config.ini
+secrets.json
+credentials.json
+*.pem
+*.key
+*.crt
+*.pfx
+
+# Ignore thư mục node_modules, vendor, cache
+node_modules/
+vendor/
+__pycache__/
+.DS_Store
+*.log
+*.sqlite3
+*.db
+
+# Ignore thư mục hệ thống và IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# Ignore các file cá nhân
+*.swp
+*.swo
+*.swn
+*.bak
