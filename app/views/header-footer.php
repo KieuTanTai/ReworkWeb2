@@ -2,107 +2,103 @@
 function renderHeader()
 {
      ?>
-     <header id="header-container">
-          <section class="grid wide">
-               <section class="grid-row flex justify-center">
-                    <div
-                         class="s-m-header s-m-content flex justify-center align-center grid-col col-m-12 col-s-12 no-gutter">
-                         <div class="header-items full-height s-m-content s-m-nav-btn">
-                              <i class="fa-solid fa-list fa-xl" style="color: var(--main-color)"></i>
-                              <div class="overlay">
-                                   <div class="s-m-nav-content s-m-content">
-                                        <div class="s-m-nav-btn flex align-center margin-y-12">
-                                             <button type="button" class="lnw-btn js-login active">Đăng
-                                                  nhập</button>
-                                             <button type="button" class="lnw-btn js-register margin-left-16 active">Đăng
-                                                  ký</button>
-                                             <button type="button" class="lnw-btn js-signout margin-left-16">Đăng
-                                                  xuất</button>
-                                        </div>
-                                        <ul class="s-m-nav-list">
-                                             <li class="web-logo">
-                                                  <div>Trang chủ</div>
-                                             </li>
-                                             <li class="history-order-link">
-                                                  <div>Lịch sử mua hàng</div>
-                                             </li>
-                                             <li class="books-store">
-                                                  <div>Tủ sách thương hiệu</div>
-                                             </li>
-                                             <li class="news-nav">
-                                                  <div>Tin tức & Sự kiện</div>
-                                             </li>
-                                             <li class="services">
-                                                  <div>Liên hệ</div>
-                                             </li>
-                                        </ul>
+     <section class="grid wide">
+          <section class="grid-row flex justify-center">
+               <div class="s-m-header s-m-content flex justify-center align-center grid-col col-m-12 col-s-12 no-gutter">
+                    <div class="header-items full-height s-m-content s-m-nav-btn">
+                         <i class="fa-solid fa-list fa-xl" style="color: var(--main-color)"></i>
+                         <div class="overlay">
+                              <div class="s-m-nav-content s-m-content">
+                                   <div class="s-m-nav-btn flex align-center margin-y-12">
+                                        <button type="button" class="lnw-btn js-login active">Đăng
+                                             nhập</button>
+                                        <button type="button" class="lnw-btn js-register margin-left-16 active">Đăng
+                                             ký</button>
+                                        <button type="button" class="lnw-btn js-signout margin-left-16">Đăng
+                                             xuất</button>
                                    </div>
-                              </div>
-                         </div>
-                         <div class="web-logo full-height">
-                              <img src="./assets/images/icons/web_logo/light-novel-world.png" alt="Mobile Phone Store" />
-                         </div>
-                         <div class="header-items full-height">
-                              <div class="cart-btn full-height">
-                                   <div class="flex align-center full-height">
-                                        <div class="cart-count item-count">0</div>
-                                        <i class="fa-solid fa-cart-shopping fa-xl" style="color: var(--main-color)"></i>
-                                        <span class="padding-left-8 font-size-14 s-m-hidden">Giỏ hàng</span>
-                                   </div>
+                                   <ul class="s-m-nav-list">
+                                        <li class="web-logo">
+                                             <div>Trang chủ</div>
+                                        </li>
+                                        <li class="history-order-link">
+                                             <div>Lịch sử mua hàng</div>
+                                        </li>
+                                        <li class="books-store">
+                                             <div>Tủ sách thương hiệu</div>
+                                        </li>
+                                        <li class="news-nav">
+                                             <div>Tin tức & Sự kiện</div>
+                                        </li>
+                                        <li class="services">
+                                             <div>Liên hệ</div>
+                                        </li>
+                                   </ul>
                               </div>
                          </div>
                     </div>
-                    <div class="grid-col col-l-2 col-m-8 col-s-8 web-logo s-m-hidden">
+                    <div class="web-logo full-height">
                          <img src="./assets/images/icons/web_logo/light-novel-world.png" alt="Mobile Phone Store" />
                     </div>
-                    <section class="search-container grid-col col-l-5 col-m-12 col-s-12">
-                         <div class="search-form-container flex justify-center align-center full-width">
-                              <form method="get" autocomplete="on" class="full-width">
-                                   <label for="search-input">
-                                        <input type="text" name="query" id="search-input" class="no-outline"
-                                             placeholder="Tìm kiếm sản phẩm...." />
-                                   </label>
-                                   <button type="button" class="search-btn button flex justify-center align-center">
-                                        <i class="fa-solid fa-magnifying-glass fa-gl"
-                                             style="color: var(--primary-white)"></i>
-                                   </button>
-                              </form>
-                         </div>
-                    </section>
-                    <section class="header-items grid-col col-l-5 col-m-2 col-s-2 s-m-hidden font-size-14">
-                         <div class="hotline flex justify-center align-center full-height">
-                              <i class="fa-solid fa-phone-volume fa-xl" style="color: var(--main-color)"></i>
-                              <div class="flex-direction-y padding-left-8">
-                                   <span>Hotline</span>
-                                   <span class="font-bold" style="color: var(--main-color)">032838xxxx</span>
-                              </div>
-                         </div>
-                         <div class="order-tracking flex justify-center align-center full-height">
-                              <i class="fa-solid fa-truck-fast fa-xl" style="color: var(--main-color)"></i>
-                              <div class="flex-direction-y">
-                                   <span class="padding-left-8">Tra cứu</span>
-                                   <span class="padding-left-8">đơn hàng</span>
-                              </div>
-                         </div>
+                    <div class="header-items full-height">
                          <div class="cart-btn full-height">
                               <div class="flex align-center full-height">
                                    <div class="cart-count item-count">0</div>
                                    <i class="fa-solid fa-cart-shopping fa-xl" style="color: var(--main-color)"></i>
-                                   <span class="padding-left-8">Giỏ hàng</span>
+                                   <span class="padding-left-8 font-size-14 s-m-hidden">Giỏ hàng</span>
                               </div>
                          </div>
-                         <div id="user-account" class="account full-height">
-                              <div class="flex align-center full-height">
-                                   <div id="no-sign-in" class="flex justify-center align-center">
-                                        <i class="fa-regular fa-circle-user fa-xl" style="color: var(--main-color)"></i>
-                                        <p class="padding-left-8">Tài khoản</p>
-                                   </div>
+                    </div>
+               </div>
+               <div class="grid-col col-l-2 col-m-8 col-s-8 web-logo s-m-hidden">
+                    <img src="./assets/images/icons/web_logo/light-novel-world.png" alt="Mobile Phone Store" />
+               </div>
+               <section class="search-container grid-col col-l-5 col-m-12 col-s-12">
+                    <div class="search-form-container flex justify-center align-center full-width">
+                         <form method="get" autocomplete="on" class="full-width">
+                              <label for="search-input">
+                                   <input type="text" name="query" id="search-input" class="no-outline"
+                                        placeholder="Tìm kiếm sản phẩm...." />
+                              </label>
+                              <button type="button" class="search-btn button flex justify-center align-center">
+                                   <i class="fa-solid fa-magnifying-glass fa-gl" style="color: var(--primary-white)"></i>
+                              </button>
+                         </form>
+                    </div>
+               </section>
+               <section class="header-items grid-col col-l-5 col-m-2 col-s-2 s-m-hidden font-size-14">
+                    <div class="hotline flex justify-center align-center full-height">
+                         <i class="fa-solid fa-phone-volume fa-xl" style="color: var(--main-color)"></i>
+                         <div class="flex-direction-y padding-left-8">
+                              <span>Hotline</span>
+                              <span class="font-bold" style="color: var(--main-color)">032838xxxx</span>
+                         </div>
+                    </div>
+                    <div class="order-tracking flex justify-center align-center full-height">
+                         <i class="fa-solid fa-truck-fast fa-xl" style="color: var(--main-color)"></i>
+                         <div class="flex-direction-y">
+                              <span class="padding-left-8">Tra cứu</span>
+                              <span class="padding-left-8">đơn hàng</span>
+                         </div>
+                    </div>
+                    <div class="cart-btn full-height">
+                         <div class="flex align-center full-height">
+                              <div class="cart-count item-count">0</div>
+                              <i class="fa-solid fa-cart-shopping fa-xl" style="color: var(--main-color)"></i>
+                              <span class="padding-left-8">Giỏ hàng</span>
+                         </div>
+                    </div>
+                    <div id="user-account" class="account full-height">
+                         <div class="flex align-center full-height">
+                              <div id="no-sign-in" class="flex justify-center align-center">
+                                   <i class="fa-regular fa-circle-user fa-xl" style="color: var(--main-color)"></i>
+                                   <p class="padding-left-8">Tài khoản</p>
                               </div>
                          </div>
-                    </section>
+                    </div>
                </section>
           </section>
-     </header>
+     </section>
      <div id="admin-header-container" class="disable">
 
      </div>
@@ -110,11 +106,10 @@ function renderHeader()
 }
 ?>
 
-<?php
-function renderSubHeader()
-{
-     ?>
-     <main id="main-container">
+     <?php
+     function renderSubHeader()
+     {
+          ?>
           <!-- html for sub header -->
           <section id="sub-header" class="s-m-hidden">
                <div class="grid wide">
@@ -207,20 +202,20 @@ function renderSubHeader()
           </section>
      </main>
      <?php
-}
-?>
-
-<?php
-function renderFooter()
-{
+     }
      ?>
-     <footer id="footer-container">
+
+     <?php
+     function renderFooter()
+     {
+          ?>
           <section class="grid wide">
                <div class="grid-row">
                     <div class="footer-col-container grid-col col-l-4 col-m-4 col-s-12">
                          <div class="footer-logo">
                               <a href="#">
-                                   <img src="./assets/images/icons/web_logo/light-novel-world.png" alt="Mobile Phone Store" />
+                                   <img src="./assets/images/icons/web_logo/light-novel-world.png"
+                                        alt="Mobile Phone Store" />
                               </a>
                          </div>
                          <div class="contact-info">
@@ -343,5 +338,5 @@ function renderFooter()
           </section>
      </footer>
      <?php
-}
-?>
+     }
+     ?>
