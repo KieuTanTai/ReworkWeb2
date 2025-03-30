@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -169,6 +173,105 @@
                                              <div
                                                   class="flex justify-center align-center font-bold capitalize margin-bottom-16">
                                                   <a href="#" target="_blank" class="category-btn button">Xem thêm</a>
+                                             </div>
+                                        </div>
+                                   </section>
+
+                                   <!-- RENAME ID IN HERE AND IN FILE CSS -->
+                                   <!-- new book -->
+                                   <section id="new-books-container"
+                                        class="container flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
+                                        <div class="category-tab">
+                                             <div class="heading">
+                                                  <div id="new-book-label" class="heading-label"></div>
+                                                  <div class="uppercase font-bold font-size-20 padding-left-8">Sách mới
+                                                  </div>
+                                             </div>
+
+                                             <!-- container for products -->
+                                             <div class="product-container"></div>
+
+                                             <div
+                                                  class="flex justify-center align-center font-bold capitalize margin-bottom-16">
+                                                  <a href="#" class="category-btn button">Xem thêm</a>
+                                             </div>
+                                        </div>
+                                   </section>
+
+                                   <!-- best selling -->
+                                   <!-- <section id="best-selling-container"
+                                        class="container flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
+                                        <div class="category-tab">
+                                             <div class="heading">
+                                                  <div id="best-selling-label" class="heading-label"></div>
+                                                  <div class="uppercase font-bold font-size-20 padding-left-8">Sản phẩm
+                                                       bán chạy</div>
+                                             </div>
+
+                                             <div class="product-container"></div>
+
+                                             <div
+                                                  class="flex justify-center align-center font-bold capitalize margin-bottom-16">
+                                                  <a href="#" class="category-btn button">Xem thêm</a>
+                                             </div>
+                                        </div>
+                                   </section> -->
+
+                                   <!-- Light Novel  -->
+                                   <section id="light-novel-container"
+                                        class="container flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
+                                        <div class="category-tab">
+                                             <div class="heading">
+                                                  <div class="heading-label light-novel-label"></div>
+                                                  <div class="uppercase font-bold font-size-20 padding-left-8">Light
+                                                       Novel</div>
+                                             </div>
+
+                                             <!-- container for products -->
+                                             <div class="product-container"></div>
+
+                                             <div
+                                                  class="flex justify-center align-center font-bold capitalize margin-bottom-16">
+                                                  <a href="#" class="category-btn button">Xem thêm</a>
+                                             </div>
+                                        </div>
+                                   </section>
+
+                                   <!-- Manga -->
+                                   <section id="manga-container"
+                                        class="container flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
+                                        <div class="category-tab">
+                                             <div class="heading">
+                                                  <div class="heading-label manga-label"></div>
+                                                  <div class="uppercase font-bold font-size-20 padding-left-8">Manga
+                                                  </div>
+                                             </div>
+
+                                             <!-- container for products -->
+                                             <div class="product-container"></div>
+
+                                             <div
+                                                  class="flex justify-center align-center font-bold capitalize margin-bottom-16">
+                                                  <a href="#" class="category-btn button">Xem thêm</a>
+                                             </div>
+                                        </div>
+                                   </section>
+
+                                   <!-- Other -->
+                                   <section id="other-books-container"
+                                        class="container flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
+                                        <div class="category-tab">
+                                             <div class="heading">
+                                                  <div id="other-book-label" class="heading-label"></div>
+                                                  <div class="uppercase font-bold font-size-20 padding-left-8">Các loại
+                                                       sách khác</div>
+                                             </div>
+
+                                             <div class="product-container"></div>
+
+                                             <div
+                                                  class="flex justify-center align-center font-bold capitalize margin-bottom-16">
+                                                  <a href="#" class="category-btn button">Xem thêm</a>
                                              </div>
                                         </div>
                                    </section>
