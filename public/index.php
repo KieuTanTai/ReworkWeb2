@@ -8,7 +8,7 @@ session_start();
 <head>
      <meta charset="UTF-8" />
      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-     <meta name="description" content="Shop Mobile " />
+     <meta name="description" content="Shop Mobile" />
      <link rel="shortcut icon" href="./assets/images/icons/web_logo/main-logo.ico" type="image/x-icon" />
      <link rel="stylesheet" href="./assets/fonts/fontawesome-6.6.0/css/all.min.css" />
      <link rel="stylesheet" href="./assets/css/index.css" />
@@ -20,6 +20,7 @@ session_start();
           <header id="header-container">
                <?php
                require "../app/views/header-footer.php";
+               require"../app/views/detail_product.php";
                renderHeader();
                ?>
           </header>
@@ -275,6 +276,9 @@ session_start();
                                              </div>
                                         </div>
                                    </section>
+
+                                   <!-- TEST FORM -->
+                                   <?php renderDetailProduct(); ?>
 
                                    <!-- FOR ADMIN CONTENT!!!! -->
                                    <section class="grid-col col-l-12 no-gutter margin-y-16 full-width"></section>
