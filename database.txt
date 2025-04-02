@@ -340,3 +340,7 @@ INSERT IGNORE INTO `tonkho` (`makho`, `maphienbansp`, `soluong`) VALUES
 INSERT IGNORE INTO `nhanvien` (`tennv`, `sdt`, `email`, `matkhau`, `vaitro`) VALUES
 ('Lê Văn C', '0901234567', 'levanc@gmail.com', 'hashed_password_123', 1),
 ('Phạm Thị D', '0909876543', 'phamthid@gmail.com', 'hashed_password_456', 2);
+
+-- Thêm cột diachi vào bảng donhang
+ALTER TABLE `donhang`
+ADD COLUMN `diachi` VARCHAR(255) DEFAULT NULL AFTER `tongtien`;
