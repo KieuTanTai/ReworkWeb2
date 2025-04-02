@@ -418,6 +418,14 @@ input[type = text] {
 .opacity-0-8 {
   opacity: 0.8;
 }
+
+.gap-8 {
+  gap: 0.5em;
+}
+
+.gap-12 {
+  gap: 0.75em;
+}
 /* end display */
 
 /* background */
@@ -427,6 +435,21 @@ input[type = text] {
 .js-bg-dark {
   color: var(--primary-white) !important;
   background-color: var(--primary-dark);
+}
+
+.bg-dark {
+  background-color: var(--primary-dark);
+  border: none;
+}
+
+.bg-white {
+  background-color: var(--primary-white);
+  border: none;
+}
+
+.bg-main-color {
+  background-color: var(--main-color);
+  border: none;
 }
 
 .overlay {
@@ -660,6 +683,11 @@ input[type = text] {
   border-color: var(--primary-dark) transparent transparent transparent;
 }
 
+.border-1-solid-black {
+  border: 1px solid black;
+  border-radius: var(--normal-radius);
+}
+
 /* other */
 .container {
      position: relative;
@@ -669,6 +697,10 @@ input[type = text] {
   opacity: 0.95;
   font-size: 1em;
   margin-bottom: 1em;
+}
+
+.text-white {
+  color: white;
 }
 
 /* default card */
