@@ -2,7 +2,7 @@
 function renderCart()
 {
      ?>
-     <section id="cart-content" class="cart grid-col col-l-12 col-m-12 col-s-12 margin-y-12">
+     <section id="cart-content" class="root-session-content cart grid-col col-l-12 col-m-12 col-s-12 margin-y-12 disable">
           <div class="cart-title padding-bottom-8">
                <span class="uppercase font-size-20">giỏ hàng</span>
                <span class="cart-count font-size-16 padding-left-8">(0 sản phẩm)</span>
@@ -25,7 +25,7 @@ function renderCart()
 function renderBlankCart()
 {
      ?>
-     <section id="blank-cart" class="margin-y-12 cart-ui">
+     <section id="blank-cart" class="margin-y-12 cart-ui active">
           <img src="./assets/images/BackGrounds/kettle-desaturated._CB445243794_.svg" />
           <span class="font-size-16 padding-left-16 margin-y-12">Không có sản phẩm
                nào trong giỏ hàng. Quay lại

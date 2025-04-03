@@ -13,6 +13,8 @@ session_start();
      <link rel="stylesheet" href="./assets/fonts/fontawesome-6.6.0/css/all.min.css" />
      <link rel="stylesheet" href="./assets/css/index.css" />
      <link rel="stylesheet" href="./assets/css/responsive.css" />
+     <script type="module" src="./assets/js/index.js"></script>
+     
 </head>
 
 <body>
@@ -20,7 +22,8 @@ session_start();
           <header id="header-container">
                <?php
                require "../app/views/header-footer.php";
-               require"../app/views/detail_product.php";
+               require "../app/views/detail_product.php";
+               require "../app/views/cart.php";
                renderHeader();
                ?>
           </header>
@@ -62,7 +65,7 @@ session_start();
                     <section class="grid wide">
                          <div class="grid-row">
                               <!-- homepage -->
-                              <div id="index-content" class="grid-col col-l-12 col-m-12 col-s-12">
+                              <div id="index-content" class="root-session-content grid-col col-l-12 col-m-12 col-s-12">
                                    <!-- banner -->
                                    <section class="banner-container flex justify-center align-center">
                                         <div class="homepage grid-col col-l-12 col-m-12 col-s-12 no-gutter">
@@ -283,6 +286,9 @@ session_start();
                                    <!-- FOR ADMIN CONTENT!!!! -->
                                    <section class="grid-col col-l-12 no-gutter margin-y-16 full-width"></section>
                               </div>
+
+                              <!-- cart content -->
+                              <?php renderCart(); ?>
                     </section>
                </div>
           </main>
