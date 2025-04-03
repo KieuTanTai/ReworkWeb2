@@ -1,5 +1,6 @@
 "use strict";
 import "./product.js";
+import { hiddenException } from "./interfaces.js";
 
 const throttleList = {}; //object for throttle function
 const debounceList = {};
@@ -133,23 +134,26 @@ async function promiseDOMHandler(fileAddress) {
 
 function navigateRootURL() {
   // window.location.replace(`${location.href.slice(0, location.href.lastIndexOf("/") + 1)}`);
-  const indexContent = getElementsHandler().getIndexContainer();
-  const rootSessionContents = getElementsHandler().getRootSessionContent();
-  indexContent.classList.toggle("disable");
-  rootSessionContents.forEach((element) => {
-    if (element.hasAttribute("id") && element.getAttribute("id") == "index-content") {
-      if (element.classList.contains("disable"))      
-        element.classList.toggle("disable")
-      else 
-        return;
+
+  
+  // const indexContent = getElementsHandler().getIndexContainer();
+  // const rootSessionContents = getElementsHandler().getRootSessionContent();
+  // indexContent.classList.toggle("disable");
+  // rootSessionContents.forEach((element) => {
+  //   if (element.hasAttribute("id") && element.getAttribute("id") == "index-content") {
+  //     if (element.classList.contains("disable"))      
+  //       element.classList.toggle("disable")
+  //     else 
+  //       return;
         
-    }
-    else if (element.hasAttribute("id") && element.classList.contains("disable"))
-      return;
-    else 
-      element.classList.toggle("disable");
+  //   }
+  //   else if (element.hasAttribute("id") && element.classList.contains("disable"))
+  //     return;
+  //   else 
+  //     element.classList.toggle("disable");
       
-  });
+  // });
+  hiddenException("index-content");
 }
 
 export default getElementsHandler;

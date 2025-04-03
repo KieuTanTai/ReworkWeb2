@@ -41,7 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
       Actions.returnHomepage(elementsObj);
       Actions.trackingNavigate(elementsObj);
       Actions.smNavigationMenu(elementsObj);
-      Actions.testPHP(elementsObj);
       Search.searchBtn();
       Pages.handleCategoryNavigation();
       // remove Interval
