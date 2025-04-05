@@ -143,7 +143,7 @@ session_start();
 
                                    <!-- flash-sale -->
                                    <section id="fs-container"
-                                        class="container flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
+                                        class="container root-session-content flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                         <div class="category-tab">
                                              <div class="heading">
                                                   <span id="fs-label" class="heading-label"></span>
@@ -184,7 +184,7 @@ session_start();
                                    <!-- RENAME ID IN HERE AND IN FILE CSS -->
                                    <!-- new book -->
                                    <section id="new-books-container"
-                                        class="container flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
+                                        class="container root-session-content flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                         <div class="category-tab">
                                              <div class="heading">
                                                   <div id="new-book-label" class="heading-label"></div>
@@ -223,7 +223,7 @@ session_start();
 
                                    <!-- Light Novel  -->
                                    <section id="light-novel-container"
-                                        class="container flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
+                                        class="container root-session-content flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                         <div class="category-tab">
                                              <div class="heading">
                                                   <div class="heading-label light-novel-label"></div>
@@ -243,7 +243,7 @@ session_start();
 
                                    <!-- Manga -->
                                    <section id="manga-container"
-                                        class="container flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
+                                        class="container root-session-content flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                         <div class="category-tab">
                                              <div class="heading">
                                                   <div class="heading-label manga-label"></div>
@@ -263,7 +263,7 @@ session_start();
 
                                    <!-- Other -->
                                    <section id="other-books-container"
-                                        class="container flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
+                                        class="container root-session-content flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                         <div class="category-tab">
                                              <div class="heading">
                                                   <div id="other-book-label" class="heading-label"></div>

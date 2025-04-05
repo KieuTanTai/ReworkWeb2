@@ -3,7 +3,7 @@ function renderDetailProduct()
 {
      ?>
      <!-- detail product -->
-     <div id="detail-content" class="grid-col col-l-12 col-m-12 col-s-12 no-gutter">
+     <div id="detail-content" class="root-session-content grid-col col-l-12 col-m-12 col-s-12 no-gutter">
           <section class="detail-product-container grid-col col-l-12 col-m-12 col-s-12 no-gutter margin-bottom-16">
                <div class="detail-block">
                     <div class="block-product grid-col col-l-3 col-m-12 col-s-12">
