@@ -671,7 +671,7 @@
 /* end css for action */
 /* end container css using on other html */
 
-.category-tab .heading #new-book-label {
+.category-tab .heading #new-phone-label {
   background: url("../Images/Icons/Other_icons/new-book.jpg") top left / cover no-repeat;
 }
 
@@ -679,17 +679,17 @@
   background: url("../Images/Icons/Other_icons/best-selling.jpg") top left / cover no-repeat;
 }
 
-.category-tab .heading .light-novel-label {
+.category-tab .heading .samsung-phone-label {
   border-radius: var(--higher-radius);
   background: url("../Images/Icons/Other_icons/LN.webp") top left / cover no-repeat;
 }
 
-.category-tab .heading .manga-label {
+.category-tab .heading .iphone-label {
   border-radius: var(--higher-radius);
   background: url("../Images/Icons/Other_icons/Manga.webp") top left / cover no-repeat;
 }
 
-.category-tab .heading #other-book-label {
+.category-tab .heading #other-phone-label {
   border-radius: var(--higher-radius);
   background: url("../Images/Icons/Other_icons/Manga-list.jpg") top left / cover no-repeat;
 }

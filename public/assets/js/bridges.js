@@ -91,7 +91,7 @@ function getElementsHandler() {
     getImages: () => $$(".product-image.js-item img"),
     getHeaderUserInfo: () => $(".header-user-info"),
     getNoSignIn: () => $("#no-sign-in"),
-    getTestPHP: () => $(".light-novel-world-test")
+    getTestPHP: () => $(".light-novel-world-test") //!!!!
   };
   return getElements;
 }

@@ -182,13 +182,13 @@ session_start();
                                    </section>
 
                                    <!-- RENAME ID IN HERE AND IN FILE CSS -->
-                                   <!-- new book -->
-                                   <section id="new-books-container"
+                                   <!-- new phone -->
+                                   <section id="new-phones-container"
                                         class="container root-session-content flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                         <div class="category-tab">
                                              <div class="heading">
-                                                  <div id="new-book-label" class="heading-label"></div>
-                                                  <div class="uppercase font-bold font-size-20 padding-left-8">Sách mới
+                                                  <div id="new-phone-label" class="heading-label"></div>
+                                                  <div class="uppercase font-bold font-size-20 padding-left-8">Mới ra mắt
                                                   </div>
                                              </div>
 
@@ -221,14 +221,13 @@ session_start();
                                         </div>
                                    </section> -->
 
-                                   <!-- Light Novel  -->
-                                   <section id="light-novel-container"
+                                   <!-- SamSung fan   -->
+                                   <section id="samsung-phone-container"
                                         class="container root-session-content flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                         <div class="category-tab">
                                              <div class="heading">
-                                                  <div class="heading-label light-novel-label"></div>
-                                                  <div class="uppercase font-bold font-size-20 padding-left-8">Light
-                                                       Novel</div>
+                                                  <div class="heading-label samsung-phone-label"></div>
+                                                  <div class="uppercase font-bold font-size-20 padding-left-8">SamSung</div>
                                              </div>
 
                                              <!-- container for products -->
@@ -241,13 +240,13 @@ session_start();
                                         </div>
                                    </section>
 
-                                   <!-- Manga -->
-                                   <section id="manga-container"
+                                   <!-- Iphone -->
+                                   <section id="iphone-container"
                                         class="container root-session-content flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                         <div class="category-tab">
                                              <div class="heading">
-                                                  <div class="heading-label manga-label"></div>
-                                                  <div class="uppercase font-bold font-size-20 padding-left-8">Manga
+                                                  <div class="heading-label iphone-label"></div>
+                                                  <div class="uppercase font-bold font-size-20 padding-left-8">Iphone
                                                   </div>
                                              </div>
 
@@ -262,13 +261,12 @@ session_start();
                                    </section>
 
                                    <!-- Other -->
-                                   <section id="other-books-container"
+                                   <section id="other-phones-container"
                                         class="container root-session-content flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                         <div class="category-tab">
                                              <div class="heading">
-                                                  <div id="other-book-label" class="heading-label"></div>
-                                                  <div class="uppercase font-bold font-size-20 padding-left-8">Các loại
-                                                       sách khác</div>
+                                                  <div id="other-phone-label" class="heading-label"></div>
+                                                  <div class="uppercase font-bold font-size-20 padding-left-8">Các hãng khác</div>
                                              </div>
 
                                              <div class="product-container"></div>
