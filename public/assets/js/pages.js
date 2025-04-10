@@ -3,32 +3,47 @@ import { resizeImages } from './interfaces.js';
 import { formatPrices } from "./interfaces.js";
 import { $, $$ } from './bridges.js';
 
+// show more product here
 function handleCategoryNavigation() {
     const categoryButtons = $$('.category-btn');
     const navCategories = $$(".nav-categories .nav-item");
 
-    // show more buttons
+    eventForCategoryButton(categoryButtons);
+    eventForSubHeader(navCategories);
+
+
+}
+
+// show more buttons
+function eventForCategoryButton(categoryButtons) {
     categoryButtons.forEach(button => {
         button.addEventListener('click', (event) => {
             event.preventDefault();
             const parentSection = button.closest('section');
             if (parentSection && parentSection.id) {
                 const categoryId = parentSection.id;
-                window.location.href = `index.php?category=${categoryId}`;
+                // window.location.href = `index.php?category=${categoryId}`;
+                console.log(parentSection, categoryId);
+
             }
         });
     });
+}
 
+function eventForSubHeader(navCategories) {
     // sub header navigations
     navCategories.forEach(item =>
         item.addEventListener("click", ((event) => {
             event.preventDefault();
             const categoryType = item.querySelector("a.flex.full-width");
             let type = categoryType ? categoryType.getAttribute("title") : "";
-            window.location.href = `index.php?category=${type}`;
+            // window.location.href = `index.php?category=${type}`;
+            console.log(categoryType);
+
         })
-        ));
+        ));    
 }
+
 
 // page.js: Xử lý hiển thị phần nội dung dựa trên URL
 const ITEMS_PER_PAGE = 10; // Số sản phẩm trên mỗi trang
@@ -110,7 +125,7 @@ async function setupPagination(products, categoryId) {
                 totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
                 displayPage(products, container, 1);
                 createPaginationControls(targetSection, products, container, totalPages);
-                clearInterval(checkTarget);            
+                clearInterval(checkTarget);
             }
         })
     }
@@ -224,9 +239,9 @@ function showTargetSection(categoryId) {
         targetSection.style.display = 'flex';
         targetSection.style.justifyContent = 'center';
         return;
-    } 
+    }
     else {
-        renderContainer(categoryId);    
+        renderContainer(categoryId);
         return;
     }
 }

@@ -42,7 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
       Actions.trackingNavigate(elementsObj);
       Actions.smNavigationMenu(elementsObj);
       Search.searchBtn();
-      Pages.handleCategoryNavigation();
+      // show more product here
+      Pages.handleCategoryNavigation(); 
       // remove Interval
       clearInterval(checkDOM);
     }
