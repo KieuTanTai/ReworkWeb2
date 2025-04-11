@@ -26,29 +26,6 @@ function renderDetailProduct()
                                    <span class="price new-price font-bold padding-right-8 font-size-26"></span>
                                    <del class="price old-price font-size-26"></del>
                               </div>
-                              <!-- <div class="product-info grid-col col-l-12 col-m-12 col-s-12 no-gutter flex margin-bottom-12">
-                                   <div class="grid-col col-l-6 col-m-6 col-s-12 no-gutter">
-                                        <strong>Tác giả</strong>
-                                        <div class="b-author"></div>
-                                   </div>
-                                   <div class="grid-col col-l-6 col-m-6 col-s-12 no-gutter">
-                                        <strong>Năm xuất bản</strong>
-                                        <div class="b-release opacity-0-8"></div>
-                                   </div>
-                                   <div class="grid-col col-l-6 col-m-6 col-s-12 no-gutter">
-                                        <strong>Hình thức</strong>
-                                        <div class="b-format opacity-0-8"></div>
-                                   </div>
-                                   <div class="grid-col col-l-6 col-m-6 col-s-12 no-gutter">
-                                        <strong>Kích thước</strong>
-                                        <div class="b-size opacity-0-8"></div>
-                                   </div>
-                              </div>
-
-                              <div class="short-desc">
-                                   <strong class="font-size-14">nội dung:</strong>
-                                   <div class="font-size-14 opacity-0-8"></div>
-                              </div> -->
 
                               <div class="product-selector margin-top-16">
                                    <div class="margin-bottom-8">
@@ -173,29 +150,6 @@ function renderDetailProduct()
                               </div>
                          </div>
                     </div>
-
-                    <!-- <style>
-                         .overlay {
-                              display: none;
-                              position: fixed;
-                              top: 0;
-                              left: 0;
-                              width: 100%;
-                              height: 100%;
-                              background: rgba(0, 0, 0, 0.8);
-                              justify-content: center;
-                              align-items: center;
-                         }
-
-                         .overlay-content {
-                              background: white;
-                              padding: 20px;
-                              width: 80%;
-                              max-height: 80vh;
-                              overflow-y: auto;
-                         }
-                    </style> -->
-
                     <script>
                          function showDetails() {
                               document.getElementById('overlay-more-detail').style.display = 'flex';

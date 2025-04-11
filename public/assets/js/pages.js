@@ -10,8 +10,6 @@ function handleCategoryNavigation() {
 
     eventForCategoryButton(categoryButtons);
     eventForSubHeader(navCategories);
-
-
 }
 
 // show more buttons
@@ -22,9 +20,8 @@ function eventForCategoryButton(categoryButtons) {
             const parentSection = button.closest('section');
             if (parentSection && parentSection.id) {
                 const categoryId = parentSection.id;
-                // window.location.href = `index.php?category=${categoryId}`;
+                window.location.href = `index.php?category=${categoryId}`;
                 console.log(parentSection, categoryId);
-
             }
         });
     });
@@ -37,31 +34,29 @@ function eventForSubHeader(navCategories) {
             event.preventDefault();
             const categoryType = item.querySelector("a.flex.full-width");
             let type = categoryType ? categoryType.getAttribute("title") : "";
-            // window.location.href = `index.php?category=${type}`;
+            window.location.href = `index.php?category=${type}`;
             console.log(categoryType);
-
         })
         ));    
 }
 
 
 // page.js: Xử lý hiển thị phần nội dung dựa trên URL
-const ITEMS_PER_PAGE = 10; // Số sản phẩm trên mỗi trang
+const ITEMS_PER_PAGE = 15; // Số sản phẩm trên mỗi trang
 /**
  * Hàm khởi tạo trang
  */
 
-function initializePage() {
+//! NEED TO CHANGE HERE (GET DATA FROM DB AND RETURN ARRAY FOR FILTER CATEGORY AND RENDER)
+async function initializePage() {
     // Lấy tham số từ URL
     const categoryId = getCategoryFromURL();
-
     if (categoryId) {
         // Ẩn tất cả các section
         hideAllSections();
-
         // Hiển thị section mục tiêu
         showTargetSection(categoryId);
-        // Lấy danh sách sản phẩm từ localStorage
+        //! Lấy danh sách sản phẩm từ localStorage (CHANGE TO DB)
         const allProducts = getProductBooks();
         // console.log("Dữ liệu sản phẩm từ localStorage:", allProducts);
         // Lọc sản phẩm theo danh mục
@@ -83,22 +78,20 @@ function filterProductsByCategory(products, categoryId) {
     switch (categoryId) {
         case 'fs-container':
             return products.sort((a, b) => b.sale - a.sale);
-        case 'new-books-container':
+        case 'new-phones-container':
             return products.slice(-5);
-        case 'best-selling-container':
-            return products.sort((a, b) => b.quantity - a.quantity);
-        case 'light-novel-container':
-        case "light-novel":
-            return products.filter((product) => product.type === 'light novel');
-        case 'manga-container':
-        case "manga":
-            return products.filter((product) => product.type === 'manga');
-        case 'other-books-container':
+        case 'samsung-phone-container':
+        case "samsung":
+            return products.filter((product) => product.type === 'samsung');
+        case 'iphone-container':
+        case "iphone":
+            return products.filter((product) => product.type === 'iphone');
+        case 'other-phones-container':
             return products.sort((a, b) => a.releaseDate - b.releaseDate);
-        case "education":
-            return products.filter((product) => product.type === 'education');
-        case "literary":
-            return products.filter((product) => product.type === 'literary');
+        case "xiaomi":
+            return products.filter((product) => product.type === 'xiaomi');
+        case "iqoo":
+            return products.filter((product) => product.type === 'vivo iqoo');
         default:
             return products;
     }

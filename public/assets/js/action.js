@@ -1,7 +1,6 @@
 "use strict";
 import * as Bridge from "./bridges.js";
-import { disableSiblingContainer, fakeOverlay, formatPrices, headerUserInfo, hiddenException, scrollView } from "./interfaces.js";
-import { sleep } from "./navigates.js";
+import { disableSiblingContainer, formatPrices, headerUserInfo, hiddenException, scrollView } from "./interfaces.js";
 
 function returnHomepage(elementsObj) {
      let testURL = location.pathname;
@@ -15,18 +14,6 @@ function returnHomepage(elementsObj) {
      webLogo?.forEach((element) => 
           element.addEventListener("click", () => Bridge.navigateRootURL()));
 }
-
-// test php
-// function testPHP(elementsObj) {
-//      (elementsObj.getTestPHP()).addEventListener("click", Bridge.debounce(() => {
-//           let now = window.location.href.toString();
-//           let newLink = now.split(now.lastIndexOf("/") + 1)[0];
-//           console.log(newLink);
-//           if (now.includes("index.php"))
-//                newLink = newLink.replace("index.php", "");
-//           window.location.href = newLink + "test.php";
-//      }, 200, "test-php"))
-// }
 
 // header navigation button on mobile
 function smNavigationMenu(elementsObj) {

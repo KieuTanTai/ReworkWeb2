@@ -51,6 +51,16 @@ function disableSiblingContainer(container) {
     child.offsetWidth > 0 ? child.classList.add("disable") : child;
   });
 }
+//! disable for show more product of specific container
+function disableForShowMore(container, target) {
+  if (!container || !target)
+    return;
+  Array.of(...container.children).forEach((child) => {
+    if (child.getAttribute("id") != target) {
+      child.classList.add("disable");
+    }
+  });
+}
 
 async function fakeOverlay(container, time) {
   const overlay = document.createElement('div');
@@ -180,23 +190,6 @@ function resizeSmNav(elementsObj) {
   });
 }
 
-// default add header footer and initProducts
-async function addDOMHeaderFooter(elementsObj) {
-  try {
-    const DOM = await Bridge.promiseDOMHandler("./header_footer/header-footer.html");
-    const header = DOM.getElementById("header-container");
-    const subHeader = DOM.getElementById("sub-header");
-    const footer = DOM.getElementById("footer-container");
-    let placeInsert = elementsObj.getMainContainer();
-    // add elements into DOM
-    placeInsert.insertAdjacentElement("beforebegin", header);
-    placeInsert.insertAdjacentElement("afterEnd", footer);
-    placeInsert.insertAdjacentElement("afterbegin", subHeader);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 async function getInitProducts(elementsObj) {
   try {
     const storage = await fetch("assets/js/storage.js");
@@ -217,4 +210,4 @@ async function getInitProducts(elementsObj) {
 }
 
 export { formatPrices, isEmpty, categoryIsEmpty, getInitProducts, hiddenException, scrollView, fakeOverlay, disableSiblingContainer };
-export { resizeSmNav, resizeImages, addDOMHeaderFooter, headerUserInfo };
+export { resizeSmNav, resizeImages, headerUserInfo };

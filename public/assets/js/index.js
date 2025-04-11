@@ -1,5 +1,4 @@
 "use strict";
-import * as Storage from "./storage.js";
 import * as Products from "./product.js";
 import * as Interface from "./interfaces.js";
 import * as Bridge from "./bridges.js";
@@ -9,7 +8,6 @@ import * as Navigate from "./navigates.js";
 import * as Search from "./search.js";
 import * as Login from "./login.js";
 import * as Register from "./registers.js";
-import * as Slides from "./slides.js";
 import * as Cart from "./carts.js";
 import * as Pages from "./pages.js";
 
@@ -49,11 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }, 200);
 
-  // call funcs
-  // if (!lastPath) Interface.hiddenException();
-  // Actions.cancelButtons(elementsObj);
-  // Interface.getInitProducts(elementsObj);
-
   // navigate.js
   Navigate.execQueryHandler();
   Navigate.popStateHandler();
@@ -70,43 +63,8 @@ document.addEventListener("DOMContentLoaded", () => {
     Cart.handleRemoveItem(elementsObj);
     Cart.handleOrderPlacement(elementsObj);
   }
-  // other
-  // Slides.slidesHandler("news");
-  // Pages.initializePage();
+
+  // others
+  Pages.initializePage();
 });
 
-// window.addEventListener("load", () => {
-//   let loginForm = Bridge.$("#login");
-//   let registForm = Bridge.$("#register");
-//   let forgotForm = Bridge.$("#forgot-password");
-
-//   if (JSON.parse(sessionStorage.getItem("retryShowOrder"))) {
-//     sessionStorage.removeItem("retryShowOrder");
-//     Actions.showOrderContent();
-//   }
-
-//   if (JSON.parse(sessionStorage.getItem("retryTracking"))) {
-//     sessionStorage.removeItem("retryTracking");
-//     Actions.showTracking(localStorage.getItem("donhang"));
-//   }
-
-//   if (JSON.parse(sessionStorage.getItem("login"))) {
-//     sessionStorage.removeItem("login");
-//     Actions.showLogin(loginForm, registForm, forgotForm);
-//   }
-
-//   if (JSON.parse(sessionStorage.getItem("register"))) {
-//     sessionStorage.removeItem("register");
-//     Actions.showRegister(loginForm, registForm, forgotForm);
-//   }
-
-//   if (JSON.parse(sessionStorage.getItem("forgotPassword"))) {
-//     sessionStorage.removeItem("forggotPassword");
-//     Actions.showForgotPassword(loginForm, registForm, forgotForm);
-//   }
-
-//   if (JSON.parse(sessionStorage.getItem("userDetail"))) {
-//     sessionStorage.removeItem("userDetail");
-//     Actions.userDetail(Bridge.default());
-//   }
-// });

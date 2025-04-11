@@ -153,10 +153,10 @@ function renderSubHeader()
                                    <!-- Nav content -->
                                    <nav class="nav-categories js-bg-white full-width">
                                         <div class="nav-item">
-                                             <a href="" class="manga flex full-width" title="manga-container">
-                                                  <img src="./assets/images/icons/Other_icons/Manga.webp" alt="manga"
+                                             <a href="" class="iphone flex full-width" title="iphone-container">
+                                                  <img src="./assets/images/icons/Other_icons/Manga.webp" alt="Iphone"
                                                        width="20em" />
-                                                  <p class="padding-left-8 font-size-14 font-bold"> Manga </p>
+                                                  <p class="padding-left-8 font-size-14 font-bold"> Iphone </p>
                                              </a>
                                         </div>
 

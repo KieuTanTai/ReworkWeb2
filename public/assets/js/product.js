@@ -4,7 +4,7 @@ import * as Bridge from "./bridges.js";
 import { fakeOverlay, formatPrices, hiddenException, isEmpty, resizeImages, scrollView } from "./interfaces.js";
 import * as Navigate from "./navigates.js";
 import { attachAddToCartEvents, attachAddToCartInDetails } from "./carts.js";
-// get / set products
+//! get / set products (NEED TO CHANGE)
 function getProductBooks() {
   return Array.from(JSON.parse(localStorage.getItem("products")));
 }
@@ -19,34 +19,30 @@ function getValueQuery(request) {
   return query === "undefined" ? undefined : query;
 }
 
+//! detail product
 async function dynamicDetail(product) {
   // !book detail
   if (!product) return;
-  let container = Bridge.default().getMainContainer();
+  let container = Bridge.default().getMainContent();
   const elementsObj = Bridge.default();
   let currentTitle = Bridge.$("title");
   let quantity = product.quantity;
-  let release = product.release, packaging = product.packagingSize
   let productSale = product.sale, productPrice = product.price;
-  let srcImage = product.img, productDescription = product.description;
-  let format = product.format, type = product.type, genre = product.genre;
-  let productAuth = product.author, productName = product.name, id = product.productID;
+  let srcImage = product.img;
+  let productName = product.name, id = product.productID;
   let productCategories = product.category;
 
   // !Container for detail
   let saleLabel = container.querySelector(".detail-block .sale-label");
   let imageContainer = container.querySelector(".detail-block .product-image img");
-  let bookTitle = container.querySelector(".product-title h1");
-  let bookID = container.querySelector(".product-title .product-id");
-  let bookPrice = container.querySelector(".block-product-price");
-  let tableInfo = container.querySelector(".product-info");
-  let bookDesc = container.querySelector(".short-desc div:last-child");
-  let bookTags = container.querySelector(".product-tags div:first-child p");
-  let bookCategory = container.querySelector(".product-tags div:last-child p");
+  let productTitle = container.querySelector(".product-title h1");
+  let productID = container.querySelector(".product-title .product-id");
+  let price = container.querySelector(".block-product-price");
   let quantityBox = container.querySelector(".quantity-box");
   let buttons = container.querySelectorAll(".button");
   // for selections
-  let listOptions = container.querySelector("#product-selector-options");
+  let listOptions = container.querySelector(".product-selector");
+  console.log(listOptions);
   let selectOptions = Array.from(listOptions?.children);
 
   // fakeOverlay(container);
@@ -58,38 +54,21 @@ async function dynamicDetail(product) {
   imageContainer.style.width = 80 + "%";
   // other details
   saleLabel.innerText = (productSale * 100) + "%";
-  bookTitle.innerText = productName;
-  bookID.innerText = id;
+  productTitle.innerText = productName;
+  productID.innerText = id;
 
   await Navigate.sleep(50);
   fakeOverlay(container, 150);
 
   // price
-  (Array.from(bookPrice.children)).forEach(() => {
-    let oldPrice = bookPrice.querySelector(".old-price");
-    let newPrice = bookPrice.querySelector(".new-price");
+  (Array.from(price.children)).forEach(() => {
+    let oldPrice = price.querySelector(".old-price");
+    let newPrice = price.querySelector(".new-price");
     if (oldPrice)
       oldPrice.innerText = productPrice;
     if (newPrice)
       newPrice.innerText = Math.round(productPrice * (1 - productSale));
   });
-  // table info
-  (Array.from(tableInfo.children)).forEach((child) => {
-    let bAuthor = child.querySelector(".b-author");
-    let bRelease = child.querySelector(".b-release");
-    let bFormat = child.querySelector(".b-format");
-    let bSize = child.querySelector(".b-size");
-
-    if (bAuthor)
-      bAuthor.innerText = productAuth;
-    else if (bRelease)
-      bRelease.innerText = release;
-    else if (bFormat)
-      bFormat.innerText = format;
-    else if (bSize)
-      bSize.innerText = packaging;
-  });
-
   // remove not exist selections
   if (!productCategories)
     selectOptions.remove();
@@ -106,18 +85,10 @@ async function dynamicDetail(product) {
     quantityBox.classList.add("disable")
   }
 
-  bookDesc.innerText = productDescription;
-  bookTags.innerText = genre;
-  bookCategory.innerText = type;
   setQuantityBox(Bridge.default());
 
-  // execute other container
-  let sameAuthor = elementsObj.getSameAuthorContainer();
-  let productLike = elementsObj.getProductLikeContainer();
-  let list = getProductBooks();
-
   // call other functions
-  productContainers(list, sameAuthor);
+  // productContainers(list, sameAuthor);
   productContainers(list, productLike);
   callFuncsAgain(elementsObj);
 }
@@ -127,7 +98,7 @@ async function callFuncsAgain(elementsObj) {
   formatPrices(elementsObj);
 }
 
-// for show detail products
+//! for show detail products
 async function renderProductDetails(list, wrapper) {
   try {
     // first param on fields requestRest when renderDOM is now object item
@@ -137,8 +108,10 @@ async function renderProductDetails(list, wrapper) {
       child.querySelector(".block-product")?.addEventListener("click", () => {
         let bookName = (list[index].name).replaceAll("&", "").replaceAll("!", "").replaceAll(" ", "-");
         // change path with path request
-        let newURL = `${location.href.slice(0, location.href.lastIndexOf("/") + 1)}index.html?name=${bookName}`;
-        window.history.pushState({}, "", newURL);
+        let newURL = `${location.href.slice(0, location.href.lastIndexOf("/") + 1)}index.php?name=${bookName}`;
+        // window.history.pushState({}, "", newURL);
+        // window.location.href = `index.php?name=${bookName}`;
+        window.location.href = newURL;
         hiddenException("detail-content");
         dynamicDetail(list[index]);
       });
@@ -148,7 +121,7 @@ async function renderProductDetails(list, wrapper) {
   }
 }
 
-// render products
+//! render products
 function renderProducts(list, wrapper) {
   if (!list) return;
   let html = "";
@@ -194,7 +167,7 @@ function renderProducts(list, wrapper) {
     return html;
 }
 
-// get container for product and call render products
+//! get container for product and call render products
 function productContainers(productsList, container) {
   if (!productsList) return;
   let listLength = productsList.length;
@@ -213,19 +186,19 @@ function productContainers(productsList, container) {
       if (wrapper && containerID === "fs-container")
         list = productsList.sort((a, b) => b.sale - a.sale).toSpliced(5);
 
-      else if (wrapper && containerID === "new-books-container")
+      else if (wrapper && containerID === "new-phones-container")
         list = productsList.toSpliced(0, listLength - 5);
 
-      else if (wrapper && containerID === "best-selling-container")
-        list = productsList.sort((a, b) => b.quantity - a.quantity).toSpliced(5);
+      // else if (wrapper && containerID === "best-selling-container")
+      //   list = productsList.sort((a, b) => b.quantity - a.quantity).toSpliced(5);
 
-      else if (wrapper && containerID === "light-novel-container")
-        list = productsList.filter((product) => product.type === "light novel").toSpliced(5);
+      else if (wrapper && containerID === "samsung-phone-container")
+        list = productsList.filter((product) => product.type === "samsung").toSpliced(5);
 
-      else if (wrapper && containerID === "manga-container")
-        list = productsList.filter((product) => product.type === "manga").toSpliced(5);
+      else if (wrapper && containerID === "iphone-container")
+        list = productsList.filter((product) => product.type === "iphone").toSpliced(5);
 
-      else if (wrapper && containerID === "other-books-container")
+      else if (wrapper && containerID === "other-phones-container")
         list = productsList.sort((a, b) => a.releaseDate - b.releaseDate).toSpliced(5);
       else
         list = productsList.sort((a, b) => a.author - b.author).toSpliced(5);
@@ -240,9 +213,9 @@ function productContainers(productsList, container) {
     let list;
     let wrapper = container.querySelector(".product-container");
     let containerID = container.getAttribute("id");
-    if (wrapper && containerID === "same-author-container")
-      list = productsList.filter((product) => product.author === Bridge.$(".b-author")?.innerHTML).toSpliced(5);
-    else if (wrapper && containerID === "product-like-container")
+    // if (wrapper && containerID === "same-author-container")
+    //   list = productsList.filter((product) => product.author === Bridge.$(".b-author")?.innerHTML).toSpliced(5);
+    if (wrapper && containerID === "product-like-container")
       list = productsList.filter((product) => (product.genre)?.includes(Bridge.$(".product-tags div:first-child p")?.innerHTML)).toSpliced(5);
     renderProducts(list, wrapper);
   }
