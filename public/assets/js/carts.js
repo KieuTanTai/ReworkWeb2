@@ -8,17 +8,20 @@ import { userDetail } from "./action.js";
 
 // cart navigation
 function handleCartNavigation() {
-  const categoryButtons = document.querySelectorAll(".cart-btn");
+  const cartButtons = Bridge.$$(".cart-btn");
+  const categoryButton = Bridge.default().getCartContent();
 
-  categoryButtons.forEach((button) => {
+  cartButtons.forEach((button) => {
     button.addEventListener("click", (event) => {
       event.preventDefault();
-      ((Bridge.default()).getIndexContainer()).classList.toggle("disable");
-      const cartContainer = (Bridge.default()).getMainContent().querySelector("#cart-content");
-      cartContainer.classList.toggle("disable");
-      
+      hiddenException("cart-content");
     });
   });
+
+  categoryButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    hiddenException();
+  })
 }
 
 function updateCartTotal(elementsObj) {

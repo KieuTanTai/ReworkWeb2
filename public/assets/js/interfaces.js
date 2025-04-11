@@ -121,6 +121,8 @@ function hiddenException(exception) {
       element.classList.remove("disable");
   });
 
+  
+
   // if (exception === "index-content") {
   //   newsContainer?.classList.contains("disable") ? newsContainer.classList.remove("disable") : newsContainer;
   //   return;

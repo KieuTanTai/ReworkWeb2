@@ -153,7 +153,7 @@ function renderSubHeader()
                                    <!-- Nav content -->
                                    <nav class="nav-categories js-bg-white full-width">
                                         <div class="nav-item">
-                                             <a href="" class="iphone flex full-width" title="iphone-container">
+                                             <a href="" class="iphone flex full-width" title="iphone">
                                                   <img src="./assets/images/icons/Other_icons/Manga.webp" alt="Iphone"
                                                        width="20em" />
                                                   <p class="padding-left-8 font-size-14 font-bold"> Iphone </p>
@@ -161,29 +161,26 @@ function renderSubHeader()
                                         </div>
 
                                         <div class="nav-item">
-                                             <a href="" class="light-novel flex full-width" title="light-novel-container">
+                                             <a href="" class="samsung flex full-width" title="samsung">
                                                   <img src="./assets/images/icons/Other_icons/LN.webp" alt="light novel"
                                                        width="20em" />
-                                                  <p class="padding-left-8 font-size-14 font-bold"> Light
-                                                       Novel </p>
+                                                  <p class="padding-left-8 font-size-14 font-bold"> Samsung</p>
                                              </a>
                                         </div>
 
                                         <div class="nav-item">
-                                             <a href="" class="literary flex full-width" title="literary">
+                                             <a href="" class="xiaomi flex full-width" title="xiaomi">
                                                   <img src="./assets/images/icons/Other_icons/yang-icon-1.webp"
-                                                       alt="literary" width="20em" />
-                                                  <p class="padding-left-8 font-size-14 font-bold">Sách văn
-                                                       học</p>
+                                                       alt="xiaomi" width="20em" />
+                                                  <p class="padding-left-8 font-size-14 font-bold"> Xiaomi </p>
                                              </a>
                                         </div>
 
                                         <div class="nav-item">
-                                             <a href="" class="education flex full-width" title="education">
+                                             <a href="" class="vivo-iqoo flex full-width" title="iqoo">
                                                   <img src="./assets/images/icons/Other_icons/yang-icon-4.webp"
-                                                       alt="education" width="20em" />
-                                                  <p class="padding-left-8 font-size-14 font-bold">Sách giáo
-                                                       dục</p>
+                                                       alt="vivo iqoo" width="20em" />
+                                                  <p class="padding-left-8 font-size-14 font-bold">Vivo Iqoo</p>
                                              </a>
                                         </div>
                                    </nav>

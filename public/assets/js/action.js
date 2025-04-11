@@ -44,7 +44,7 @@ function cancelButtons(elementsObj) {
           );
 }
 
-// navigate to order-tracking
+//! navigate to order-tracking
 function trackingNavigate(elementsObj) {
      // navigate to index.html if not have any container
      const buttons = elementsObj.getOrderTrackingBtn();
@@ -69,13 +69,13 @@ function showTracking(trackers) {
      hiddenException("order-content");
      disableSiblingContainer(elementsObj.getOrderContent());
      elementsObj.getStatusContainer()?.classList.remove("disable");
-     if (!trackers || !JSON.parse(sessionStorage.getItem("hasLogin"))) {
-          blankOrder.classList.add("active");
-          customerOrder.classList.contains("active") ? customerOrder.classList.remove("active") : customerOrder;
-     } else {
-          customerOrder.classList.add("active");
-          blankOrder.classList.contains("active") ? blankOrder.classList.remove("active") : blankOrder;
-     }
+     // if (!trackers || !JSON.parse(sessionStorage.getItem("hasLogin"))) {
+     //      blankOrder.classList.add("active");
+     //      customerOrder.classList.contains("active") ? customerOrder.classList.remove("active") : customerOrder;
+     // } else {
+     //      customerOrder.classList.add("active");
+     //      blankOrder.classList.contains("active") ? blankOrder.classList.remove("active") : blankOrder;
+     // }
 }
 
 function orderInfo() {

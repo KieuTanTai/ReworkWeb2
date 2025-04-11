@@ -40,7 +40,7 @@ async function dynamicDetail(product) {
   let price = container.querySelector(".block-product-price");
   let quantityBox = container.querySelector(".quantity-box");
   let buttons = container.querySelectorAll(".button");
-  // for selections
+  //!for selections
   let listOptions = container.querySelector(".product-selector");
   console.log(listOptions);
   let selectOptions = Array.from(listOptions?.children);

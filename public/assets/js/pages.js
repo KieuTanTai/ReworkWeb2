@@ -91,7 +91,7 @@ function filterProductsByCategory(products, categoryId) {
         case "xiaomi":
             return products.filter((product) => product.type === 'xiaomi');
         case "iqoo":
-            return products.filter((product) => product.type === 'vivo iqoo');
+            return products.filter((product) => product.type === 'iqoo');
         default:
             return products;
     }

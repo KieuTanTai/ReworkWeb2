@@ -22,6 +22,7 @@ function getElementsHandler() {
     getProductLikeContainer: () => $("#product-like-container"),
     getMainContent: () => $("#main-content .grid-row"),
     getRootSessionContent: () => $$(".root-session-content"),
+    getCartContent: () => $("#cart-content"),
     // other pages container
     getIndexContainer: () => $("#index-content"),
     getDetailContent: () => $("#detail-content"),
@@ -154,6 +155,7 @@ function navigateRootURL() {
       
   // });
   hiddenException("index-content");
+  
 }
 
 export default getElementsHandler;
