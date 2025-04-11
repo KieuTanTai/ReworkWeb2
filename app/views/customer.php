@@ -77,7 +77,7 @@ include ("sidebar1.php");
    
              
               <td style=" cursor:pointer;">
-              <button type="button" class="btn btn-primary" onclick="orderdetails(">Chi Tiết</button>            </tr>
+              <button type="button" class="btn btn-primary" onclick="orderdetails">Chi Tiết</button>            </tr>
           </tbody>
            <tr class="align-middle">
               <td></td>
