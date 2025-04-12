@@ -105,6 +105,7 @@ function historyNavigate(elementsObj) {
      historyBtn.forEach((btn) => btn.addEventListener("click", showOrderContent));
 }
 
+// ! NEED CHANGE HERE
 function showOrderContent() {
      let elementsObj = Bridge.default();
      let historyContainer = elementsObj.getHistoryOrder();
@@ -122,10 +123,10 @@ function showOrderContent() {
           Bridge.navigateRootURL();
      }
 
-     elementsObj.getHistoryContainer()?.classList.remove("disable");
-     if (historyContainer.classList.contains("active")) return;
-     historyContainer.classList.add("active");
-     renderOrder(elementsObj);
+     // elementsObj.getHistoryContainer()?.classList.remove("disable");
+     // if (historyContainer.classList.contains("active")) return;
+     // historyContainer.classList.add("active");
+     // renderOrder(elementsObj);
 }
 
 function scriptOrder(customer, detailOrder) {

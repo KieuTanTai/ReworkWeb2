@@ -109,6 +109,8 @@ function formatPrices(elementsObj) {
 // show and hide specific form
 function hiddenException(exception) {
   exception = !exception ? "index-content" : exception;
+  if(exception === "index-content")
+    location.href = location.origin;
   let getHandler = Bridge.default();
   let container = getHandler.getMainContent()?.children;
   // let newsContainer = getHandler.getNewsBlogs();
@@ -120,14 +122,6 @@ function hiddenException(exception) {
     else
       element.classList.remove("disable");
   });
-
-  
-
-  // if (exception === "index-content") {
-  //   newsContainer?.classList.contains("disable") ? newsContainer.classList.remove("disable") : newsContainer;
-  //   return;
-  // }
-  // newsContainer?.classList.add("disable");
 }
 
 //change DOM on categories if it not have any product inside
