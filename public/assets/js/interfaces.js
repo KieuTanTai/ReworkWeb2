@@ -110,7 +110,7 @@ function formatPrices(elementsObj) {
 function hiddenException(exception) {
   exception = !exception ? "index-content" : exception;
   if(exception === "index-content")
-    location.href = location.origin;
+    location.href = `${location.origin}/public`;
   let getHandler = Bridge.default();
   let container = getHandler.getMainContent()?.children;
   // let newsContainer = getHandler.getNewsBlogs();
