@@ -3,4 +3,4 @@
      {
           echo '<script>console.log("Hello admin");</script>';
      }
-?>
+?>          
