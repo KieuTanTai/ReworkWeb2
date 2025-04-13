@@ -220,6 +220,32 @@
                       <p>Quản Lý Người Dùng</p>
                     </a>
                   </li>
+                  <li class="nav-item">
+                    <a href="product.php" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Quản Lý Sản Phẩm</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                <i class="bi bi-bar-chart-line"></i>
+
+                  <p>
+                  Thống Kê
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                  <a href="customer.php" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Thống Kê Khách Hàng</p>
+                    </a>
+                  </li>
+               
+                  
                 </ul>
               </li>
               <!-- <li class="nav-header">EXAMPLES</li>
