@@ -36,7 +36,7 @@ async function renderSearchDOM(bookName) {
   let newURL = `${location.href.slice(
     0,
     location.href.lastIndexOf("/") + 1
-  )}index.html?query=${bookName}`;
+  )}?query=${bookName}`;
   window.history.pushState({}, "", newURL); // Cập nhật URL
   initSearchFilters(); // Hiển thị sản phẩm theo từ khóa
 }
@@ -47,18 +47,19 @@ function searchDOM() {
           <label for="category-filter">Thể loại:</label>
           <select id="category-filter">
                 <option value="">Tất cả</option>
-                <option value="manga">Manga</option>
-                <option value="light novel">Light Novel</option>
-                <option value="education">Education</option>
+                <option value="samsung">Samsung</option>
+                <option value="iphone">Iphone</option>
+                <option value="vivo">Vivo</option>
+                <option value="iqoo">IQOO</option>
           </select>
 
           <label for="price-filter" class="padding-left-12">Khoảng giá:</label>
           <select id="price-filter">
                 <option value="">Tất cả</option>
-                <option value="0-100000">0đ - 100,000đ</option>
-                <option value="100000-200000">100,000đ - 200,000đ</option>
-                <option value="200000-300000">200,000đ - 300,000đ</option>
-                <option value="300000-">300,000đ trở lên</option>
+                <option value="0-1000000">0đ - 1,000,000đ</option>
+                <option value="1000000-3000000">1,000,000đ - 3,000,000đ</option>
+                <option value="3000000-6000000">3,000,000đ - 6,000,000đ</option>
+                <option value="600000-">6,000,000đ trở lên</option>
           </select>
       </section>
 
@@ -84,43 +85,33 @@ function applyFilters(productList, searchQuery, elementsObj) {
   const priceFilter = elementsObj.getPriceFilter();
   const category = categoryFilter?.value;
   const priceRange = priceFilter?.value;
-
   // Lọc theo từ khóa (nếu có)
   return productList.filter((product) => {
-    const name = product.name?.toLowerCase() || "";
-    const author = product.author?.toLowerCase() || "";
-    const genre = product.genre?.toLowerCase() || "";
-    const type = product.type?.toLowerCase() || "";
-    const queryMatch = searchQuery
-      ? name.includes(searchQuery) ||
-        author.includes(searchQuery) ||
-        genre.includes(searchQuery) ||
-        type.includes(searchQuery)
-      : true;
+    const name = product.tensp?.toLowerCase() || "";
+    const brand = product.thuonghieu?.toLowerCase() || ""; 
+    const queryMatch = searchQuery ? name.includes(searchQuery) || brand.includes(searchQuery) : true;
 
     // Lọc theo thể loại
-    const categoryMatch = category ? product.type === category : true;
+    console.log(category);
+    console.log(priceRange);
+    const categoryMatch = category ? (product.thuonghieu.toLowerCase()).includes(category) : true;
 
-    // Lọc theo khoảng giá
-    const price = product.price * (1 - product.sale); // Giá sau giảm giá
+    //! Lọc theo khoảng giá
+    const price = 10000000 * (1 - 0.29); // Giá sau giảm giá
     let priceMatch = true;
     if (priceRange) {
       const [min, max] = priceRange.split("-").map(Number);
       priceMatch = max ? price >= min && price <= max : price >= min;
     }
+    console.log(queryMatch, categoryMatch, priceMatch);
     return queryMatch && categoryMatch && priceMatch;
   });
 }
 
-function displayProducts(
-  productList,
-  searchQuery,
-  elementsObj,
-  currentPage = 1,
-  itemsPerPage = 15
-) {
+function displayProducts(productList, searchQuery, elementsObj, currentPage = 1, itemsPerPage = 15) {
   if (!elementsObj) elementsObj = Bridge.default();
   const filteredProducts = applyFilters(productList, searchQuery);
+  console.log(filteredProducts);
   const productContainer = elementsObj
     .getResultContainer()
     ?.querySelector(".product-container");
@@ -152,12 +143,7 @@ function displayProducts(
   );
 }
 
-function renderPaginationControls(
-  container,
-  currentPage,
-  totalPages,
-  onPageChange
-) {
+function renderPaginationControls(container, currentPage, totalPages, onPageChange) {
   container.innerHTML = "";
   if (totalPages <= 1) return;
 
@@ -172,16 +158,12 @@ function renderPaginationControls(
   }
 }
 
-function initSearchFilters() {
+async function initSearchFilters() {
   let elementsObj = Bridge.default();
   const query = execQueryHandler("query");
-  let productList = getProductBooks();
-  displayProducts(productList, query, elementsObj, 1, 15);
-  changeByFilter(
-    [elementsObj.getCategoryFilter(), elementsObj.getPriceFilter()],
-    query,
-    productList
-  );
+  let productList = await getProductBooks();
+  displayProducts(...productList, query, elementsObj, 1, 15);
+  changeByFilter([elementsObj.getCategoryFilter(), elementsObj.getPriceFilter()], query, ...productList);
 }
 
 function changeByFilter(elements, query, productList) {

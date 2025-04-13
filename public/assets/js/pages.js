@@ -21,7 +21,6 @@ function eventForCategoryButton(categoryButtons) {
             if (parentSection && parentSection.id) {
                 const categoryId = parentSection.id;
                 window.location.href = `index.php?category=${categoryId}`;
-                console.log(parentSection, categoryId);
             }
         });
     });
@@ -35,7 +34,6 @@ function eventForSubHeader(navCategories) {
             const categoryType = item.querySelector("a.flex.full-width");
             let type = categoryType ? categoryType.getAttribute("title") : "";
             window.location.href = `index.php?category=${type}`;
-            console.log(categoryType);
         })
         ));    
 }
@@ -58,7 +56,6 @@ async function initializePage() {
         showTargetSection(categoryId);
         //! Lấy danh sách sản phẩm từ localStorage (CHANGE TO DB)
         const allProducts = await getProductBooks();
-        console.log("Dữ liệu sản phẩm từ localStorage:", ...allProducts);
         // Lọc sản phẩm theo danh mục
         const filteredProducts = filterProductsByCategory(...allProducts, categoryId);
         // console.log("Filtered Products:", filteredProducts);
@@ -82,16 +79,16 @@ function filterProductsByCategory(products, categoryId) {
             return products.slice(-5);
         case 'samsung-phone-container':
         case "samsung":
-            return products.filter((product) => product.type === 'samsung');
+            return products.filter((product) => product.thuonghieu.toLowerCase().includes('samsung'));
         case 'iphone-container':
         case "iphone":
-            return products.filter((product) => product.type === 'iphone');
+            return products.filter((product) => product.thuonghieu.toLowerCase().includes('iphone'));
         case 'other-phones-container':
             return products.sort((a, b) => a.releaseDate - b.releaseDate);
         case "xiaomi":
-            return products.filter((product) => product.type === 'xiaomi');
+            return products.filter((product) => product.thuonghieu.toLowerCase().includes('xiaomi'));
         case "iqoo":
-            return products.filter((product) => product.type === 'iqoo');
+            return products.filter((product) => product.thuonghieu.toLowerCase().includes('vivo'));
         default:
             return products;
     }
@@ -178,7 +175,8 @@ function createPaginationControls(section, products, container, totalPages) {
     const paginationContainer = document.createElement('div');
     paginationContainer.className = 'pagination-controls';
     paginationContainer.style.textAlign = 'center';
-    paginationContainer.style.marginTop = '20px';
+    paginationContainer.style.marginTop = '1em';
+    paginationContainer.style.marginBottom = '1em';
 
     for (let i = 1; i <= totalPages; i++) {
         const pageButton = document.createElement('button');
@@ -240,8 +238,9 @@ function showTargetSection(categoryId) {
 }
 
 function renderContainer(name) {
+    console.log(name);
     let script = `
-        <div class="category-tab">
+        <div class="category-tab margin-0">
                 <div class="heading">
                     <div class="heading-label ${name}-label"></div>
                     <div class="uppercase font-bold font-size-20 padding-left-8">${name.replace("-", " ")}</div>
@@ -249,11 +248,6 @@ function renderContainer(name) {
 
                 <!-- container for products -->
                 <div class="product-container"></div>
-
-                <div
-                    class="flex justify-center align-center font-bold capitalize margin-bottom-16">
-                    <a href="#" class="category-btn button">Xem thêm</a>
-                </div>
         </div>
     `
     let element = document.createElement("section");

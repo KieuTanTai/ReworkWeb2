@@ -107,10 +107,10 @@ async function renderProductDetails(list, wrapper) {
     let arrayChild = Array.from(wrapper.children);
     arrayChild?.forEach((child, index) => {
       child.querySelector(".block-product")?.addEventListener("click", () => {
-        // let bookName = (list[index].tensp).replaceAll("&", "").replaceAll("!", "").replaceAll(" ", "-");
-        // // change path with path request
-        // let newURL = `${location.href.slice(0, location.href.lastIndexOf("/") + 1)}index.html?name=${bookName}`;
-        // window.history.pushState({}, "", newURL);
+        let bookName = (list[index].tensp).replaceAll("&", "").replaceAll("!", "").replaceAll(" ", "-");
+        // change path with path request
+        let newURL = `${location.href.slice(0, location.href.lastIndexOf("/") + 1)}?name=${bookName}`;
+        window.history.pushState({}, "", newURL);
         hiddenException("detail-content");
         dynamicDetail(list[index]);
       });

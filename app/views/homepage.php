@@ -215,7 +215,7 @@ function loadDefaultHomepage()
 
                                    
                                    <!-- FOR ADMIN CONTENT!!!! -->
-                                   <section class="grid-col col-l-12 no-gutter margin-y-16 full-width"></section>
+                                   <section class="grid-col col-l-12 no-gutter full-width"></section>
                               </div>
                               <!-- TEST FORM -->
                               <?php renderDetailProduct(); ?>

@@ -269,7 +269,7 @@ async function setQuantityBox(elementsObj) {
           .getQuantityBox()
           .querySelector("input[type=text]#quantity");
      let productID = Bridge.$(".product-id")?.innerHTML;
-     let realQuantity = Array.from(await GetProducts()).find((product) => product.masp === masp)?.quantity;
+     let realQuantity = Array.from(await GetProducts()).find((product) => product.masp === productID)?.quantity;
 
      reduceBtn.addEventListener("click", () => (quantity.value = parseInt(quantity.value) - 1 <= 0 ? 1 : parseInt(quantity.value) - 1));
      increaseBtn.addEventListener("click", () => (quantity.value = parseInt(quantity.value) + 1 <= realQuantity ? parseInt(quantity.value) + 1 : realQuantity));
