@@ -7,7 +7,7 @@ import { GetProducts } from "./getdata.js";
 import { attachAddToCartEvents, attachAddToCartInDetails } from "./carts.js";
 //! get / set products (NEED TO CHANGE)
 async function getProductBooks() {
-  return Array.of(await GetProducts());
+  return await GetProducts();
 }
 
 function setProductBooks(product) {
@@ -90,7 +90,7 @@ async function dynamicDetail(product) {
 
   // call other functions
   // productContainers(list, sameAuthor);
-  productContainers(await getProductBooks(), productLike);
+  productContainers(Array.of(await getProductBooks()), productLike);
   callFuncsAgain(elementsObj);
 }
 

@@ -57,7 +57,7 @@ async function initializePage() {
         //! Lấy danh sách sản phẩm từ localStorage (CHANGE TO DB)
         const allProducts = await getProductBooks();
         // Lọc sản phẩm theo danh mục
-        const filteredProducts = filterProductsByCategory(...allProducts, categoryId);
+        const filteredProducts = filterProductsByCategory(allProducts, categoryId);
         // console.log("Filtered Products:", filteredProducts);
 
         // Tích hợp phân trang

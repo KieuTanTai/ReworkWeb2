@@ -162,8 +162,8 @@ async function initSearchFilters() {
   let elementsObj = Bridge.default();
   const query = execQueryHandler("query");
   let productList = await getProductBooks();
-  displayProducts(...productList, query, elementsObj, 1, 15);
-  changeByFilter([elementsObj.getCategoryFilter(), elementsObj.getPriceFilter()], query, ...productList);
+  displayProducts(productList, query, elementsObj, 1, 15);
+  changeByFilter([elementsObj.getCategoryFilter(), elementsObj.getPriceFilter()], query, productList);
 }
 
 function changeByFilter(elements, query, productList) {
