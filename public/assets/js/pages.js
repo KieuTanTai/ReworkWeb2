@@ -42,7 +42,7 @@ function eventForSubHeader(navCategories) {
 
 
 // page.js: Xử lý hiển thị phần nội dung dựa trên URL
-const ITEMS_PER_PAGE = 15; // Số sản phẩm trên mỗi trang
+const ITEMS_PER_PAGE = 5; // Số sản phẩm trên mỗi trang
 /**
  * Hàm khởi tạo trang
  */
@@ -57,10 +57,10 @@ async function initializePage() {
         // Hiển thị section mục tiêu
         showTargetSection(categoryId);
         //! Lấy danh sách sản phẩm từ localStorage (CHANGE TO DB)
-        const allProducts = getProductBooks();
-        // console.log("Dữ liệu sản phẩm từ localStorage:", allProducts);
+        const allProducts = await getProductBooks();
+        console.log("Dữ liệu sản phẩm từ localStorage:", ...allProducts);
         // Lọc sản phẩm theo danh mục
-        const filteredProducts = filterProductsByCategory(allProducts, categoryId);
+        const filteredProducts = filterProductsByCategory(...allProducts, categoryId);
         // console.log("Filtered Products:", filteredProducts);
 
         // Tích hợp phân trang

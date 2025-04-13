@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 200);
 
   // navigate.js
-  Navigate.execQueryHandler();
+  // Navigate.execQueryHandler();
   Navigate.popStateHandler();
   Navigate.forbiddenDOM();
   // login

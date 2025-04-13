@@ -1,5 +1,6 @@
 "use strict";
 import * as Bridge from "./bridges.js";
+import { GetProducts } from "./getdata.js";
 import { disableSiblingContainer, formatPrices, headerUserInfo, hiddenException, scrollView } from "./interfaces.js";
 
 function returnHomepage(elementsObj) {
@@ -256,8 +257,8 @@ function addDaysToDate(dateString, daysToAdd) {
 }
 
 
-// set quantity box on detail product
-function setQuantityBox(elementsObj) {
+//! set quantity box on detail product
+async function setQuantityBox(elementsObj) {
      let reduceBtn = elementsObj
           .getQuantityBox()
           .querySelector("input[type=button].reduce");
@@ -268,9 +269,7 @@ function setQuantityBox(elementsObj) {
           .getQuantityBox()
           .querySelector("input[type=text]#quantity");
      let productID = Bridge.$(".product-id")?.innerHTML;
-     let realQuantity = Array.from(
-          JSON.parse(localStorage.getItem("products"))
-     ).find((product) => product.productID === productID)?.quantity;
+     let realQuantity = Array.from(await GetProducts()).find((product) => product.masp === masp)?.quantity;
 
      reduceBtn.addEventListener("click", () => (quantity.value = parseInt(quantity.value) - 1 <= 0 ? 1 : parseInt(quantity.value) - 1));
      increaseBtn.addEventListener("click", () => (quantity.value = parseInt(quantity.value) + 1 <= realQuantity ? parseInt(quantity.value) + 1 : realQuantity));

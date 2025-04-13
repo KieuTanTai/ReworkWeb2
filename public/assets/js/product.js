@@ -6,8 +6,8 @@ import * as Navigate from "./navigates.js";
 import { GetProducts } from "./getdata.js";
 import { attachAddToCartEvents, attachAddToCartInDetails } from "./carts.js";
 //! get / set products (NEED TO CHANGE)
-function getProductBooks() {
-  return GetProducts();
+async function getProductBooks() {
+  return Array.of(await GetProducts());
 }
 
 function setProductBooks(product) {
@@ -22,16 +22,16 @@ function getValueQuery(request) {
 
 //! detail product
 async function dynamicDetail(product) {
-  // !book detail
+  // ?product detail (NEED TO CHANGE HERE)
   if (!product) return;
   let container = Bridge.default().getMainContent();
   const elementsObj = Bridge.default();
   let currentTitle = Bridge.$("title");
-  let quantity = product.quantity;
-  let productSale = product.sale, productPrice = product.price;
-  let srcImage = product.img;
-  let productName = product.name, id = product.productID;
-  let productCategories = product.category;
+  let quantity = 1 //product.quantity ;
+  let productSale = 0.29, productPrice = 10000000;
+  let srcImage = "assets/images/Phone/RedMagics/vn-11134207-7ras8-m2nn2bl6q4922e.jpg" //product.hinhanh;
+  let productName = product.tensp, id = product.masp;
+  // let productCategories = product.category;
 
   // !Container for detail
   let saleLabel = container.querySelector(".detail-block .sale-label");
@@ -43,8 +43,8 @@ async function dynamicDetail(product) {
   let buttons = container.querySelectorAll(".button");
   //!for selections
   let listOptions = container.querySelector(".product-selector");
-  console.log(listOptions);
   let selectOptions = Array.from(listOptions?.children);
+  let productLike = container.querySelector("#product-like-container");
 
   // fakeOverlay(container);
   // !set data (CONTINUE) GET FIELDS ON OBJ -> ADD DATA TO DOM 
@@ -54,7 +54,7 @@ async function dynamicDetail(product) {
   imageContainer.setAttribute("alt", productName);
   imageContainer.style.width = 80 + "%";
   // other details
-  saleLabel.innerText = (productSale * 100) + "%";
+  saleLabel.innerText = Math.round(productSale * 100) + "%";
   productTitle.innerText = productName;
   productID.innerText = id;
 
@@ -71,14 +71,14 @@ async function dynamicDetail(product) {
       newPrice.innerText = Math.round(productPrice * (1 - productSale));
   });
   // remove not exist selections
-  if (!productCategories)
-    selectOptions.remove();
-  if (!productCategories.includes("normal"))
-    (selectOptions.find((child) => child.value === "normal"))?.remove();
-  if (!productCategories.includes("special"))
-    (selectOptions.find((child) => child.value === "special"))?.remove();
-  if (productCategories.includes("collectible"))
-    listOptions.innerHTML = "<option value=\"collectible\">bản sưu tập</option>"
+  // if (!productCategories)
+  //   selectOptions.remove();
+  // if (!productCategories.includes("normal"))
+  //   (selectOptions.find((child) => child.value === "normal"))?.remove();
+  // if (!productCategories.includes("special"))
+  //   (selectOptions.find((child) => child.value === "special"))?.remove();
+  // if (productCategories.includes("collectible"))
+  //   listOptions.innerHTML = "<option value=\"collectible\">bản sưu tập</option>"
 
   // execute buttons when quantity > 0 or not 
   if (quantity <= 0) {
@@ -90,7 +90,7 @@ async function dynamicDetail(product) {
 
   // call other functions
   // productContainers(list, sameAuthor);
-  productContainers(list, productLike);
+  productContainers(await getProductBooks(), productLike);
   callFuncsAgain(elementsObj);
 }
 
@@ -107,12 +107,10 @@ async function renderProductDetails(list, wrapper) {
     let arrayChild = Array.from(wrapper.children);
     arrayChild?.forEach((child, index) => {
       child.querySelector(".block-product")?.addEventListener("click", () => {
-        let bookName = (list[index].name).replaceAll("&", "").replaceAll("!", "").replaceAll(" ", "-");
-        // change path with path request
-        let newURL = `${location.href.slice(0, location.href.lastIndexOf("/") + 1)}index.php?name=${bookName}`;
+        // let bookName = (list[index].tensp).replaceAll("&", "").replaceAll("!", "").replaceAll(" ", "-");
+        // // change path with path request
+        // let newURL = `${location.href.slice(0, location.href.lastIndexOf("/") + 1)}index.html?name=${bookName}`;
         // window.history.pushState({}, "", newURL);
-        // window.location.href = `index.php?name=${bookName}`;
-        window.location.href = newURL;
         hiddenException("detail-content");
         dynamicDetail(list[index]);
       });
@@ -134,7 +132,7 @@ function renderProducts(list, wrapper) {
                     <span class="product-image js-item">
                         <img src="assets/images/Phone/RedMagics/vn-11134207-7ras8-m2nn2bl6q4922e.jpg" alt="${product.tensp}">
                     </span>
-                    <div class="sale-label">${Math.round()}%</div>
+                    <div class="sale-label">${Math.round(0.29 * 100)}%</div>
                     <div class="sale-off font-bold capitalize ${product.trangthai > 0 ? "" : "active"}">hết hàng</div>
                     <div class="info-inner flex justify-center align-center line-height-1-6">
                         <h4 class="font-light capitalize" title="${product.tensp}">${product.tensp}</h4>
@@ -195,13 +193,10 @@ function productContainers(productsList, container) {
       // else if (wrapper && containerID === "best-selling-container")
       //   list = productsList.sort((a, b) => b.quantity - a.quantity).toSpliced(5);
 
-      else if (wrapper && containerID === "samsung-phone-container") {
+      else if (wrapper && containerID === "samsung-phone-container")
         list = productsList.filter((product) => (product.tensp.toLowerCase()).includes("samsung")).toSpliced(5);
-      }
-
       else if (wrapper && containerID === "iphone-container")
         list = productsList.filter((product) => (product.tensp.toLowerCase()).includes("iphone")).toSpliced(5);
-
       else if (wrapper && containerID === "other-phones-container")
         list = productsList.sort((a, b) => a.releaseDate - b.releaseDate).toSpliced(5);
       else

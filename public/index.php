@@ -14,11 +14,13 @@ session_start();
      <link rel="stylesheet" href="./assets/css/index.css" />
      <link rel="stylesheet" href="./assets/css/responsive.css" />
      <script type="module" src="./assets/js/index.js"></script>
+     <title>Light Novel World</title>
      <?php
      require "../app/views/header-footer.php";
      require "../app/views/detail_product.php";
      require "../app/views/cart.php";
      require "../app/views/homepage.php";
+     require "../app/views/search_result.php"
      ?>
 </head>
 

@@ -84,7 +84,8 @@ async function fakeOverlay(container, time) {
 
 // check container is empty or not
 function isEmpty(container) {
-  let children = container.children;
+  let children = container?.children;
+  if (!children) return true;
   if (children.length === 0) return true;
   for (let child of children)
     if (child.classList.contains("empty-mess")) return true;
