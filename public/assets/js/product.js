@@ -3,10 +3,11 @@ import { setQuantityBox } from "./action.js";
 import * as Bridge from "./bridges.js";
 import { fakeOverlay, formatPrices, hiddenException, isEmpty, resizeImages, scrollView } from "./interfaces.js";
 import * as Navigate from "./navigates.js";
+import { GetProducts } from "./getdata.js";
 import { attachAddToCartEvents, attachAddToCartInDetails } from "./carts.js";
 //! get / set products (NEED TO CHANGE)
 function getProductBooks() {
-  return Array.from(JSON.parse(localStorage.getItem("products")));
+  return GetProducts();
 }
 
 function setProductBooks(product) {
@@ -126,23 +127,24 @@ function renderProducts(list, wrapper) {
   if (!list) return;
   let html = "";
   for (let product of list) {
+    // ! need to change src, sale label here
     html += `
       <div class="product-item grid-col col-l-2-4 col-m-3 col-s-6">
               <div class="block-product product-resize">
                     <span class="product-image js-item">
-                        <img src="${product.img}" alt="${product.name}">
+                        <img src="assets/images/Phone/RedMagics/vn-11134207-7ras8-m2nn2bl6q4922e.jpg" alt="${product.tensp}">
                     </span>
-                    <div class="sale-label">${product.sale * 100}%</div>
-                    <div class="sale-off font-bold capitalize ${product.quantity > 0 ? "" : "active"}">hết hàng</div>
+                    <div class="sale-label">${Math.round()}%</div>
+                    <div class="sale-off font-bold capitalize ${product.trangthai > 0 ? "" : "active"}">hết hàng</div>
                     <div class="info-inner flex justify-center align-center line-height-1-6">
-                        <h4 class="font-light capitalize" title="${product.name}">${product.name}</h4>
+                        <h4 class="font-light capitalize" title="${product.tensp}">${product.tensp}</h4>
                         <div class="margin-y-4">
-                              <span class="price font-bold">${Math.round(product.price * (1 - product.sale))}</span>
-                              <del class="price old-price padding-left-8 font-size-14">${product.price}</del>
+                              <span class="price font-bold">${Math.round(10000000 * (1 - 0.29))}</span>
+                              <del class="price old-price padding-left-8 font-size-14">${10000000}</del>
                         </div>
                     </div>
               </div>
-              <div class="action ${product.quantity > 0 ? "" : "disable"}">
+              <div class="action ${product.trangthai > 0 ? "" : "disable"}">
                     <div class="buy-btn">
                         <div title="mua ngay" class="button">
                               <i class="fa-solid fa-bag-shopping fa-lg" style="color: var(--primary-white);"></i>
@@ -184,7 +186,8 @@ function productContainers(productsList, container) {
       //gene script html
       if (!isEmpty(wrapper)) return;
       if (wrapper && containerID === "fs-container")
-        list = productsList.sort((a, b) => b.sale - a.sale).toSpliced(5);
+        // !change to sale if have
+        list = productsList.sort((a, b) => b.dungluongpin - a.dungluongpin).toSpliced(5);
 
       else if (wrapper && containerID === "new-phones-container")
         list = productsList.toSpliced(0, listLength - 5);
@@ -192,11 +195,12 @@ function productContainers(productsList, container) {
       // else if (wrapper && containerID === "best-selling-container")
       //   list = productsList.sort((a, b) => b.quantity - a.quantity).toSpliced(5);
 
-      else if (wrapper && containerID === "samsung-phone-container")
-        list = productsList.filter((product) => product.type === "samsung").toSpliced(5);
+      else if (wrapper && containerID === "samsung-phone-container") {
+        list = productsList.filter((product) => (product.tensp.toLowerCase()).includes("samsung")).toSpliced(5);
+      }
 
       else if (wrapper && containerID === "iphone-container")
-        list = productsList.filter((product) => product.type === "iphone").toSpliced(5);
+        list = productsList.filter((product) => (product.tensp.toLowerCase()).includes("iphone")).toSpliced(5);
 
       else if (wrapper && containerID === "other-phones-container")
         list = productsList.sort((a, b) => a.releaseDate - b.releaseDate).toSpliced(5);
@@ -205,8 +209,6 @@ function productContainers(productsList, container) {
       // render script and add it to DOM
       renderProducts(list, wrapper);
     });
-
-
     return;
   }
   else {
@@ -216,7 +218,7 @@ function productContainers(productsList, container) {
     // if (wrapper && containerID === "same-author-container")
     //   list = productsList.filter((product) => product.author === Bridge.$(".b-author")?.innerHTML).toSpliced(5);
     if (wrapper && containerID === "product-like-container")
-      list = productsList.filter((product) => (product.genre)?.includes(Bridge.$(".product-tags div:first-child p")?.innerHTML)).toSpliced(5);
+      list = productsList.filter((product) => (product.tensp)?.includes(Bridge.$(".product-tags div:first-child p")?.innerHTML)).toSpliced(5);
     renderProducts(list, wrapper);
   }
   if (isEmpty(container)) return;

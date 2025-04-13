@@ -23,9 +23,23 @@
                 }
             }
         
-            return $products; // Trả mảng sản phẩm cho view xử lý
+            return ($products); // Trả mảng sản phẩm cho view xử lý
         }
         
+        public function indexJSON() {
+            $result = $this->product->getAll();
+        
+            $products = [];
+        
+            if ($result && $result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $products[] = $row;
+                }
+            }
+        
+            return  json_encode($products); // Trả mảng sản phẩm cho view xử lý
+        }
+
         // Thêm sản phẩm mới
         public function create($data) {
             $this->product->tensp = $data['tensp'];

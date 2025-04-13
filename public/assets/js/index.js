@@ -10,11 +10,12 @@ import * as Login from "./login.js";
 import * as Register from "./registers.js";
 import * as Cart from "./carts.js";
 import * as Pages from "./pages.js";
-
+import * as Gets from "./getdata.js";
 document.addEventListener("DOMContentLoaded", () => {
   let elementsObj = Bridge.default();
   let lastPath = location.href;
   lastPath = lastPath.slice(lastPath.lastIndexOf("/") + 1, lastPath.length);
+  Gets.GetProducts();   
 
   // DOM ON action.js
   Navigate.forbiddenDOM();
@@ -28,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // call funcs
       Interface.resizeSmNav(elementsObj);
       Interface.headerUserInfo(elementsObj);
+      Interface.getInitProducts(elementsObj);
       Cart.increaseCartCount();
       Cart.updateCartCount(elementsObj);
       Cart.handleCartNavigation();

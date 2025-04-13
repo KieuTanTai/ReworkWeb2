@@ -1,26 +1,6 @@
 <?php
-require_once __DIR__ . '/../controller/product/productController.php';
-
 function loadDefaultHomepage()
-{
-    // Khởi tạo ProductController và lấy danh sách sản phẩm
-    $productController = new ProductController();
-    $products = $productController->index();
-    // Lọc sản phẩm cho các section (giả định logic lọc)
-    $flashSaleProducts = array_slice($products, 0, 4); // Lấy 4 sản phẩm đầu tiên cho Flash Sale
-    $newProducts = array_slice($products, 0, 4); // Lấy 4 sản phẩm đầu tiên cho New Phones
-    $samsungProducts = array_filter($products, function($product) {
-        return strtolower($product['thuonghieu']) === 'samsung';
-    });
-    $iphoneProducts = array_filter($products, function($product) {
-        return strtolower($product['thuonghieu']) === 'iphone';
-    });
-    $otherProducts = array_filter($products, function($product) {
-        return !in_array(strtolower($product['thuonghieu']), ['samsung', 'iphone']);
-    });
-
-
-?>
+{ ?>
      <div class="web-content">
           <header id="header-container">
                <?php renderHeader();?>
@@ -34,7 +14,7 @@ function loadDefaultHomepage()
 
                <div id="main-content">
                     <article id="scroll-top" class="s-m-hidden">
-                         <img src="./assets/images/icons/web_logo/manga-icon-backtotop_550x700_1.png" alt="Scroll to top of page" />
+                         <img src="./assets/images/icons/web_logo/manga-icon-backtotop_550x700_1.png" alt="back to top" />
                     </article>
 
                     <!-- main items -->
@@ -52,25 +32,25 @@ function loadDefaultHomepage()
                                         <div class="ad-banner grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                              <div class="banner-item">
                                                   <a href=" ">
-                                                       <img src="./assets/images/ads/demo5.webp" alt="Advertisement 1" />
+                                                       <img src="./assets/images/ads/demo5.webp" alt="Demo 1" />
                                                   </a>
                                              </div>
 
                                              <div class="banner-item">
                                                   <a href=" ">
-                                                       <img src="./assets/images/ads/demo6.webp" alt="Advertisement 2" />
+                                                       <img src="./assets/images/ads/demo6.webp" alt="Demo 2" />
                                                   </a>
                                              </div>
 
                                              <div class="banner-item">
                                                   <a href=" ">
-                                                       <img src="./assets/images/ads/demo3.webp" alt="Advertisement 3" />
+                                                       <img src="./assets/images/ads/demo3.webp" alt="Demo 3" />
                                                   </a>
                                              </div>
 
                                              <div class="banner-item">
                                                   <a href=" ">
-                                                       <img src="./assets/images/ads/demo4.webp" alt="Advertisement 4" />
+                                                       <img src="./assets/images/ads/demo4.webp" alt="Demo 4" />
                                                   </a>
                                              </div>
                                         </div>
@@ -99,7 +79,8 @@ function loadDefaultHomepage()
                                                   <img src="./assets/images/icons/services/icon-sv3.jpg" alt="Bảo mật" />
                                                   <div class="flex-direction-y padding-left-8">
                                                        <h5 class="font-bold uppercase font-size-13">Bảo mật</h5>
-                                                       <p class="font-size-13 font-light capitalize">Thanh toán trực tuyến</p>
+                                                       <p class="font-size-13 font-light capitalize">Thanh toán trực
+                                                            tuyến</p>
                                                   </div>
                                              </div>
 
@@ -118,7 +99,7 @@ function loadDefaultHomepage()
                                         class="container root-session-content flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                         <div class="category-tab">
                                              <div class="heading">
-                                                  <span id="fs-label" class="heading-label">Flash Sale</span>
+                                                  <span id="fs-label" class="heading-label"></span>
                                                   <span
                                                        class="fs-countdown flex justify-center align-center padding-left-8 font-bold">
                                                        <p class="s-m-hidden padding-right-8">kết thúc trong:</p>
@@ -133,16 +114,7 @@ function loadDefaultHomepage()
                                              </div>
 
                                              <!-- container for products -->
-                                             <div class="product-container flex">
-                                                  <?php foreach ($flashSaleProducts as $product): ?>
-                                                       <div class="product-item grid-col col-l-3 col-m-4 col-s-6">
-                                                            <img src="<?php echo htmlspecialchars($product['hinhanh']); ?>" 
-                                                                 alt="<?php echo htmlspecialchars($product['tensp']); ?>" />
-                                                            <h5 class="font-bold font-size-14"><?php echo htmlspecialchars($product['tensp']); ?></h5>
-                                                            <p class="font-size-13"><?php echo htmlspecialchars($product['thuonghieu']); ?></p>
-                                                       </div>
-                                                  <?php endforeach; ?>
-                                             </div>
+                                             <div class="product-container"></div>
 
                                              <div class="nav-btn margin-inline-8 disable">
                                                   <div class="prev-btn font-size-13">
@@ -162,27 +134,19 @@ function loadDefaultHomepage()
                                         </div>
                                    </section>
 
+                                   <!-- RENAME ID IN HERE AND IN FILE CSS -->
                                    <!-- new phone -->
                                    <section id="new-phones-container"
                                         class="container root-session-content flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                         <div class="category-tab">
                                              <div class="heading">
-                                                  <div id="new-phone-label" class="heading-label">New Phones</div>
+                                                  <div id="new-phone-label" class="heading-label"></div>
                                                   <div class="uppercase font-bold font-size-20 padding-left-8">Mới ra mắt
                                                   </div>
                                              </div>
 
                                              <!-- container for products -->
-                                             <div class="product-container flex">
-                                                  <?php foreach ($newProducts as $product): ?>
-                                                       <div class="product-item grid-col col-l-3 col-m-4 col-s-6">
-                                                            <img src="<?php echo htmlspecialchars($product['hinhanh']); ?>" 
-                                                                 alt="<?php echo htmlspecialchars($product['tensp']); ?>" />
-                                                            <h5 class="font-bold font-size-14"><?php echo htmlspecialchars($product['tensp']); ?></h5>
-                                                            <p class="font-size-13"><?php echo htmlspecialchars($product['thuonghieu']); ?></p>
-                                                       </div>
-                                                  <?php endforeach; ?>
-                                             </div>
+                                             <div class="product-container"></div>
 
                                              <div
                                                   class="flex justify-center align-center font-bold capitalize margin-bottom-16">
@@ -191,26 +155,17 @@ function loadDefaultHomepage()
                                         </div>
                                    </section>
 
-                                   <!-- Samsung fan -->
+                                   <!-- SamSung fan   -->
                                    <section id="samsung-phone-container"
                                         class="container root-session-content flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                         <div class="category-tab">
                                              <div class="heading">
-                                                  <div class="heading-label samsung-phone-label">Samsung</div>
-                                                  <div class="uppercase font-bold font-size-20 padding-left-8">Samsung</div>
+                                                  <div class="heading-label samsung-phone-label"></div>
+                                                  <div class="uppercase font-bold font-size-20 padding-left-8">SamSung</div>
                                              </div>
 
                                              <!-- container for products -->
-                                             <div class="product-container flex">
-                                                  <?php foreach ($samsungProducts as $product): ?>
-                                                       <div class="product-item grid-col col-l-3 col-m-4 col-s-6">
-                                                            <img src="<?php echo htmlspecialchars($product['hinhanh']); ?>" 
-                                                                 alt="<?php echo htmlspecialchars($product['tensp']); ?>" />
-                                                            <h5 class="font-bold font-size-14"><?php echo htmlspecialchars($product['tensp']); ?></h5>
-                                                            <p class="font-size-13"><?php echo htmlspecialchars($product['thuonghieu']); ?></p>
-                                                       </div>
-                                                  <?php endforeach; ?>
-                                             </div>
+                                             <div class="product-container"></div>
 
                                              <div
                                                   class="flex justify-center align-center font-bold capitalize margin-bottom-16">
@@ -219,27 +174,18 @@ function loadDefaultHomepage()
                                         </div>
                                    </section>
 
-                                   <!-- iPhone -->
+                                   <!-- Iphone -->
                                    <section id="iphone-container"
                                         class="container root-session-content flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                         <div class="category-tab">
                                              <div class="heading">
-                                                  <div class="heading-label iphone-label">iPhone</div>
-                                                  <div class="uppercase font-bold font-size-20 padding-left-8">iPhone
+                                                  <div class="heading-label iphone-label"></div>
+                                                  <div class="uppercase font-bold font-size-20 padding-left-8">Iphone
                                                   </div>
                                              </div>
 
                                              <!-- container for products -->
-                                             <div class="product-container flex">
-                                                  <?php foreach ($iphoneProducts as $product): ?>
-                                                       <div class="product-item grid-col col-l-3 col-m-4 col-s-6">
-                                                            <img src="<?php echo htmlspecialchars($product['hinhanh']); ?>" 
-                                                                 alt="<?php echo htmlspecialchars($product['tensp']); ?>" />
-                                                            <h5 class="font-bold font-size-14"><?php echo htmlspecialchars($product['tensp']); ?></h5>
-                                                            <p class="font-size-13"><?php echo htmlspecialchars($product['thuonghieu']); ?></p>
-                                                       </div>
-                                                  <?php endforeach; ?>
-                                             </div>
+                                             <div class="product-container"></div>
 
                                              <div
                                                   class="flex justify-center align-center font-bold capitalize margin-bottom-16">
@@ -253,22 +199,12 @@ function loadDefaultHomepage()
                                         class="container root-session-content flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                         <div class="category-tab">
                                              <div class="heading">
-                                                  <div id="other-phone-label" class="heading-label">Other Brands</div>
+                                                  <div id="other-phone-label" class="heading-label"></div>
                                                   <div class="uppercase font-bold font-size-20 padding-left-8">Các hãng khác
                                                   </div>
                                              </div>
 
-                                             <!-- container for products -->
-                                             <div class="product-container flex">
-                                                  <?php foreach ($otherProducts as $product): ?>
-                                                       <div class="product-item grid-col col-l-3 col-m-4 col-s-6">
-                                                            <img src="<?php echo htmlspecialchars($product['hinhanh']); ?>" 
-                                                                 alt="<?php echo htmlspecialchars($product['tensp']); ?>" />
-                                                            <h5 class="font-bold font-size-14"><?php echo htmlspecialchars($product['tensp']); ?></h5>
-                                                            <p class="font-size-13"><?php echo htmlspecialchars($product['thuonghieu']); ?></p>
-                                                       </div>
-                                                  <?php endforeach; ?>
-                                             </div>
+                                             <div class="product-container"></div>
 
                                              <div
                                                   class="flex justify-center align-center font-bold capitalize margin-bottom-16">
@@ -295,4 +231,4 @@ function loadDefaultHomepage()
                ?>
           </footer>
      </div>
-<?php } ?>
+<?php }?>

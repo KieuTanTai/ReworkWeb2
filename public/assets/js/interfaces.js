@@ -4,6 +4,7 @@ import * as Bridge from "./bridges.js";
 import * as FlashSale from "./flashsale.js";
 import { sleep } from "./navigates.js";
 import * as RenderProducts from "./product.js";
+import * as Get from "./getdata.js";
 
 function scrollView() {
   let webContent = Bridge.default().getWebContent();
@@ -188,15 +189,16 @@ function resizeSmNav(elementsObj) {
 
 async function getInitProducts(elementsObj) {
   try {
-    const storage = await fetch("assets/js/storage.js");
-    const jsonArray = await storage.json();
-    const productsList = Array.from(jsonArray);
-    localStorage.setItem("products", JSON.stringify(productsList));
+    // const storage = await fetch("assets/js/storage.js");
+    // const jsonArray = await storage.json();
+    // const productsList = Array.from(jsonArray);
+    // localStorage.setItem("products", JSON.stringify(productsList));
+    let getProducts =Array.from(await Get.GetProducts());
 
     // render init products
-    RenderProducts.productContainers(productsList);
+    RenderProducts.productContainers(getProducts);
     FlashSale.setTimeFS(elementsObj);
-    RenderProducts.renderProducts(productsList);
+    RenderProducts.renderProducts(getProducts);
     formatPrices(elementsObj);
     resizeImages(elementsObj);
     categoryIsEmpty();

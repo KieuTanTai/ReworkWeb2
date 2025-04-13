@@ -1,6 +1,13 @@
 async function GetProducts() {
-     
-     return ;
+     try {
+          let response = await fetch("../../../app/api/productAPi.php");
+          let data = await response.json();
+          console.log(response); 
+          console.log(data);
+          return data;
+     } catch (error) {
+          console.error(error);
+     }
 }
 
 async function GetCustomers() {
@@ -8,12 +15,12 @@ async function GetCustomers() {
      return ;
 }
 
-async function GetAccount() {
+async function GetAccounts() {
 
      return ;
 }
 
-async function GetInvoice() {
+async function GetInvoices() {
 
      return ;
 }
@@ -22,3 +29,5 @@ async function GetOthers() {
 
      return ;
 }
+
+export { GetProducts, GetCustomers, GetAccounts, GetInvoices, GetOthers };
