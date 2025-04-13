@@ -344,3 +344,41 @@ INSERT IGNORE INTO `nhanvien` (`tennv`, `sdt`, `email`, `matkhau`, `vaitro`) VAL
 -- Thêm cột diachi vào bảng donhang
 ALTER TABLE `donhang`
 ADD COLUMN `diachi` VARCHAR(255) DEFAULT NULL AFTER `tongtien`;
+
+-- 1. Xóa các ràng buộc khóa ngoại trong bảng sanpham
+ALTER TABLE `sanpham`
+DROP FOREIGN KEY `sanpham_ibfk_1`, -- Ràng buộc với `thuonghieu`
+DROP FOREIGN KEY `sanpham_ibfk_2`; -- Ràng buộc với `hedieuhanh`
+
+-- 2. Chỉnh sửa bảng sanpham
+ALTER TABLE `sanpham`
+MODIFY COLUMN `hedieuhanh` VARCHAR(255) DEFAULT NULL, -- Chuyển hệ điều hành thành chuỗi
+MODIFY COLUMN `thuonghieu` VARCHAR(255) NOT NULL;     -- Chuyển thương hiệu thành chuỗi
+
+-- 3. Xóa bảng hệ điều hành và thương hiệu
+DROP TABLE IF EXISTS `hedieuhanh`;
+DROP TABLE IF EXISTS `thuonghieu`;
+
+-- Cập nhật dữ liệu thương hiệu và hệ điều hành
+UPDATE `sanpham`
+SET `thuonghieu` = 'Iphone', `hedieuhanh` = 'IOS'
+WHERE `tensp` = 'iPhone 13';
+
+UPDATE `sanpham`
+SET `thuonghieu` = 'Samsung', `hedieuhanh` = 'Android'
+WHERE `tensp` = 'Samsung Galaxy A53';
+
+UPDATE `sanpham`
+SET `thuonghieu` = 'Vivo', `hedieuhanh` = 'Android'
+WHERE `tensp` = 'Vivo Y22s';
+
+
+--
+-- Cập nhật thương hiệu cho sản phẩm mới hoặc hiện tại
+-- Nếu thêm sản phẩm mới với các thương hiệu này:
+INSERT INTO `sanpham` (`tensp`, `hinhanh`, `chipxuly`, `dungluongpin`, `kichthuocman`, `hedieuhanh`, `camerasau`, `cameratruoc`, `thuonghieu`) 
+VALUES
+('Redmi Note 12', 'redmi_note12.jpg', 'Snapdragon 685', 5000, 6.67, 'Android', '50MP + 8MP + 2MP', '13MP', 'Redmi'),
+('Google Pixel 7', 'google_pixel7.jpg', 'Google Tensor G2', 4355, 6.3, 'Android', '50MP + 12MP', '10.8MP', 'Google'),
+('Oppo Reno 8T', 'oppo_reno8t.jpg', 'Dimensity 920', 4800, 6.7, 'Android', '108MP', '32MP', 'Oppo');
+
