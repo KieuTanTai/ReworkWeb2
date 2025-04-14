@@ -1,27 +1,50 @@
 "use strict";
 import * as Bridge from "./bridges.js";
 import { validateRegister } from "./registers.js";
-import { getProductBooks } from "./product.js";
+import { getProducPhones } from "./product.js";
 import { formatPrices, hiddenException } from "./interfaces.js";
 import { sleep } from "./navigates.js";
 import { userDetail } from "./action.js";
 
 // cart navigation
-function handleCartNavigation() {
+async function handleCartNavigation() {
   const cartButtons = Bridge.$$(".cart-btn");
-  const categoryButton = Bridge.default().getCartContent();
+  // const categoryButton = Bridge.default().getCartContent();
 
   cartButtons.forEach((button) => {
-    button.addEventListener("click", (event) => {
+    button.addEventListener("click", async (event) => {
       event.preventDefault();
       hiddenException("cart-content");
+      
+      // await fetch("../../../app/model/Product.php?cartQuantity=" + localStorage.getItem("cart").length, {
+      //   method: "GET",
+      //   credentials: "include" // quan trọng nếu dùng session
+      // });
+      const currentURL = window.location.origin + window.location.pathname;
+      history.pushState({}, "", currentURL + "?type=cart");
+      callCartFunctions();
     });
   });
 
-  categoryButton.addEventListener("click", (event) => {
-    event.preventDefault();
-    hiddenException();
-  })
+  // categoryButton.addEventListener("click", (event) => {
+  //   event.preventDefault();
+  //   hiddenException();
+  // })
+}
+
+function callCartFunctions() {
+  let elementsObj = Bridge.default();
+  let lastPath = location.href;
+  lastPath = lastPath.slice(lastPath.lastIndexOf("/") + 1, lastPath.length);
+  if (lastPath.includes("type=cart")) {
+    displayCartItems(elementsObj);
+    updateCartTotal(elementsObj);
+    handleQuantityChange(elementsObj);
+    handleCheckboxChange(elementsObj);
+    handleSelectAllCheckbox(elementsObj);
+    handleRemoveItem(elementsObj);
+    handleOrderPlacement(elementsObj);
+  }
 }
 
 function updateCartTotal(elementsObj) {
@@ -112,36 +135,39 @@ function handleCheckboxChange(elementsObj) {
   const qrCodeATM = document.querySelector("#qr-code-atm");
   const paymentOptions = document.querySelectorAll('input[name="payment-option"]');
 
-  cartItems.forEach((item) => {
-    const checkbox = item.querySelector('input[type="checkbox"]');
-    checkbox.addEventListener("change", () => {
-      const isAnyProductSelected = Array.from(cartItems).some((item) => {
-        const checkbox = item.querySelector('input[type="checkbox"]');
-        return checkbox && checkbox.checked;
-      });
+  // cartItems.forEach((item) => {
+  //   const checkbox = item.querySelector('input[type="checkbox"]');
+  //   console.log(cartItems);
+  //   console.log(item);
+  //   console.log("type: " + checkbox);
+  //   checkbox.addEventListener("change", () => {
+  //     const isAnyProductSelected = Array.from(cartItems).some((item) => {
+  //       const checkbox = item.querySelector('input[type="checkbox"]');
+  //       return checkbox && checkbox.checked;
+  //     });
 
-      if (!isAnyProductSelected) {
-        if (qrCodeMomo) qrCodeMomo.style.display = "none";
-        if (qrCodeATM) qrCodeATM.style.display = "none";
-      } else {
+  //     if (!isAnyProductSelected) {
+  //       if (qrCodeMomo) qrCodeMomo.style.display = "none";
+  //       if (qrCodeATM) qrCodeATM.style.display = "none";
+  //     } else {
 
-        const selectedPaymentOption = document.querySelector(
-          'input[name="payment-option"]:checked'
-        );
-        if (selectedPaymentOption) {
-          if (selectedPaymentOption.id === "payment-option-2") {
-            qrCodeMomo.style.display = "block";
-            qrCodeATM.style.display = "none";
-          } else if (selectedPaymentOption.id === "payment-option-3") {
-            qrCodeATM.style.display = "block";
-            qrCodeMomo.style.display = "none";
-          }
-        }
-      }
+  //       const selectedPaymentOption = document.querySelector(
+  //         'input[name="payment-option"]:checked'
+  //       );
+  //       if (selectedPaymentOption) {
+  //         if (selectedPaymentOption.id === "payment-option-2") {
+  //           qrCodeMomo.style.display = "block";
+  //           qrCodeATM.style.display = "none";
+  //         } else if (selectedPaymentOption.id === "payment-option-3") {
+  //           qrCodeATM.style.display = "block";
+  //           qrCodeMomo.style.display = "none";
+  //         }
+  //       }
+  //     }
 
-      updateCartTotal(elementsObj);
-    });
-  });
+  //     updateCartTotal(elementsObj);
+  //   });
+  // });
 }
 
 
@@ -224,13 +250,18 @@ function increaseCartCount() {
   });
 }
 
-function updateCartCount() {
+// ! NEED TO FIX 
+async function updateCartCount() {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const cartCount = cart.length;
+
   document.querySelectorAll(".cart-count").forEach((el) => {
     el.textContent = cartCount;
   });
+  
 }
+
+// !NEED TO CHANGE HERE
 function displayCartItems(elementsObj) {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const cartContainer = document.querySelector(".list-carts");
@@ -242,27 +273,26 @@ function displayCartItems(elementsObj) {
 
   cartContainer.innerHTML = "";
   cart.forEach((item, index) => {
-    const priceAfterDiscount =
-      typeof item.price === "number" &&
-        typeof item.sale === "number" &&
-        item.sale >= 0 &&
-        item.sale <= 1
-        ? Math.round(item.price * (1 - item.sale))
-        : item.price || 0;
+    const priceAfterDiscount = 10000000 * (1 - 0.29);
+      // typeof item.price === "number" &&
+      //   typeof item.sale === "number" &&
+      //   item.sale >= 0 &&
+      //   item.sale <= 1
+      //   ? Math.round(item.price * (1 - item.sale))
+      //   : item.price || 0;
     const totalPricePerItem = priceAfterDiscount * item.quantity || 0;
     cartContainer.innerHTML += `
             <div class="block-product">
                 <input type="checkbox" name="select-block-product" id="block-product-${index}" class="grid-col col-l-1 col-m-1 col-s-1"/>
                 <div class="product-cart grid-col col-l-1 col-m-1 col-s-1 no-gutter full-width">
-                    <img src="${item.image}" alt="${item.name}" />
+                    <img class="mini-image" src="${'assets/images/Phone/RedMagics/red-magic-supernova_1_2_2_2.webp'}" alt="${item.name}" />
                 </div>
                 <div class="grid-col col-l-10 col-m-10 col-s-10 no-gutter flex align-center">
                     <div class="info-product-cart padding-left-8 grid-col col-l-6 col-m-12 col-s-12">
-                        <p class="font-bold capitalize margin-bottom-16">${item.name
-      }</p>
+                        <p class="font-bold capitalize margin-bottom-16">${item.name}</p>
                         <div class="block-product-price">
                             <span class="new-price font-bold padding-right-8 price">${priceAfterDiscount}</span>
-                            <del class="price old-price">${item.price || 0}</del>
+                            <del class="price old-price">${10000000 || 0}</del>
                         </div>
                     </div>
                     <div class="number-product-cart grid-col col-l-2 col-m-10 col-s-10 no-gutter">
@@ -289,9 +319,10 @@ function displayCartItems(elementsObj) {
   console.log("Giỏ hàng đã được hiển thị:", cart);
 }
 
-function addToCart(productName) {
-  const products = getProductBooks();
-  const product = products.find((item) => item.name === productName);
+// !NEED TO CHANGE HERE
+async function addToCart(productName) {
+  const products = await getProducPhones();
+  const product = products.find((item) => (item.tensp).toLowerCase().trim() === productName.toLowerCase().trim());
 
   if (!product) {
     console.error(`Sản phẩm "${productName}" không tìm thấy!`);
@@ -300,14 +331,14 @@ function addToCart(productName) {
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   const existingProductIndex = cart.findIndex(
-    (item) => item.name === product.name
+    (item) => item.tensp === product.tensp
   );
 
   if (existingProductIndex !== -1) {
     cart[existingProductIndex].quantity += 1;
   } else {
     cart.push({
-      name: product.name,
+      name: product.tensp,
       price: Math.round(product.price * (1 - product.sale)),
       image: product.img,
       quantity: 1,
@@ -315,18 +346,17 @@ function addToCart(productName) {
   }
 
   localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCount();
 }
 
-function attachAddToCartEvents() {
-  const mainContainer = document.querySelector("#main-container");
+async function attachAddToCartEvents() {
+  const mainContainer = document.querySelector("#index-content");
 
   if (!mainContainer) {
     console.error("Không tìm thấy #main-container!");
     return;
   }
-
   const productItems = mainContainer.querySelectorAll(".product-item");
-
   productItems.forEach((productItem) => {
     const addToCartButton = productItem.querySelector(".add-to-cart .button");
     const buyNowButton = productItem.querySelector(".buy-btn .button");
@@ -361,7 +391,7 @@ function attachAddToCartEvents() {
         console.log(`Đang thêm sản phẩm và chuyển đến giỏ hàng: ${productName}`);
         addToCart(productName);
         increaseCartCount();
-        window.location.href = "cart.html";
+        // window.location.href = "cart.html";
       } else {
         alert("Phải đăng nhập trước");
       }
@@ -378,7 +408,7 @@ function handleCategoryNavigation() {
       const parentSection = button.closest("section");
       if (parentSection && parentSection.id) {
         const categoryId = parentSection.id;
-        window.location.href = `index.html?category=${categoryId}`;
+        // window.location.href = `index.html?category=${categoryId}`;
       }
     });
   });
@@ -425,7 +455,7 @@ function createDonHang(orderId, userId, userAddress, totalOrderPrice, formattedD
 }
 
 function createChiTietDonHang(orderId, selectedItems, totalOrderPrice) {
-  const products = getProductBooks();
+  const products = getProducPhones();
   return selectedItems.map((item) => {
     const product = products.find((prod) => {
       const normalize = (str) => str.trim().toLowerCase();
@@ -586,7 +616,7 @@ function handleOrderPlacement(elementsObj) {
 }
 
 
-function attachAddToCartInDetails() {
+async function attachAddToCartInDetails() {
   const addToCartButton = Bridge.$$(".add-to-cart.button");
   const buyNowButton = Bridge.$$(".buy-btn.button");
   let historyCart = Bridge.$$(".block-product .cart-content");
@@ -646,7 +676,7 @@ function attachAddToCartInDetails() {
 
     addToCart(productName);
     increaseCartCount();
-    window.location.href = "cart.html";
+    // window.location.href = "cart.html";
   })), 200, "buy-now");
 
 }
@@ -689,4 +719,4 @@ function handlePaymentOptionChange() {
 
 
 export { addToCart, attachAddToCartEvents, increaseCartCount, displayCartItems, updateCartCount, updateCartTotal, handleOrderPlacement, attachAddToCartInDetails, handlePaymentOptionChange };
-export { handleQuantityChange, handleCheckboxChange, handleSelectAllCheckbox, handleRemoveItem, handleCartNavigation, handleCategoryNavigation, handleDefaultAddressCheckbox };
+export { handleQuantityChange, handleCheckboxChange, handleSelectAllCheckbox, handleRemoveItem, handleCartNavigation, handleCategoryNavigation, handleDefaultAddressCheckbox, callCartFunctions };

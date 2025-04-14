@@ -13,8 +13,6 @@ import * as Pages from "./pages.js";
 import * as Gets from "./getdata.js";
 document.addEventListener("DOMContentLoaded", () => {
   let elementsObj = Bridge.default();
-  let lastPath = location.href;
-  lastPath = lastPath.slice(lastPath.lastIndexOf("/") + 1, lastPath.length);
   Gets.GetProducts();   
 
   // DOM ON action.js
@@ -56,16 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // login
   Login.validateAccount();
   Register.validateRegister();
-  if (lastPath.includes("cart")) {
-    Cart.displayCartItems(elementsObj);
-    Cart.updateCartTotal(elementsObj);
-    Cart.handleQuantityChange(elementsObj);
-    Cart.handleCheckboxChange(elementsObj);
-    Cart.handleSelectAllCheckbox(elementsObj);
-    Cart.handleRemoveItem(elementsObj);
-    Cart.handleOrderPlacement(elementsObj);
-  }
-
   // others
   Pages.initializePage();
 });

@@ -853,3 +853,8 @@ input[type = text] {
   color: white;
   border-color: var(--main-color);
 }
+
+.mini-image {
+  width: 4em;
+  height: 4em;
+}

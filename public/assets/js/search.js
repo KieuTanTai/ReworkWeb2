@@ -8,7 +8,7 @@ import {
   scrollView,
 } from "./interfaces.js";
 import { execQueryHandler } from "./navigates.js";
-import { getProductBooks, renderProducts } from "./product.js";
+import { getProducPhones, renderProducts } from "./product.js";
 
 function searchBtn() {
   let searchBtn = Bridge.$("button[type=button].search-btn");
@@ -161,7 +161,7 @@ function renderPaginationControls(container, currentPage, totalPages, onPageChan
 async function initSearchFilters() {
   let elementsObj = Bridge.default();
   const query = execQueryHandler("query");
-  let productList = await getProductBooks();
+  let productList = await getProducPhones();
   displayProducts(productList, query, elementsObj, 1, 15);
   changeByFilter([elementsObj.getCategoryFilter(), elementsObj.getPriceFilter()], query, productList);
 }

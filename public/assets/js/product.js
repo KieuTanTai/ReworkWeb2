@@ -6,8 +6,8 @@ import * as Navigate from "./navigates.js";
 import { GetProducts } from "./getdata.js";
 import { attachAddToCartEvents, attachAddToCartInDetails } from "./carts.js";
 //! get / set products (NEED TO CHANGE)
-async function getProductBooks() {
-  return await GetProducts();
+function getProducPhones() {
+  return GetProducts();
 }
 
 function setProductBooks(product) {
@@ -90,7 +90,7 @@ async function dynamicDetail(product) {
 
   // call other functions
   // productContainers(list, sameAuthor);
-  productContainers(Array.of(await getProductBooks()), productLike);
+  productContainers(Array.of(await getProducPhones()), productLike);
   callFuncsAgain(elementsObj);
 }
 
@@ -121,102 +121,97 @@ async function renderProductDetails(list, wrapper) {
 }
 
 //! render products
-function renderProducts(list, wrapper) {
-  if (!list) return;
+async function renderProducts(list, wrapper) {
+  if (!list || !wrapper) return;
+
   let html = "";
   for (let product of list) {
-    // ! need to change src, sale label here
     html += `
       <div class="product-item grid-col col-l-2-4 col-m-3 col-s-6">
-              <div class="block-product product-resize">
-                    <span class="product-image js-item">
-                        <img src="assets/images/Phone/RedMagics/vn-11134207-7ras8-m2nn2bl6q4922e.jpg" alt="${product.tensp}">
-                    </span>
-                    <div class="sale-label">${Math.round(0.29 * 100)}%</div>
-                    <div class="sale-off font-bold capitalize ${product.trangthai > 0 ? "" : "active"}">hết hàng</div>
-                    <div class="info-inner flex justify-center align-center line-height-1-6">
-                        <h4 class="font-light capitalize" title="${product.tensp}">${product.tensp}</h4>
-                        <div class="margin-y-4">
-                              <span class="price font-bold">${Math.round(10000000 * (1 - 0.29))}</span>
-                              <del class="price old-price padding-left-8 font-size-14">${10000000}</del>
-                        </div>
-                    </div>
-              </div>
-              <div class="action ${product.trangthai > 0 ? "" : "disable"}">
-                    <div class="buy-btn">
-                        <div title="mua ngay" class="button">
-                              <i class="fa-solid fa-bag-shopping fa-lg" style="color: var(--primary-white);"></i>
-                        </div>
-                    </div>
-
-                  <div class="add-to-cart">
-                    <div title="thêm vào giỏ hàng" class="button">
-                      <i class="fa-solid fa-basket-shopping fa-lg" style="color: var(--primary-white);"></i>
-                    </div>
-                  </div>
-              </div>
+        <div class="block-product product-resize">
+          <span class="product-image js-item">
+            <img src="assets/images/Phone/RedMagics/vn-11134207-7ras8-m2nn2bl6q4922e.jpg" alt="${product.tensp}">
+          </span>
+          <div class="sale-label">${Math.round(0.29 * 100)}%</div>
+          <div class="sale-off font-bold capitalize ${product.trangthai > 0 ? "" : "active"}">hết hàng</div>
+          <div class="info-inner flex justify-center align-center line-height-1-6">
+            <h4 class="font-light capitalize" title="${product.tensp}">${product.tensp}</h4>
+            <div class="margin-y-4">
+              <span class="price font-bold">${Math.round(10000000 * (1 - 0.29))}</span>
+              <del class="price old-price padding-left-8 font-size-14">${10000000}</del>
+            </div>
+          </div>
         </div>
+        <div class="action ${product.trangthai > 0 ? "" : "disable"}">
+          <div class="buy-btn">
+            <div title="mua ngay" class="button">
+              <i class="fa-solid fa-bag-shopping fa-lg" style="color: var(--primary-white);"></i>
+            </div>
+          </div>
+          <div class="add-to-cart">
+            <div title="thêm vào giỏ hàng" class="button">
+              <i class="fa-solid fa-basket-shopping fa-lg" style="color: var(--primary-white);"></i>
+            </div>
+          </div>
+        </div>
+      </div>
     `;
   }
-  if (wrapper) {
-    wrapper.innerHTML = html;
-    renderProductDetails(list, wrapper, "detail_product.html");
-    attachAddToCartEvents();
-    attachAddToCartInDetails();
-  } else
-    return html;
+
+  wrapper.innerHTML = html;
+  // Chờ những thao tác DOM sau khi render hoàn thành
+  renderProductDetails(list, wrapper);
+  // attachAddToCartEvents();
+  // await attachAddToCartInDetails();
 }
 
+
 //! get container for product and call render products
-function productContainers(productsList, container) {
+async function productContainers(productsList, container) {
   if (!productsList) return;
+
   let listLength = productsList.length;
 
   if (!container) {
     let containers = Bridge.$$(".container");
-    // return if not have any container
     if (!containers) return;
-    containers.forEach((container) => {
+
+    for (let container of containers) {
       let list;
       let containerID = container.getAttribute("id");
       let wrapper = container.querySelector(".product-container");
+      if (!wrapper || !isEmpty(wrapper)) continue;
 
-      //gene script html
-      if (!isEmpty(wrapper)) return;
-      if (wrapper && containerID === "fs-container")
-        // !change to sale if have
+      if (containerID === "fs-container")
         list = productsList.sort((a, b) => b.dungluongpin - a.dungluongpin).toSpliced(5);
-
-      else if (wrapper && containerID === "new-phones-container")
+      else if (containerID === "new-phones-container")
         list = productsList.toSpliced(0, listLength - 5);
-
-      // else if (wrapper && containerID === "best-selling-container")
-      //   list = productsList.sort((a, b) => b.quantity - a.quantity).toSpliced(5);
-
-      else if (wrapper && containerID === "samsung-phone-container")
+      else if (containerID === "samsung-phone-container")
         list = productsList.filter((product) => (product.tensp.toLowerCase()).includes("samsung")).toSpliced(5);
-      else if (wrapper && containerID === "iphone-container")
+      else if (containerID === "iphone-container")
         list = productsList.filter((product) => (product.tensp.toLowerCase()).includes("iphone")).toSpliced(5);
-      else if (wrapper && containerID === "other-phones-container")
+      else if (containerID === "other-phones-container")
         list = productsList.sort((a, b) => a.releaseDate - b.releaseDate).toSpliced(5);
       else
         list = productsList.sort((a, b) => a.author - b.author).toSpliced(5);
-      // render script and add it to DOM
-      renderProducts(list, wrapper);
-    });
-    return;
-  }
-  else {
-    let list;
+
+      await renderProducts(list, wrapper); // chờ render xong
+    }
+  } else {
     let wrapper = container.querySelector(".product-container");
     let containerID = container.getAttribute("id");
-    // if (wrapper && containerID === "same-author-container")
-    //   list = productsList.filter((product) => product.author === Bridge.$(".b-author")?.innerHTML).toSpliced(5);
+    let list;
+
     if (wrapper && containerID === "product-like-container")
-      list = productsList.filter((product) => (product.tensp)?.includes(Bridge.$(".product-tags div:first-child p")?.innerHTML)).toSpliced(5);
-    renderProducts(list, wrapper);
+      list = productsList.filter((product) =>
+        (product.tensp)?.includes(Bridge.$(".product-tags div:first-child p")?.innerHTML)
+      ).toSpliced(5);
+
+    await renderProducts(list, wrapper); // chờ render xong
   }
+
   if (isEmpty(container)) return;
 }
 
-export { getProductBooks, setProductBooks, productContainers, getValueQuery, renderProductDetails, renderProducts, dynamicDetail, callFuncsAgain };
+
+export { getProducPhones, setProductBooks, productContainers, getValueQuery, renderProductDetails, renderProducts, dynamicDetail, callFuncsAgain };
