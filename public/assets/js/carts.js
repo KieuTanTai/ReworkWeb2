@@ -23,6 +23,8 @@ async function handleCartNavigation() {
       const currentURL = window.location.origin + window.location.pathname;
       history.pushState({}, "", currentURL + "?type=cart");
       callCartFunctions();
+      Bridge.default().getMainContainer().scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+      console.log("hello")
     });
   });
 
@@ -331,7 +333,7 @@ async function addToCart(productName) {
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   const existingProductIndex = cart.findIndex(
-    (item) => item.tensp === product.tensp
+    (item) => item.name === product.tensp
   );
 
   if (existingProductIndex !== -1) {
