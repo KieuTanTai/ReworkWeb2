@@ -42,18 +42,33 @@
 
         // Thêm sản phẩm mới
         public function create($data) {
+            $ten_file = '..../public/assets/images/';
+            if (isset($_FILES['hinhanh']) && $_FILES['hinhanh']['error'] == 0) {
+                $thu_muc = '';
+                $ten_file = time() . '_' . basename($_FILES['hinhanh']['name']); // thêm timestamp tránh trùng
+                $duong_dan = $thu_muc . $ten_file;
+    
+                if (move_uploaded_file($_FILES['hinhanh']['tmp_name'], $duong_dan)) {
+                    // Upload thành công
+                } else {
+                    // Upload thất bại
+                    $ten_file = ''; // hoặc set thông báo lỗi
+                }
+            }
+    
+            if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            
             $this->product->tensp = $data['tensp'];
-            $this->product->hinhanh = $data['hinhanh'];
+            $this->product->hinhanh = $ten_file;
             $this->product->chipxuly = $data['chipxuly'];
             $this->product->dungluongpin = $data['dungluongpin'];
             $this->product->kichthuocman = $data['kichthuocman'];
             $this->product->hedieuhanh = $data['hedieuhanh'];
             $this->product->camerasau = $data['camerasau'];
             $this->product->cameratruoc = $data['cameratruoc'];
-            $this->product->thoigianbaohanh = $data['thoigianbaohanh'];
             $this->product->thuonghieu = $data['thuonghieu'];
-            $this->product->trangthai = $data['trangthai'];
-
+      
+            }
             return $this->product->create();
         }
 

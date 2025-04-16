@@ -1,20 +1,41 @@
+<?php
+require_once '../controller/product/productController.php';
+$sql= "SELECT * FROM dungluongram";
+$dlram = mysqli_query($conn, $sql);
+$sql1="SELECT * FROM dungluongrom";
+$dlrom = mysqli_query($conn, $sql1);
+$sql2="SELECT * FROM mausac";
+$dlmau = mysqli_query($conn, $sql2);
+?>
 <div class="econtainer ms-3">
-    <div class="input-group mb-3"style="width:400px;margin-top:20px;margin-left:8px;">
-   <span class="input-group-text" id="basic-addon1">Mã Sản Phẩm</span>
-  <input type="text" class="form-control"aria-label="Username" aria-describedby="basic-addon1">
+  <form action="" onsubmit="handleFormSubmit(event)" id="myForm2">
+ 
+<div class="input-group mb-3" style="width:400px;margin-top:20px;margin-left:8px;">
+               <label class="input-group-text" for="inputGroupSelect01">Ram</label>
+      <select class="form-select" id="inputGroupSelect01" name="ram">
+          <option selected>Chọn</option>
+           <?php foreach ($dlram as $ram): ?>
+        <option value="<?= $ram['madlram'] ?>"><?= $ram['kichthuocram'] ?></option>
+           <?php endforeach; ?>
+</select>
 </div>
-<div class="input-group mb-3"style="width:400px;margin-top:20px;margin-left:8px;">
-   <span class="input-group-text" id="basic-addon1">Rom</span>
-  <input type="text" class="form-control"aria-label="Username" aria-describedby="basic-addon1">
+<div class="input-group mb-3" style="width:400px;margin-top:20px;margin-left:8px;">
+         <label class="input-group-text" for="inputGroupSelect01">Rom</label>
+      <select class="form-select" id="inputGroupSelect01" name="rom">
+          <option selected>Chọn</option>
+           <?php foreach ($dlrom as $rom): ?>
+        <option value="<?= $rom['madlrom'] ?>"><?= $rom['kichthuocrom'] ?></option>
+           <?php endforeach; ?>
+</select>
 </div>
-    
-<div class="input-group mb-3"style="width:400px;margin-top:20px;margin-left:8px;">
-   <span class="input-group-text" id="basic-addon1">Rom</span>
-  <input type="text" class="form-control"aria-label="Username" aria-describedby="basic-addon1">
-</div>
-<div class="input-group mb-3"style="width:400px;margin-top:20px;margin-left:8px;">
-  <span class="input-group-text" id="basic-addon1">Màu Sắc</span>
-  <input type="text" class="form-control"aria-label="Username" aria-describedby="basic-addon1">
+<div class="input-group mb-3" style="width:400px;margin-top:20px;margin-left:8px;">
+         <label class="input-group-text" for="inputGroupSelect01">Màu Sắc</label>
+      <select class="form-select" id="inputGroupSelect01" name="mausac">
+          <option selected>Chọn</option>
+           <?php foreach ($dlmau as $mau): ?>
+        <option value="<?= $mau['mamau'] ?>"><?= $mau['tenmau'] ?></option>
+           <?php endforeach; ?>
+</select>
 </div>
 <div class="input-group mb-3" style="width:400px;margin-top:20px;margin-left:8px;">
   <span class="input-group-text">Giá Bán</span>
@@ -35,6 +56,7 @@
             <input type="submit" class="btn btn-primary"name="" id="" value="LƯU" style="width: 70px; height: 35px; font-size: 17px;font-weight: bold;" onclick="thongbao()">
         </div>
     </div>
+           </form>
 </div>
 <style>
 
@@ -43,7 +65,7 @@
 {
     position: absolute;
     width: 40%;
-    height: 87%;
+    height: 80%;
     top:50%;
     left:50%;
     transform: translate(-50%,-50%);
@@ -56,6 +78,25 @@
 
 </style>
 <script>
+
+function handleFormSubmit(event) {
+        event.preventDefault(); 
+        var form = document.getElementById('myForm2');
+        var formDataa = new FormData(form);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '../controller/product/productController.php', true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                console.log(xhr.responseText);
+                thongbao();
+            } else {
+                console.error('Error: ' + xhr.status);
+            }
+        };
+       
+        xhr.send(formDataa);
+       
+    }
     function thongbao() {
         alert("Đã Lưu!");
         window.location.href = "product.php";

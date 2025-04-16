@@ -39,7 +39,7 @@ $products = $controller->index(); // lấy danh sách sản phẩm
                 <tbody>
                     <?php foreach ($products as $product): ?>
                     <tr class="align-middle">
-                        <td><?= $product['masp'] ?></td>
+                        <td>2</td>
                         <td><?= $product['tensp'] ?></td>
                         <td><img src="<?= $product['hinhanh'] ?>" width="80"></td>
                         <td><?= $product['chipxuly'] ?></td>
