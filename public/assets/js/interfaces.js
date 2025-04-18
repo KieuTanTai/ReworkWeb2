@@ -5,6 +5,7 @@ import * as FlashSale from "./flashsale.js";
 import { sleep } from "./navigates.js";
 import * as RenderProducts from "./product.js";
 import * as Get from "./getdata.js";
+import { attachAddToCartEvents, attachAddToCartInDetails, updateCartCount } from "./carts.js";
 
 function scrollView() {
   let webContent = Bridge.default().getWebContent();
@@ -197,9 +198,10 @@ async function getInitProducts(elementsObj) {
     let getProducts =Array.from(await Get.GetProducts());
 
     // render init products
-    RenderProducts.productContainers(getProducts);
+    await RenderProducts.productContainers(getProducts);
     FlashSale.setTimeFS(elementsObj);
-    RenderProducts.renderProducts(getProducts);
+    attachAddToCartEvents();
+    await attachAddToCartInDetails();
     formatPrices(elementsObj);
     resizeImages(elementsObj);
     categoryIsEmpty();

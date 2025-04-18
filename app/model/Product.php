@@ -36,19 +36,9 @@
 
         // Phương thức tạo sản phẩm mới
         public function create() {
-            $query = "INSERT INTO " . $this->table_name . "
-                    SET
-                        tensp = ?,
-                        hinhanh = ?,
-                        chipxuly = ?,
-                        dungluongpin = ?,
-                        kichthuocman = ?,
-                        hedieuhanh = ?,
-                        camerasau = ?,
-                        cameratruoc = ?,
-                        thoigianbaohanh = ?,
-                        thuonghieu = ?,
-                        trangthai = ?";
+            $query = "INSERT INTO " . $this->table_name . " 
+            (tensp, hinhanh, chipxuly, dungluongpin, kichthuocman, hedieuhanh, camerasau, cameratruoc, thuonghieu) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             $stmt = $this->conn->prepare($query);
 
@@ -61,24 +51,20 @@
             $this->hedieuhanh = htmlspecialchars(strip_tags($this->hedieuhanh));
             $this->camerasau = htmlspecialchars(strip_tags($this->camerasau));
             $this->cameratruoc = htmlspecialchars(strip_tags($this->cameratruoc));
-            $this->thoigianbaohanh = htmlspecialchars(strip_tags($this->thoigianbaohanh));
             $this->thuonghieu = htmlspecialchars(strip_tags($this->thuonghieu));
-            $this->trangthai = htmlspecialchars(strip_tags($this->trangthai));
 
             // Bind các giá trị
-            $stmt->bind_param("sssddissiii", 
-                $this->tensp,
-                $this->hinhanh,
-                $this->chipxuly,
-                $this->dungluongpin,
-                $this->kichthuocman,
-                $this->hedieuhanh,
-                $this->camerasau,
-                $this->cameratruoc,
-                $this->thoigianbaohanh,
-                $this->thuonghieu,
-                $this->trangthai
-            );
+            $stmt->bind_param("sssiisssi", 
+            $this->tensp,
+            $this->hinhanh,
+            $this->chipxuly,
+            $this->dungluongpin, 
+            $this->kichthuocman, 
+            $this->hedieuhanh,   
+            $this->camerasau,
+            $this->cameratruoc,
+            $this->thuonghieu    
+        );
 
             if($stmt->execute()) {
                 return true;

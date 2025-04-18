@@ -1,4 +1,6 @@
 <?php
+     // require __DIR__ . "../../model/cartQuantityForShow.php";
+     // $_isHaveQuantity = getCartQuantity();
 function renderCart()
 {
      ?>
@@ -10,9 +12,11 @@ function renderCart()
 
           <div class="cart-ui-content">
                <?php
-               if (true)
-                    renderBlankCart();
-               else
+               // global $_isHaveQuantity;
+               // echo $_isHaveQuantity;
+               // if ($_isHaveQuantity == 0)
+               //      renderBlankCart();
+               // else
                     renderCartWidthProduct();
                ?>
           </div>
@@ -49,7 +53,7 @@ function renderCartWidthProduct()
                          class="grid-col col-l-1 col-m-1 col-s-1" />
                     <div class="grid-col col-l-6 col-m-11 col-s-11">
                          chọn sản phẩm
-                         <span class="item-count">(1 sản phẩm)</span>
+                         <span class="item-count">(0 sản phẩm)</span>
                     </div>
 
                     <div class="grid-col col-l-2 s-m-hidden text-center">
@@ -64,7 +68,7 @@ function renderCartWidthProduct()
                </div>
 
                <div class="list-carts cart-ui margin-top-16">
-                    <div class="block-product">
+                    <!-- <div class="block-product">
                          <input type="checkbox" name="select-block-product" id="block-product-1"
                               class="grid-col col-l-1 col-m-1 col-s-1" />
                          <div class="product-cart grid-col col-l-1 col-m-1 col-s-1 no-gutter full-width">
@@ -91,7 +95,7 @@ function renderCartWidthProduct()
                                    </div>
                               </div>
                          </div>
-                    </div>
+                    </div> -->
                </div>
           </div>
 
