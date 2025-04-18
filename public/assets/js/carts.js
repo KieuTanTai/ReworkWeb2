@@ -108,7 +108,7 @@ function handleQuantityChange(elementsObj) {
   quantityInputs.forEach((input, index) => {
     input.addEventListener("change", () => {
       const cartItems = elementsObj.getCartItems();
-      const item = cartItems[index];
+      const item = cartItems[index - 1];
       const pricePerItemElement = item.querySelector(".price-per-item");
       const priceElement = item.querySelector(".price");
 
@@ -117,7 +117,7 @@ function handleQuantityChange(elementsObj) {
 
       const quantity = parseInt(input.value, 10);
 
-      if (isNaN(price) || isNaN(quantity)) {
+      if (isNaN(price) || isNaN(quantity) || price < 0) {
         console.error("Giá hoặc số lượng không hợp lệ:", { price, quantity });
         return;
       }
@@ -137,39 +137,39 @@ function handleCheckboxChange(elementsObj) {
   const qrCodeATM = document.querySelector("#qr-code-atm");
   const paymentOptions = document.querySelectorAll('input[name="payment-option"]');
 
-  // cartItems.forEach((item) => {
-  //   const checkbox = item.querySelector('input[type="checkbox"]');
-  //   console.log(cartItems);
-  //   console.log(item);
-  //   console.log("type: " + checkbox);
-  //   checkbox.addEventListener("change", () => {
-  //     const isAnyProductSelected = Array.from(cartItems).some((item) => {
-  //       const checkbox = item.querySelector('input[type="checkbox"]');
-  //       return checkbox && checkbox.checked;
-  //     });
+  cartItems.forEach((item) => {
+    const checkbox = item.querySelector('input[type="checkbox"]');
+    console.log(cartItems);
+    console.log(item);
+    console.log("type: " + checkbox);
+    checkbox.addEventListener("change", () => {
+      const isAnyProductSelected = Array.from(cartItems).some((item) => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        return checkbox && checkbox.checked;
+      });
 
-  //     if (!isAnyProductSelected) {
-  //       if (qrCodeMomo) qrCodeMomo.style.display = "none";
-  //       if (qrCodeATM) qrCodeATM.style.display = "none";
-  //     } else {
+      if (!isAnyProductSelected) {
+        if (qrCodeMomo) qrCodeMomo.style.display = "none";
+        if (qrCodeATM) qrCodeATM.style.display = "none";
+      } else {
 
-  //       const selectedPaymentOption = document.querySelector(
-  //         'input[name="payment-option"]:checked'
-  //       );
-  //       if (selectedPaymentOption) {
-  //         if (selectedPaymentOption.id === "payment-option-2") {
-  //           qrCodeMomo.style.display = "block";
-  //           qrCodeATM.style.display = "none";
-  //         } else if (selectedPaymentOption.id === "payment-option-3") {
-  //           qrCodeATM.style.display = "block";
-  //           qrCodeMomo.style.display = "none";
-  //         }
-  //       }
-  //     }
+        const selectedPaymentOption = document.querySelector(
+          'input[name="payment-option"]:checked'
+        );
+        if (selectedPaymentOption) {
+          if (selectedPaymentOption.id === "payment-option-2") {
+            qrCodeMomo.style.display = "block";
+            qrCodeATM.style.display = "none";
+          } else if (selectedPaymentOption.id === "payment-option-3") {
+            qrCodeATM.style.display = "block";
+            qrCodeMomo.style.display = "none";
+          }
+        }
+      }
 
-  //     updateCartTotal(elementsObj);
-  //   });
-  // });
+      updateCartTotal(elementsObj);
+    });
+  });
 }
 
 
@@ -284,7 +284,7 @@ function displayCartItems(elementsObj) {
       //   : item.price || 0;
     const totalPricePerItem = priceAfterDiscount * item.quantity || 0;
     cartContainer.innerHTML += `
-            <div class="block-product">
+            <div class="block-product block-cart">
                 <input type="checkbox" name="select-block-product" id="block-product-${index}" class="grid-col col-l-1 col-m-1 col-s-1"/>
                 <div class="product-cart grid-col col-l-1 col-m-1 col-s-1 no-gutter full-width">
                     <img class="mini-image" src="${'assets/images/Phone/RedMagics/red-magic-supernova_1_2_2_2.webp'}" alt="${item.name}" />

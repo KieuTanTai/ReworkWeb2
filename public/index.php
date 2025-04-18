@@ -26,6 +26,7 @@ session_start();
 
 <body>
      <?php loadDefaultHomepage();?>
+     
      <?php if(isset($_GET["mode"])) {
           if($_GET["mode"] === "admin") {
                require "../app/controller/adminController.php";
