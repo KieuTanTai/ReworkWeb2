@@ -10,21 +10,12 @@ function renderHeader()
                          <div class="overlay">
                               <div class="s-m-nav-content s-m-content">
                                    <div class="s-m-nav-btn flex align-center margin-y-12">
-<<<<<<< HEAD
-                                        <button type="button" class="lnw-btn js-login active">Đăng
-                                             nhập</button>
-                                        <button type="button" class="lnw-btn js-register margin-left-16 active">Đăng
-                                             ký</button>
-                                        <button type="button" class="lnw-btn js-signout margin-left-16">Đăng
-                                             xuất</button>
-=======
                                    <?php if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true): ?>
      <a href="login.php" class="lnw-btn js-login active">Đăng nhập</a>
      <a href="register.php" class="lnw-btn js-register margin-left-16 active">Đăng ký</a>
 <?php else: ?>
      <a href="/Web2/app/controllers/logout_controller.php" class="lnw-btn js-signout margin-left-16">Đăng xuất</a>
 <?php endif; ?>
->>>>>>> NKieu
                                    </div>
                                    <ul class="s-m-nav-list">
                                         <li class="web-logo">
@@ -120,11 +111,11 @@ function renderHeader()
                               <!-- account -->
                               <nav class="nav-account flex justify-center align-center flex-direction-y">
                                    <?php if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true): ?>
-                                   <a href="../app/views/login.php" title="Đăng nhập" class="lnw-btn active js-login margin-bottom-16">
+                                   <a href="../app/views/login.php" title="Đăng nhập" class="lnw-btn active js-login margin-bottom-16 text-center font-size-14">
                                         <div class="font-bold uppercase">Đăng nhập</div>
                                    </a>
 
-                                   <a href="../app/views/register.php" title="Đăng ký" class="lnw-btn js-register">
+                                   <a href="../app/views/register.php" title="Đăng ký" class="lnw-btn js-register text-center font-size-14">
                                         <div class="font-bold uppercase">Đăng ký</div>
                                    </a>
                                    <?php else: ?>
