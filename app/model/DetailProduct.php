@@ -23,6 +23,19 @@ class DetailProduct {
     
     return $result;
     }
+    public function getDetailProductById($masp){
+        $query = "SELECT * FROM " . $this->table_name . " WHERE masp = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $masp);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
+        } else {
+            return null;
+        }
+    }
 }
 
 
