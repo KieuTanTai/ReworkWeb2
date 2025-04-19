@@ -1,5 +1,5 @@
 import { getProducPhones, renderProducts } from './product.js';
-import { resizeImages } from './interfaces.js';
+import { hiddenException, resizeImages } from './interfaces.js';
 import { formatPrices } from "./interfaces.js";
 import { $, $$ } from './bridges.js';
 
@@ -58,8 +58,6 @@ async function initializePage() {
         const allProducts = await getProducPhones();
         // Lọc sản phẩm theo danh mục
         const filteredProducts = filterProductsByCategory(allProducts, categoryId);
-        // console.log("Filtered Products:", filteredProducts);
-
         // Tích hợp phân trang
         setupPagination(filteredProducts, categoryId);
     }
@@ -79,16 +77,16 @@ function filterProductsByCategory(products, categoryId) {
             return products.slice(-5);
         case 'samsung-phone-container':
         case "samsung":
-            return products.filter((product) => product.thuonghieu.toLowerCase().includes('samsung'));
+            return products.filter((product) => product.tensp.toLowerCase().includes('samsung'));
         case 'iphone-container':
         case "iphone":
-            return products.filter((product) => product.thuonghieu.toLowerCase().includes('iphone'));
+            return products.filter((product) => product.tensp.toLowerCase().includes('iphone'));
         case 'other-phones-container':
             return products.sort((a, b) => a.releaseDate - b.releaseDate);
         case "xiaomi":
-            return products.filter((product) => product.thuonghieu.toLowerCase().includes('xiaomi'));
+            return products.filter((product) => product.tensp.toLowerCase().includes('xiaomi'));
         case "iqoo":
-            return products.filter((product) => product.thuonghieu.toLowerCase().includes('vivo'));
+            return products.filter((product) => product.tensp.toLowerCase().includes('vivo'));
         default:
             return products;
     }

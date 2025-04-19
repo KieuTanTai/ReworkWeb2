@@ -175,7 +175,7 @@ function loadDefaultHomepage()
                                    </section>
 
                                    <!-- Iphone -->
-                                   <section id="iphone-container"
+                                   <section id="ip-container"
                                         class="container root-session-content flex grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                         <div class="category-tab">
                                              <div class="heading">

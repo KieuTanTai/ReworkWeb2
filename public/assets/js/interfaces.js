@@ -45,6 +45,26 @@ function headerUserInfo(elementsObj) {
   }
 }
 
+// show and hide specific form
+function hiddenException(exception) {
+  exception = !exception ? "index-content" : exception;
+  if(exception === "index-content")
+    location.href = `${location.origin}/public`;
+  let getHandler = Bridge.default();
+  let container = getHandler.getMainContent()?.children;
+  // let newsContainer = getHandler.getNewsBlogs();
+  container = Array.of(...container);
+
+  container.forEach((element) => {
+    if (element.getAttribute("id") !== exception)
+      element.classList.add("disable");
+    else {
+      element.classList.remove("disable");
+      element.style.display = "block";
+    }
+  });
+}
+
 // funcs event
 function disableSiblingContainer(container) {
   if (!container) return;
@@ -109,28 +129,12 @@ function formatPrices(elementsObj) {
   }
 }
 
-// show and hide specific form
-function hiddenException(exception) {
-  exception = !exception ? "index-content" : exception;
-  if(exception === "index-content")
-    location.href = `${location.origin}/public`;
-  let getHandler = Bridge.default();
-  let container = getHandler.getMainContent()?.children;
-  // let newsContainer = getHandler.getNewsBlogs();
-  container = Array.of(...container);
-
-  container.forEach((element) => {
-    if (element.getAttribute("id") !== exception)
-      element.classList.add("disable");
-    else
-      element.classList.remove("disable");
-  });
-}
-
 //change DOM on categories if it not have any product inside
 function categoryIsEmpty() {
   Bridge.default().getCategories().forEach((category) => {
+    console.log(category)
     const container = category.querySelector(".product-container");
+    console.log(isEmpty(container));
     if (isEmpty(container)) {
       container.innerHTML = '<div class="empty-mess font-size-20 font-bold">Không có sản phẩm trong phần này</div>';
       container.classList.add("flex", "full-height", "align-center", "justify-center");

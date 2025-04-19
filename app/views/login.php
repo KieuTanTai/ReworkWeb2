@@ -18,7 +18,7 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
     <link rel="stylesheet" href="../../public/assets/fonts/fontawesome-6.6.0/css/all.min.css" />
     <link rel="stylesheet" href="../../public/assets/css/index.css" />
     <link rel="stylesheet" href="../../public/assets/css/responsive.css" />
-    <link rel="stylesheet" href="../../public/assets/css/login.css">
+    <link rel="stylesheet" href="/public/assets/css/login.css">
 </head>
 <body>
     <div id="account-content">

@@ -16,26 +16,26 @@ session_start();
      <script type="module" src="./assets/js/index.js"></script>
      <title>Light Novel World</title>
      <?php
-     require "../app/views/header-footer.php";
-     require "../app/views/detail_product.php";
-     require "../app/views/cart.php";
-     require "../app/views/homepage.php";
-     require "../app/views/search_result.php"
+     require __DIR__ . '/../app/views/header-footer.php';
+     require __DIR__ . '/../app/views/detail_product.php';
+     require __DIR__ . '/../app/views/cart.php';
+     require __DIR__ . '/../app/views/homepage.php';
+     require __DIR__ . '/../app/views/search_result.php';
+
      ?>
 </head>
 
 <body>
-     <?php loadDefaultHomepage();?>
-     <?php if(isset($_GET["mode"])) {
-          if($_GET["mode"] === "admin") {
+     <?php loadDefaultHomepage(); ?>
+     <?php if (isset($_GET["mode"])) {
+          if ($_GET["mode"] === "admin") {
                require "../app/controller/adminController.php";
                helloAdmin();
-          }
-          else {
+          } else {
                require "../app/controller/endUserController.php";
                helloUser();
           }
-     } 
+     }
      var_dump($_GET);
      ?>
 </body>

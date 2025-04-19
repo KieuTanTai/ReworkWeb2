@@ -2,8 +2,6 @@ async function GetProducts() {
      try {
           let response = await fetch("../../../app/api/productAPi.php");
           let data = await response.json();
-          console.log(response); 
-          console.log(data);
           return data;
      } catch (error) {
           console.error(error);

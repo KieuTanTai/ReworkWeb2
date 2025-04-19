@@ -389,7 +389,7 @@ async function attachAddToCartEvents() {
     const newBuyNowButton = productItem.querySelector(".buy-btn .button");
 
     newBuyNowButton.addEventListener("click", () => {
-      if (sessionStorage.getItem("hasLogin")) {
+      if (sessionStorage.getItem("login")) {
         console.log(`Đang thêm sản phẩm và chuyển đến giỏ hàng: ${productName}`);
         addToCart(productName);
         increaseCartCount();
@@ -426,11 +426,11 @@ function handleDefaultAddressCheckbox() {
   }
 
   checkbox.addEventListener("change", () => {
-    const user = JSON.parse(sessionStorage.getItem("hasLoginAccount"));
+    const user = JSON.parse(sessionStorage.getItem("loginAccount"));
 
     if (checkbox.checked) {
-      if (user && user.address) {
-        userAddressInput.value = user.address;
+      if (user && user.diachi) {
+        userAddressInput.value = user.diachi;
       } else {
         alert("Không tìm thấy địa chỉ mặc định của người dùng. Vui lòng kiểm tra lại thông tin đăng nhập.");
         checkbox.checked = false;
@@ -476,7 +476,7 @@ function createChiTietDonHang(orderId, selectedItems, totalOrderPrice) {
 
 function handleOrderPlacement(elementsObj) {
   const checkoutButton = document.querySelector(".checkout-btn");
-  let accountLogin = JSON.parse(sessionStorage.getItem("hasLoginAccount"));
+  let accountLogin = JSON.parse(sessionStorage.getItem("loginAccount"));
   if (!checkoutButton) {
     console.warn("Không tìm thấy nút 'checkout-btn'.");
     return;
@@ -489,7 +489,7 @@ function handleOrderPlacement(elementsObj) {
       return;
     }
 
-    if (!sessionStorage.getItem("hasLogin")) {
+    if (!sessionStorage.getItem("login")) {
       alert("Vui lòng đăng nhập");
       return;
     }
@@ -533,12 +533,12 @@ function handleOrderPlacement(elementsObj) {
     const userAddress = document.querySelector("#user-address").value.trim();
     const userNote = document.querySelector("#user-note").value.trim();
 
-    if (!userAddress && !accountLogin.address) {
+    if (!userAddress && !accountLogin.diachi) {
       alert("Hãy nhập địa chỉ giao hàng.");
       return;
     }
 
-    if (!accountLogin.phone) {
+    if (!accountLogin.sdt) {
       alert("chưa nhập số điện thoại liên lạc.");
       userDetail(Bridge.default());
     }
@@ -560,13 +560,13 @@ function handleOrderPlacement(elementsObj) {
       currentDate.getDate()
     ).padStart(2, "0")}/${String(currentDate.getFullYear()).slice(-2)} ${currentDate.toLocaleTimeString("en-US")}`;
     const orderId = `DH${String(Date.now()).slice(-5)}`;
-    const user = JSON.parse(sessionStorage.getItem("hasLoginAccount"));
+    const user = JSON.parse(sessionStorage.getItem("loginAccount"));
     const userName = user ? `${user.firstName} ${user.lastName}` : "Khách hàng";
     const status = userName === "Khách hàng" ? "2" : "1";
     let userId, phone;
     if (user?.userID) {
       userId = user.userID;
-      phone = user.phone;
+      phone = user.sdt;
     } else {
       userId = generateId(user);
       phone = generateId(user);
@@ -577,6 +577,7 @@ function handleOrderPlacement(elementsObj) {
       return;
     }
 
+    // !NEED TO CHANGE HERE
     // Create donhang and chitiet_donhang
     const donHang = createDonHang(orderId, userId, userAddress, totalOrderPrice, formattedDate, phone, userName, status);
     const chiTietDonHang = createChiTietDonHang(orderId, selectedItems, totalOrderPrice);
@@ -655,7 +656,7 @@ async function attachAddToCartInDetails() {
   });
 
   buyNowButton.forEach((button) => button.addEventListener("click", Bridge.throttle(() => {
-    if (!sessionStorage.getItem("hasLogin")) {
+    if (!sessionStorage.getItem("login")) {
       alert("Bạn cần đăng nhập để mua ngay.");
       return;
     }

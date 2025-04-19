@@ -17,6 +17,7 @@ function searchBtn() {
   searchBtn.addEventListener("click", () => {
     const bookName = searchInput?.value.trim();
     renderSearchDOM(bookName);
+    hiddenException
   });
 
   searchInput?.addEventListener("keypress", (event) => {
@@ -94,7 +95,7 @@ function applyFilters(productList, searchQuery, elementsObj) {
     // Lọc theo thể loại
     console.log(category);
     console.log(priceRange);
-    const categoryMatch = category ? (product.thuonghieu.toLowerCase()).includes(category) : true;
+    const categoryMatch = category ? (product.tensp.toLowerCase()).includes(category) : true;
 
     //! Lọc theo khoảng giá
     const price = 10000000 * (1 - 0.29); // Giá sau giảm giá
@@ -103,7 +104,6 @@ function applyFilters(productList, searchQuery, elementsObj) {
       const [min, max] = priceRange.split("-").map(Number);
       priceMatch = max ? price >= min && price <= max : price >= min;
     }
-    console.log(queryMatch, categoryMatch, priceMatch);
     return queryMatch && categoryMatch && priceMatch;
   });
 }
