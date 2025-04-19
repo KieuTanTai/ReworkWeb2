@@ -41,36 +41,60 @@
         }
 
         // Thêm sản phẩm mới
-        public function create($data) {
-            $ten_file = '..../public/assets/images/';
-            if (isset($_FILES['hinhanh']) && $_FILES['hinhanh']['error'] == 0) {
-                $thu_muc = '';
-                $ten_file = time() . '_' . basename($_FILES['hinhanh']['name']); // thêm timestamp tránh trùng
-                $duong_dan = $thu_muc . $ten_file;
+        public function create() {
+            // Đường dẫn thư mục upload ảnh
+            $thu_muc = __DIR__ . '/../../../public/assets/images/';
+            $ten_file = '';
     
+            // Xử lý file ảnh upload
+            if (isset($_FILES['hinhanh']) && $_FILES['hinhanh']['error'] == 0) {
+                $filename = time() . '_' . basename($_FILES['hinhanh']['name']);
+                $duong_dan = $thu_muc . $filename;
+    
+                // Kiểm tra và tạo thư mục nếu chưa tồn tại
+                if (!file_exists($thu_muc)) {
+                    print("Lỗi");
+                }
+    
+                // Di chuyển file vào thư mục
                 if (move_uploaded_file($_FILES['hinhanh']['tmp_name'], $duong_dan)) {
-                    // Upload thành công
+                    $ten_file = $filename;
                 } else {
-                    // Upload thất bại
-                    $ten_file = ''; // hoặc set thông báo lỗi
+                    return [
+                        'status' => 'error',
+                        'message' => 'Không thể upload ảnh'
+                    ];
                 }
             }
     
-            if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            
-            $this->product->tensp = $data['tensp'];
+            // Gán giá trị từ request vào thuộc tính của sản phẩm
+            $this->product->tensp = isset($_POST['tensp']) ? htmlspecialchars(strip_tags($_POST['tensp'])) : '';
             $this->product->hinhanh = $ten_file;
-            $this->product->chipxuly = $data['chipxuly'];
-            $this->product->dungluongpin = $data['dungluongpin'];
-            $this->product->kichthuocman = $data['kichthuocman'];
-            $this->product->hedieuhanh = $data['hedieuhanh'];
-            $this->product->camerasau = $data['camerasau'];
-            $this->product->cameratruoc = $data['cameratruoc'];
-            $this->product->thuonghieu = $data['thuonghieu'];
-      
+            $this->product->chipxuly = isset($_POST['chipxuly']) ? htmlspecialchars(strip_tags($_POST['chipxuly'])) : '';
+            $this->product->dungluongpin = isset($_POST['dungluongpin']) ? htmlspecialchars(strip_tags($_POST['dungluongpin'])) : '';
+            $this->product->kichthuocman = isset($_POST['kichthuocman']) ? htmlspecialchars(strip_tags($_POST['kichthuocman'])) : '';
+            $this->product->hedieuhanh = isset($_POST['hedieuhanh']) ? htmlspecialchars(strip_tags($_POST['hedieuhanh'])) : '';
+            $this->product->camerasau = isset($_POST['camerasau']) ? htmlspecialchars(strip_tags($_POST['camerasau'])) : '';
+            $this->product->cameratruoc = isset($_POST['cameratruoc']) ? htmlspecialchars(strip_tags($_POST['cameratruoc'])) : '';
+            $this->product->thoigianbaohanh = isset($_POST['thoigianbaohanh']) ? htmlspecialchars(strip_tags($_POST['thoigianbaohanh'])) : '';
+            $this->product->thuonghieu = isset($_POST['thuonghieu']) ? htmlspecialchars(strip_tags($_POST['thuonghieu'])) : '';
+            $this->product->trangthai = 1;
+
+    
+            // Gọi hàm create từ model Product
+            if ($this->product->create()) {
+                return [
+                    'status' => 'success',
+                    'message' => 'Tạo sản phẩm thành công'
+                ];
+            } else {
+                return [
+                    'status' => 'error',
+                    'message' => 'Không thể tạo sản phẩm'
+                ];
             }
-            return $this->product->create();
         }
+        
 
         // Cập nhật sản phẩm
         public function update($id, $data) {
