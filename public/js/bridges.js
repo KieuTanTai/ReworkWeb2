@@ -50,7 +50,7 @@ function getElementsHandler() {
     getFSCountDown: () => $(".fs-countdown"),
     getHistoryOrder: () => $(".history-tracking-container #history-order-container"),
     //cart
-    getCartItems: () => $$(".block-product.block-cart"), 
+    getCartItems: () => $$(".block-product"), 
     getQuantityInputs: () => $$(".quantity-cart"), 
     getTotalPrice: () => $(".total-price"),  
     getshippingFee: () => $(".shipping-fee"),

@@ -10,12 +10,12 @@ function renderHeader()
                          <div class="overlay">
                               <div class="s-m-nav-content s-m-content">
                                    <div class="s-m-nav-btn flex align-center margin-y-12">
-                                        <button type="button" class="lnw-btn js-login active">Đăng
-                                             nhập</button>
-                                        <button type="button" class="lnw-btn js-register margin-left-16 active">Đăng
-                                             ký</button>
-                                        <button type="button" class="lnw-btn js-signout margin-left-16">Đăng
-                                             xuất</button>
+                                   <?php if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true): ?>
+     <a href="login.php" class="lnw-btn js-login active">Đăng nhập</a>
+     <a href="register.php" class="lnw-btn js-register margin-left-16 active">Đăng ký</a>
+<?php else: ?>
+     <a href="/Web2/app/controllers/logout_controller.php" class="lnw-btn js-signout margin-left-16">Đăng xuất</a>
+<?php endif; ?>
                                    </div>
                                    <ul class="s-m-nav-list">
                                         <li class="web-logo">
@@ -110,17 +110,22 @@ function renderHeader()
 
                               <!-- account -->
                               <nav class="nav-account flex justify-center align-center flex-direction-y">
-                                   <button type="button" title="Đăng nhập" class="lnw-btn active js-login margin-bottom-16">
+                                   <?php if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true): ?>
+                                   <a href="../app/views/login.php" title="Đăng nhập" class="lnw-btn active js-login margin-bottom-16 text-center font-size-14">
                                         <div class="font-bold uppercase">Đăng nhập</div>
-                                   </button>
+                                   </a>
 
-                                   <button type="button" title="Đăng ký" class="lnw-btn js-register">
+                                   <a href="../app/views/register.php" title="Đăng ký" class="lnw-btn js-register text-center font-size-14">
                                         <div class="font-bold uppercase">Đăng ký</div>
-                                   </button>
-
-                                   <button type="button" title="Đăng xuất" class="lnw-btn js-signout disable">
+                                   </a>
+                                   <?php else: ?>
+                                   <a href="profile.php" title="Thông tin cá nhân" class="lnw-btn margin-bottom-16">
+                                        <div class="font-bold uppercase">Thông tin cá nhân</div>
+                                   </a>
+                                   <a href="../app/controller/logout_controller.php" title="Đăng xuất" class="lnw-btn active js-login margin-bottom-16">
                                         <div class="font-bold uppercase">Đăng xuất</div>
-                                   </button>
+                                   </a>
+                                   <?php endif; ?>
                               </nav>
                          </div>
                     </div>

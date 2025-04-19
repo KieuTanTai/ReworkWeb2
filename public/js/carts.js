@@ -1,52 +1,27 @@
 "use strict";
 import * as Bridge from "./bridges.js";
 import { validateRegister } from "./registers.js";
-import { getProducPhones } from "./product.js";
+import { getProductBooks } from "./product.js";
 import { formatPrices, hiddenException } from "./interfaces.js";
 import { sleep } from "./navigates.js";
 import { userDetail } from "./action.js";
 
 // cart navigation
-async function handleCartNavigation() {
+function handleCartNavigation() {
   const cartButtons = Bridge.$$(".cart-btn");
-  // const categoryButton = Bridge.default().getCartContent();
+  const categoryButton = Bridge.default().getCartContent();
 
   cartButtons.forEach((button) => {
-    button.addEventListener("click", async (event) => {
+    button.addEventListener("click", (event) => {
       event.preventDefault();
       hiddenException("cart-content");
-      
-      // await fetch("../../../app/model/Product.php?cartQuantity=" + localStorage.getItem("cart").length, {
-      //   method: "GET",
-      //   credentials: "include" // quan trọng nếu dùng session
-      // });
-      const currentURL = window.location.origin + window.location.pathname;
-      history.pushState({}, "", currentURL + "?type=cart");
-      callCartFunctions();
-      Bridge.default().getMainContainer().scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
-      console.log("hello")
     });
   });
 
-  // categoryButton.addEventListener("click", (event) => {
-  //   event.preventDefault();
-  //   hiddenException();
-  // })
-}
-
-function callCartFunctions() {
-  let elementsObj = Bridge.default();
-  let lastPath = location.href;
-  lastPath = lastPath.slice(lastPath.lastIndexOf("/") + 1, lastPath.length);
-  if (lastPath.includes("type=cart")) {
-    displayCartItems(elementsObj);
-    updateCartTotal(elementsObj);
-    handleQuantityChange(elementsObj);
-    handleCheckboxChange(elementsObj);
-    handleSelectAllCheckbox(elementsObj);
-    handleRemoveItem(elementsObj);
-    handleOrderPlacement(elementsObj);
-  }
+  categoryButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    hiddenException();
+  })
 }
 
 function updateCartTotal(elementsObj) {
@@ -108,7 +83,7 @@ function handleQuantityChange(elementsObj) {
   quantityInputs.forEach((input, index) => {
     input.addEventListener("change", () => {
       const cartItems = elementsObj.getCartItems();
-      const item = cartItems[index - 1];
+      const item = cartItems[index];
       const pricePerItemElement = item.querySelector(".price-per-item");
       const priceElement = item.querySelector(".price");
 
@@ -117,7 +92,7 @@ function handleQuantityChange(elementsObj) {
 
       const quantity = parseInt(input.value, 10);
 
-      if (isNaN(price) || isNaN(quantity) || price < 0) {
+      if (isNaN(price) || isNaN(quantity)) {
         console.error("Giá hoặc số lượng không hợp lệ:", { price, quantity });
         return;
       }
@@ -139,9 +114,6 @@ function handleCheckboxChange(elementsObj) {
 
   cartItems.forEach((item) => {
     const checkbox = item.querySelector('input[type="checkbox"]');
-    console.log(cartItems);
-    console.log(item);
-    console.log("type: " + checkbox);
     checkbox.addEventListener("change", () => {
       const isAnyProductSelected = Array.from(cartItems).some((item) => {
         const checkbox = item.querySelector('input[type="checkbox"]');
@@ -252,18 +224,13 @@ function increaseCartCount() {
   });
 }
 
-// ! NEED TO FIX 
-async function updateCartCount() {
+function updateCartCount() {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const cartCount = cart.length;
-
   document.querySelectorAll(".cart-count").forEach((el) => {
     el.textContent = cartCount;
   });
-  
 }
-
-// !NEED TO CHANGE HERE
 function displayCartItems(elementsObj) {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const cartContainer = document.querySelector(".list-carts");
@@ -275,26 +242,27 @@ function displayCartItems(elementsObj) {
 
   cartContainer.innerHTML = "";
   cart.forEach((item, index) => {
-    const priceAfterDiscount = 10000000 * (1 - 0.29);
-      // typeof item.price === "number" &&
-      //   typeof item.sale === "number" &&
-      //   item.sale >= 0 &&
-      //   item.sale <= 1
-      //   ? Math.round(item.price * (1 - item.sale))
-      //   : item.price || 0;
+    const priceAfterDiscount =
+      typeof item.price === "number" &&
+        typeof item.sale === "number" &&
+        item.sale >= 0 &&
+        item.sale <= 1
+        ? Math.round(item.price * (1 - item.sale))
+        : item.price || 0;
     const totalPricePerItem = priceAfterDiscount * item.quantity || 0;
     cartContainer.innerHTML += `
-            <div class="block-product block-cart">
+            <div class="block-product">
                 <input type="checkbox" name="select-block-product" id="block-product-${index}" class="grid-col col-l-1 col-m-1 col-s-1"/>
                 <div class="product-cart grid-col col-l-1 col-m-1 col-s-1 no-gutter full-width">
-                    <img class="mini-image" src="${'assets/images/Phone/RedMagics/red-magic-supernova_1_2_2_2.webp'}" alt="${item.name}" />
+                    <img src="${item.image}" alt="${item.name}" />
                 </div>
                 <div class="grid-col col-l-10 col-m-10 col-s-10 no-gutter flex align-center">
                     <div class="info-product-cart padding-left-8 grid-col col-l-6 col-m-12 col-s-12">
-                        <p class="font-bold capitalize margin-bottom-16">${item.name}</p>
+                        <p class="font-bold capitalize margin-bottom-16">${item.name
+      }</p>
                         <div class="block-product-price">
                             <span class="new-price font-bold padding-right-8 price">${priceAfterDiscount}</span>
-                            <del class="price old-price">${10000000 || 0}</del>
+                            <del class="price old-price">${item.price || 0}</del>
                         </div>
                     </div>
                     <div class="number-product-cart grid-col col-l-2 col-m-10 col-s-10 no-gutter">
@@ -321,10 +289,9 @@ function displayCartItems(elementsObj) {
   console.log("Giỏ hàng đã được hiển thị:", cart);
 }
 
-// !NEED TO CHANGE HERE
-async function addToCart(productName) {
-  const products = await getProducPhones();
-  const product = products.find((item) => (item.tensp).toLowerCase().trim() === productName.toLowerCase().trim());
+function addToCart(productName) {
+  const products = getProductBooks();
+  const product = products.find((item) => item.name === productName);
 
   if (!product) {
     console.error(`Sản phẩm "${productName}" không tìm thấy!`);
@@ -333,14 +300,14 @@ async function addToCart(productName) {
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   const existingProductIndex = cart.findIndex(
-    (item) => item.name === product.tensp
+    (item) => item.name === product.name
   );
 
   if (existingProductIndex !== -1) {
     cart[existingProductIndex].quantity += 1;
   } else {
     cart.push({
-      name: product.tensp,
+      name: product.name,
       price: Math.round(product.price * (1 - product.sale)),
       image: product.img,
       quantity: 1,
@@ -348,17 +315,18 @@ async function addToCart(productName) {
   }
 
   localStorage.setItem("cart", JSON.stringify(cart));
-  updateCartCount();
 }
 
-async function attachAddToCartEvents() {
-  const mainContainer = document.querySelector("#index-content");
+function attachAddToCartEvents() {
+  const mainContainer = document.querySelector("#main-container");
 
   if (!mainContainer) {
     console.error("Không tìm thấy #main-container!");
     return;
   }
+
   const productItems = mainContainer.querySelectorAll(".product-item");
+
   productItems.forEach((productItem) => {
     const addToCartButton = productItem.querySelector(".add-to-cart .button");
     const buyNowButton = productItem.querySelector(".buy-btn .button");
@@ -393,7 +361,7 @@ async function attachAddToCartEvents() {
         console.log(`Đang thêm sản phẩm và chuyển đến giỏ hàng: ${productName}`);
         addToCart(productName);
         increaseCartCount();
-        // window.location.href = "cart.html";
+        window.location.href = "cart.html";
       } else {
         alert("Phải đăng nhập trước");
       }
@@ -410,7 +378,7 @@ function handleCategoryNavigation() {
       const parentSection = button.closest("section");
       if (parentSection && parentSection.id) {
         const categoryId = parentSection.id;
-        // window.location.href = `index.html?category=${categoryId}`;
+        window.location.href = `index.html?category=${categoryId}`;
       }
     });
   });
@@ -457,7 +425,7 @@ function createDonHang(orderId, userId, userAddress, totalOrderPrice, formattedD
 }
 
 function createChiTietDonHang(orderId, selectedItems, totalOrderPrice) {
-  const products = getProducPhones();
+  const products = getProductBooks();
   return selectedItems.map((item) => {
     const product = products.find((prod) => {
       const normalize = (str) => str.trim().toLowerCase();
@@ -618,7 +586,7 @@ function handleOrderPlacement(elementsObj) {
 }
 
 
-async function attachAddToCartInDetails() {
+function attachAddToCartInDetails() {
   const addToCartButton = Bridge.$$(".add-to-cart.button");
   const buyNowButton = Bridge.$$(".buy-btn.button");
   let historyCart = Bridge.$$(".block-product .cart-content");
@@ -678,7 +646,7 @@ async function attachAddToCartInDetails() {
 
     addToCart(productName);
     increaseCartCount();
-    // window.location.href = "cart.html";
+    window.location.href = "cart.html";
   })), 200, "buy-now");
 
 }
@@ -721,4 +689,4 @@ function handlePaymentOptionChange() {
 
 
 export { addToCart, attachAddToCartEvents, increaseCartCount, displayCartItems, updateCartCount, updateCartTotal, handleOrderPlacement, attachAddToCartInDetails, handlePaymentOptionChange };
-export { handleQuantityChange, handleCheckboxChange, handleSelectAllCheckbox, handleRemoveItem, handleCartNavigation, handleCategoryNavigation, handleDefaultAddressCheckbox, callCartFunctions };
+export { handleQuantityChange, handleCheckboxChange, handleSelectAllCheckbox, handleRemoveItem, handleCartNavigation, handleCategoryNavigation, handleDefaultAddressCheckbox };
