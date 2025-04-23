@@ -68,6 +68,9 @@
             }
     
             // Gán giá trị từ request vào thuộc tính của sản phẩm
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+               
+            
             $this->product->tensp = isset($_POST['tensp']) ? htmlspecialchars(strip_tags($_POST['tensp'])) : '';
             $this->product->hinhanh = $ten_file;
             $this->product->chipxuly = isset($_POST['chipxuly']) ? htmlspecialchars(strip_tags($_POST['chipxuly'])) : '';
@@ -79,7 +82,7 @@
             $this->product->thoigianbaohanh = isset($_POST['thoigianbaohanh']) ? htmlspecialchars(strip_tags($_POST['thoigianbaohanh'])) : '';
             $this->product->thuonghieu = isset($_POST['thuonghieu']) ? htmlspecialchars(strip_tags($_POST['thuonghieu'])) : '';
             $this->product->trangthai = 1;
-
+            }
     
             // Gọi hàm create từ model Product
             if ($this->product->create()) {
@@ -117,8 +120,9 @@
         // Xóa sản phẩm
         public function delete($id) {
             $this->product->masp = $id;
-            return $this->product->delete();
+            return $this->product->delete(); 
         }
+        
 
         // Lấy thông tin một sản phẩm
         public function getOne($id) {

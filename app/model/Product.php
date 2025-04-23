@@ -24,7 +24,7 @@
 
         // Phương thức lấy tất cả sản phẩm
         public function getAll() {
-            $query = "SELECT * FROM " . $this->table_name;
+            $query = "SELECT * FROM " . $this->table_name . " WHERE trangthai = 1 ORDER BY masp ASC";
             $result = $this->conn->query($query);
             
             if (!$result) {
@@ -123,7 +123,7 @@
             $this->trangthai = htmlspecialchars(strip_tags($this->trangthai));
 
             // Bind các giá trị
-            $stmt->bind_param("sssddissiiii", 
+            $stmt->bind_param("ssssssssssii", 
                 $this->tensp,
                 $this->hinhanh,
                 $this->chipxuly,
@@ -146,17 +146,15 @@
 
         // Phương thức xóa sản phẩm
         public function delete() {
-            $query = "DELETE FROM " . $this->table_name . " WHERE masp = ?";
+            $query = "UPDATE " . $this->table_name . " SET trangthai = 0 WHERE masp = ?";
             $stmt = $this->conn->prepare($query);
-            
+        
             $this->masp = htmlspecialchars(strip_tags($this->masp));
             $stmt->bind_param("i", $this->masp);
-
-            if($stmt->execute()) {
-                return true;
-            }
-            return false;
+        
+            return $stmt->execute();
         }
+        
 
         // Phương thức lấy một sản phẩm theo ID
         public function getOne() {

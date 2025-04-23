@@ -39,7 +39,7 @@ $products = $controller->index(); // lấy danh sách sản phẩm
                 <tbody>
                     <?php foreach ($products as $product): ?>
                     <tr class="align-middle">
-                        <td>2</td>
+                        <td><?= $product['masp'] ?></td>
                         <td><?= $product['tensp'] ?></td>
                         <td><img src="<?= $product['hinhanh'] ?>" width="80"></td>
                         <td><?= $product['chipxuly'] ?></td>
@@ -50,9 +50,10 @@ $products = $controller->index(); // lấy danh sách sản phẩm
                         <td><?= $product['cameratruoc'] ?></td>
                         <td><?= $product['thuonghieu'] ?></td>
                         <td style="cursor:pointer;">
-                            <a href="edit.php?id=<?= $product['masp'] ?>" class="btn btn-primary btn-sm">Sửa</a>
-                            <a href="delete.php?id=<?= $product['masp'] ?>" class="btn btn-danger btn-sm"
-                                onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
+                        <a href="#" class="btn btn-primary btn-sm" onclick="editProduct(<?= $product['masp'] ?>); return false;">Sửa</a>
+              
+                        <a href="#"onclick="deleteProduct(<?= $product['masp'] ?>)" class="btn btn-danger btn-sm">Xóa</a> 
+
                         </td>
                     </tr>
                     <?php endforeach; ?>
@@ -118,6 +119,32 @@ function addproduct() {
     document.querySelector(".app-content").style.filter = "blur(5px)";
     $(".container").load("test.php");
 
+}
+function editProduct(id) {
+    $(".container").css("display", "block");
+    $(".container").fadeIn();
+    document.querySelector(".app-content").style.filter = "blur(5px)";
+    $(".container").load("sua1.php?id=" + id);
+}
+function deleteProduct(productId) {
+    if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
+        $.ajax({
+            url: '../controller/product/delete.php',
+            type: 'POST',
+            data: { id: productId },
+            success: function(response) {
+                if (response.trim() === "success") {
+                    alert("Xóa sản phẩm thành công.");
+                    location.reload(); // hoặc xóa dòng khỏi bảng nếu muốn
+                } else {
+                    alert("Xóa sản phẩm thất bại.");
+                }
+            },
+            error: function() {
+                alert("Có lỗi xảy ra khi gửi yêu cầu.");
+            }
+        });
+    }
 }
 </script>
 <script src="https://kit.fontawesome.com/95a272230e.js" crossorigin="anonymous"></script>
