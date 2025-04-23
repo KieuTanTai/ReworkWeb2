@@ -3,11 +3,15 @@ import { setQuantityBox } from "./action.js";
 import * as Bridge from "./bridges.js";
 import { fakeOverlay, formatPrices, hiddenException, isEmpty, resizeImages, scrollView } from "./interfaces.js";
 import * as Navigate from "./navigates.js";
-import { GetProducts } from "./getdata.js";
+import { GetDetailPRoducts, GetProducts } from "./getdata.js";
 import { attachAddToCartEvents, attachAddToCartInDetails } from "./carts.js";
 //! get / set products (NEED TO CHANGE)
 function getProducPhones() {
   return GetProducts();
+}
+
+function getDetailPhones(id) {
+  return GetDetailPRoducts();
 }
 
 function setProductBooks(product) {
@@ -187,9 +191,9 @@ async function productContainers(productsList, container) {
       else if (containerID === "new-phones-container")
         list = productsList.toSpliced(0, listLength - 5);
       else if (containerID === "samsung-phone-container")
-        list = productsList.filter((product) => (product.tensp.toLowerCase()).includes("samsung")).toSpliced(5);
-      else if (containerID === "iphone-container")
-        list = productsList.filter((product) => (product.tensp.toLowerCase()).includes("iphone")).toSpliced(5);
+        list = productsList.filter((product) => (product.thuonghieu.toLowerCase()).includes("samsung")).toSpliced(5);
+      else if (containerID === "ip-container")
+        list = productsList.filter((product) => (product.thuonghieu.toLowerCase()).includes("iphone")).toSpliced(5);
       else if (containerID === "other-phones-container")
         list = productsList.sort((a, b) => a.releaseDate - b.releaseDate).toSpliced(5);
       else

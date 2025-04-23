@@ -77,16 +77,16 @@ function filterProductsByCategory(products, categoryId) {
             return products.slice(-5);
         case 'samsung-phone-container':
         case "samsung":
-            return products.filter((product) => product.tensp.toLowerCase().includes('samsung'));
-        case 'iphone-container':
+            return products.filter((product) => product.thuonghieu.toLowerCase().includes('samsung'));
+        case 'ip-container':
         case "iphone":
-            return products.filter((product) => product.tensp.toLowerCase().includes('iphone'));
+            return products.filter((product) => product.thuonghieu.toLowerCase().includes('iphone'));
         case 'other-phones-container':
             return products.sort((a, b) => a.releaseDate - b.releaseDate);
         case "xiaomi":
-            return products.filter((product) => product.tensp.toLowerCase().includes('xiaomi'));
+            return products.filter((product) => product.thuonghieu.toLowerCase().includes('xiaomi'));
         case "iqoo":
-            return products.filter((product) => product.tensp.toLowerCase().includes('vivo'));
+            return products.filter((product) => product.thuonghieu.toLowerCase().includes('vivo'));
         default:
             return products;
     }
