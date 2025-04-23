@@ -119,11 +119,13 @@
         var form = document.getElementById('myForm');
         var formData = new FormData(form);
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '../controller/product/productController.php', true);
+        xhr.open('POST', '../controller/product/SaveProduct.php', true);
         xhr.onload = function() {
             if (xhr.status === 200) {
                 console.log(xhr.responseText);
-                thongbao();
+                // thongbao();
+                alert("Đã Lưu!");
+                window.location.href = "product.php";
             } else {
                 console.error('Error: ' + xhr.status);
             }
@@ -132,13 +134,13 @@
         xhr.send(formData);
        
     }
-    function thongbao() {
+    // function thongbao() {
        
-        $(".bcontainer").load("test2.php");
-        $(".bcontainer").css("display", "block");
-      $(".acontainer").css("display", "none");  
-        $(".bcontainer").fadeIn();
-    }
+    //     $(".bcontainer").load("test2.php");
+    //     $(".bcontainer").css("display", "block");
+    //   $(".acontainer").css("display", "none");  
+    //     $(".bcontainer").fadeIn();
+    // }
     
     function previewImage(input) {
         var preview = document.getElementById('imagePreview');
