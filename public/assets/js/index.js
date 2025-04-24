@@ -13,7 +13,7 @@ import * as Pages from "./pages.js";
 import * as Gets from "./getdata.js";
 document.addEventListener("DOMContentLoaded", () => {
   let elementsObj = Bridge.default();
-  Gets.GetProducts();   
+  Gets.GetProducts();
 
   // DOM ON action.js
   Navigate.forbiddenDOM();
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
       Actions.smNavigationMenu(elementsObj);
       Search.searchBtn();
       // show more product here
-      Pages.handleCategoryNavigation(); 
+      Pages.handleCategoryNavigation();
       // remove Interval
       clearInterval(checkDOM);
     }
@@ -56,6 +56,10 @@ document.addEventListener("DOMContentLoaded", () => {
   Register.validateRegister();
   // others
   Pages.initializePage();
+  const accountInfo = JSON.parse(sessionStorage.getItem("loginAccount"));
+  const formatName = (name) => name.charAt(0).toUpperCase() + name.slice(1);
+  Bridge.$(".user-name-account").innerHTML = accountInfo?.tenkhachhang ? formatName(accountInfo.tenkhachhang) : "Tài Khoản";
+
 });
 
-export {Cart, Interface, Bridge, Search, Products}
+export { Cart, Interface, Bridge, Search, Products }

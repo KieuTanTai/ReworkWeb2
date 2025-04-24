@@ -35,6 +35,8 @@ session_start();
      } else {
           require '../app/controller/urlController.php';
           renderDynamicScript();
+          require_once __DIR__ . '/../app/utils/auth_view_script.php';
+          renderClientSessionJS();
      }
      ?>
 </body>
