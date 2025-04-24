@@ -1,6 +1,6 @@
 "use strict";
 import * as Bridge from "./bridges.js";
-import { GetProducts } from "./getdata.js";
+import { GetDetailPRoducts, GetProducts } from "./getdata.js";
 import { disableSiblingContainer, formatPrices, headerUserInfo, hiddenException, scrollView } from "./interfaces.js";
 
 function returnHomepage(elementsObj) {
@@ -259,22 +259,32 @@ function addDaysToDate(dateString, daysToAdd) {
 
 //! set quantity box on detail product
 async function setQuantityBox(elementsObj) {
-     let reduceBtn = elementsObj
-          .getQuantityBox()
-          .querySelector("input[type=button].reduce");
-     let increaseBtn = elementsObj
-          .getQuantityBox()
-          .querySelector("input[type=button].increase");
-     let quantity = elementsObj
-          .getQuantityBox()
-          .querySelector("input[type=text]#quantity");
-     let productID = Bridge.$(".product-id")?.innerHTML;
-     let realQuantity = Array.from(await GetProducts()).find((product) => product.masp === productID)?.quantity;
-
-     reduceBtn.addEventListener("click", () => (quantity.value = parseInt(quantity.value) - 1 <= 0 ? 1 : parseInt(quantity.value) - 1));
-     increaseBtn.addEventListener("click", () => (quantity.value = parseInt(quantity.value) + 1 <= realQuantity ? parseInt(quantity.value) + 1 : realQuantity));
-     quantity.addEventListener("change", () => (quantity.value = parseInt(quantity.value) > realQuantity ? realQuantity : parseInt(quantity.value)));
-}
+     const box = elementsObj.getQuantityBox();
+     const reduceBtn = box.querySelector("input[type=button].reduce");
+     const increaseBtn = box.querySelector("input[type=button].increase");
+     const quantity = box.querySelector("input[type=text]#quantity");
+     const productID = Bridge.$(".product-id")?.innerHTML;
+     const product = (await GetProducts()).find((product) => product.masp === productID);
+     const realQuantity = (await GetDetailPRoducts(product?.masp)).soluongton;
+ 
+     reduceBtn.addEventListener("click", () => {
+         const value = parseInt(quantity.value) || 1;
+         quantity.value = Math.max(1, value - 1);
+     });
+ 
+     increaseBtn.addEventListener("click", () => {
+         const value = parseInt(quantity.value) || 1;
+         quantity.value = Math.min(realQuantity, value + 1);
+     });
+ 
+     quantity.addEventListener("change", () => {
+         let value = parseInt(quantity.value);
+         if (isNaN(value) || value < 1) value = 1;
+         if (value > realQuantity) value = realQuantity;
+         quantity.value = value;
+     });
+ }
+ 
 
 // handle scrolls
 function scrollToHandler(nameStaticPage) {

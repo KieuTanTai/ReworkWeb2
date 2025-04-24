@@ -322,7 +322,7 @@ function displayCartItems(elementsObj) {
 }
 
 // !NEED TO CHANGE HERE
-async function addToCart(productName) {
+async function addToCart(productName, realQuantity) {
   const products = await getProducPhones();
   const product = products.find((item) => (item.tensp).toLowerCase().trim() === productName.toLowerCase().trim());
 
@@ -337,13 +337,18 @@ async function addToCart(productName) {
   );
 
   if (existingProductIndex !== -1) {
-    cart[existingProductIndex].quantity += 1;
+    let temp = parseInt(cart[existingProductIndex].quantity, 10);
+    if (realQuantity) 
+      temp += parseInt(realQuantity, 10);
+    else 
+      temp += 1;
+    cart[existingProductIndex].quantity = temp;
   } else {
     cart.push({
       name: product.tensp,
       price: Math.round(product.price * (1 - product.sale)),
       image: product.img,
-      quantity: 1,
+      quantity: realQuantity ? realQuantity : 1,
     });
   }
 
@@ -629,6 +634,7 @@ async function attachAddToCartInDetails() {
     return;
   }
 
+  // add to cart
   addToCartButton.forEach((button) => {
     if (button.dataset.eventAttached)
       return;
@@ -636,25 +642,20 @@ async function attachAddToCartInDetails() {
       const productName = document.querySelector(".product-title h1")?.textContent.trim();
       const productPrice = parseFloat(document.querySelector(".new-price")?.textContent.replace(/\D/g, "")) || 0;
       const productImage = document.querySelector(".product-image img")?.src;
+      const productQuantity = document.querySelector(".quantity-cart")?.value;
 
       if (!productName || !productPrice || !productImage) {
         console.error("Không thể lấy thông tin sản phẩm từ Product Details.");
         return;
       }
 
-      const product = {
-        name: productName,
-        price: productPrice,
-        img: productImage,
-        quantity: 1,
-      };
-
-      addToCart(productName);
+      addToCart(productName, productQuantity);
       increaseCartCount();
     }), 200, "add-to-cart");
     button.dataset.eventAttached = true;
   });
 
+  //buy now
   buyNowButton.forEach((button) => button.addEventListener("click", Bridge.throttle(() => {
     if (!sessionStorage.getItem("login")) {
       alert("Bạn cần đăng nhập để mua ngay.");
@@ -664,25 +665,20 @@ async function attachAddToCartInDetails() {
     const productName = document.querySelector(".product-title h1")?.textContent.trim();
     const productPrice = parseFloat(document.querySelector(".new-price")?.textContent.replace(/\D/g, "")) || 0;
     const productImage = document.querySelector(".product-image img")?.src;
+    const productQuantity = document.querySelector(".quantity-cart")?.value;
 
     if (!productName || !productPrice || !productImage) {
       console.error("Không thể lấy thông tin sản phẩm từ Product Details.");
       return;
     }
-
-    const product = {
-      name: productName,
-      price: productPrice,
-      img: productImage,
-      quantity: 1,
-    };
-
-    addToCart(productName);
+    addToCart(productName, productQuantity);
     increaseCartCount();
     // window.location.href = "cart.html";
   })), 200, "buy-now");
 
+  // 
 }
+
 
 function handlePaymentOptionChange() {
   const qrCodeMomo = document.querySelector("#qr-code-momo");

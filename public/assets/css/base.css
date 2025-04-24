@@ -863,3 +863,39 @@ input[type = text] {
   width: 4em;
   height: 4em;
 }
+
+.color-option {
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 8px;
+  background-color: var(--primary-dark);
+  cursor: pointer;
+}
+
+.color-option:hover {
+  transform: scale(1.05);
+  background-color: var(--main-color);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.color-option.selected {
+  /* outline: 3px solid #007bff; */
+  background-color: var(--main-color);
+  /* outline-offset: 2px; */
+}
+
+.storage-option {
+  background-color: var(--primary-dark);
+  color: var(--primary-white);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.storage-option:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.storage-option.selected {
+  background-color: var(--main-color);
+  color: var(--primary-dark);
+}

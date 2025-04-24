@@ -219,9 +219,9 @@ function loadDefaultHomepage()
                               </div>
                               <!-- TEST FORM -->
                               <?php renderDetailProduct(); ?>
-                              <?php renderSearch(); ?>
-
+                              
                               <!-- cart content -->
+                              <?php renderSearch(); ?>
                               <?php renderCart(); ?>
                     </section>
                </div>

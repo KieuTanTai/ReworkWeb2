@@ -132,9 +132,7 @@ function formatPrices(elementsObj) {
 //change DOM on categories if it not have any product inside
 function categoryIsEmpty() {
   Bridge.default().getCategories().forEach((category) => {
-    console.log(category)
     const container = category.querySelector(".product-container");
-    console.log(isEmpty(container));
     if (isEmpty(container)) {
       container.innerHTML = '<div class="empty-mess font-size-20 font-bold">Không có sản phẩm trong phần này</div>';
       container.classList.add("flex", "full-height", "align-center", "justify-center");

@@ -40,7 +40,7 @@ function eventForSubHeader(navCategories) {
 
 
 // page.js: Xử lý hiển thị phần nội dung dựa trên URL
-const ITEMS_PER_PAGE = 5; // Số sản phẩm trên mỗi trang
+const ITEMS_PER_PAGE = 10; // Số sản phẩm trên mỗi trang
 /**
  * Hàm khởi tạo trang
  */

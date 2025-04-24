@@ -11,7 +11,7 @@ class Rom {
     }
 
     public function getAllRom(){
-      $query = "Select * from" . $this->table_name;  
+      $query = "Select * from " . $this->table_name;  
       $result = $this->conn->query($query);
       if (!$result) {
         die("Lỗi truy vấn: " . $this->conn->error);

@@ -57,10 +57,10 @@ function searchDOM() {
           <label for="price-filter" class="padding-left-12">Khoảng giá:</label>
           <select id="price-filter">
                 <option value="">Tất cả</option>
-                <option value="0-1000000">0đ - 1,000,000đ</option>
-                <option value="1000000-3000000">1,000,000đ - 3,000,000đ</option>
-                <option value="3000000-6000000">3,000,000đ - 6,000,000đ</option>
-                <option value="600000-">6,000,000đ trở lên</option>
+                <option value="0-4000000">0đ - 4,000,000đ</option>
+                <option value="4000000-7000000">4,000,000đ - 7,000,000đ</option>
+                <option value="7000000-10000000">7,000,000đ - 10,000,000đ</option>
+                <option value="1000000-">10,000,000đ trở lên</option>
           </select>
       </section>
 
@@ -93,9 +93,7 @@ function applyFilters(productList, searchQuery, elementsObj) {
     const queryMatch = searchQuery ? name.includes(searchQuery) || brand.includes(searchQuery) : true;
 
     // Lọc theo thể loại
-    console.log(category);
-    console.log(priceRange);
-    const categoryMatch = category ? (product.tensp.toLowerCase()).includes(category) : true;
+    const categoryMatch = category ? (product.thuonghieu.toLowerCase()).includes(category) : true;
 
     //! Lọc theo khoảng giá
     const price = 10000000 * (1 - 0.29); // Giá sau giảm giá
@@ -106,6 +104,7 @@ function applyFilters(productList, searchQuery, elementsObj) {
     }
     return queryMatch && categoryMatch && priceMatch;
   });
+
 }
 
 function displayProducts(productList, searchQuery, elementsObj, currentPage = 1, itemsPerPage = 15) {
@@ -129,8 +128,8 @@ function displayProducts(productList, searchQuery, elementsObj, currentPage = 1,
 
   if (productsToShow.length > 0) {
     renderProducts(productsToShow, productContainer);
-    formatPrices(elementsObj);
     resizeImages(elementsObj);
+    formatPrices(elementsObj);
   } else
     productContainer.innerHTML =
       '<div class="font-size-13 font-bold">Không tìm thấy sản phẩm nào phù hợp</div>';
@@ -168,8 +167,10 @@ async function initSearchFilters() {
 
 function changeByFilter(elements, query, productList) {
   elements.forEach((filter) =>
-    filter?.addEventListener("change", () =>
-      displayProducts(productList, query, null, 1)
+    filter?.addEventListener("change", () => {
+      displayProducts(productList, query, null, 1);
+      formatPrices(Bridge.default());
+    }
     )
   );
 }
