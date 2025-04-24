@@ -1,7 +1,7 @@
 "use strict";
 import * as Bridge from "./bridges.js";
 import { validateRegister } from "./registers.js";
-import { getProducPhones } from "./product.js";
+import { getDetailPhones, getProductPhones } from "./product.js";
 import { formatPrices, hiddenException } from "./interfaces.js";
 import { sleep } from "./navigates.js";
 import { userDetail } from "./action.js";
@@ -15,23 +15,12 @@ async function handleCartNavigation() {
     button.addEventListener("click", async (event) => {
       event.preventDefault();
       hiddenException("cart-content");
-      
-      // await fetch("../../../app/model/Product.php?cartQuantity=" + localStorage.getItem("cart").length, {
-      //   method: "GET",
-      //   credentials: "include" // quan trọng nếu dùng session
-      // });
       const currentURL = window.location.origin + window.location.pathname;
       history.pushState({}, "", currentURL + "?type=cart");
       callCartFunctions();
-      Bridge.default().getMainContainer().scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
-      console.log("hello")
+      Bridge.default().getMainContainer().scrollIntoView({ behavior: "smooth", block: "start", inline: "start" });
     });
   });
-
-  // categoryButton.addEventListener("click", (event) => {
-  //   event.preventDefault();
-  //   hiddenException();
-  // })
 }
 
 function callCartFunctions() {
@@ -139,9 +128,6 @@ function handleCheckboxChange(elementsObj) {
 
   cartItems.forEach((item) => {
     const checkbox = item.querySelector('input[type="checkbox"]');
-    console.log(cartItems);
-    console.log(item);
-    console.log("type: " + checkbox);
     checkbox.addEventListener("change", () => {
       const isAnyProductSelected = Array.from(cartItems).some((item) => {
         const checkbox = item.querySelector('input[type="checkbox"]');
@@ -260,7 +246,7 @@ async function updateCartCount() {
   document.querySelectorAll(".cart-count").forEach((el) => {
     el.textContent = cartCount;
   });
-  
+
 }
 
 // !NEED TO CHANGE HERE
@@ -272,17 +258,10 @@ function displayCartItems(elementsObj) {
     cartContainer.innerHTML = "<p>Giỏ hàng trống</p>";
     return;
   }
-
   cartContainer.innerHTML = "";
   cart.forEach((item, index) => {
-    const priceAfterDiscount = 10000000 * (1 - 0.29);
-      // typeof item.price === "number" &&
-      //   typeof item.sale === "number" &&
-      //   item.sale >= 0 &&
-      //   item.sale <= 1
-      //   ? Math.round(item.price * (1 - item.sale))
-      //   : item.price || 0;
-    const totalPricePerItem = priceAfterDiscount * item.quantity || 0;
+    let discountPrice = Math.round(item.price * 0.71);
+    const totalPricePerItem = discountPrice * item.quantity || 0;
     cartContainer.innerHTML += `
             <div class="block-product block-cart">
                 <input type="checkbox" name="select-block-product" id="block-product-${index}" class="grid-col col-l-1 col-m-1 col-s-1"/>
@@ -293,8 +272,8 @@ function displayCartItems(elementsObj) {
                     <div class="info-product-cart padding-left-8 grid-col col-l-6 col-m-12 col-s-12">
                         <p class="font-bold capitalize margin-bottom-16">${item.name}</p>
                         <div class="block-product-price">
-                            <span class="new-price font-bold padding-right-8 price">${priceAfterDiscount}</span>
-                            <del class="price old-price">${10000000 || 0}</del>
+                            <span class="new-price font-bold padding-right-8 price">${discountPrice}</span>
+                            <del class="price old-price">${Math.round(item.price)}</del>
                         </div>
                     </div>
                     <div class="number-product-cart grid-col col-l-2 col-m-10 col-s-10 no-gutter">
@@ -322,8 +301,8 @@ function displayCartItems(elementsObj) {
 }
 
 // !NEED TO CHANGE HERE
-async function addToCart(productName, realQuantity) {
-  const products = await getProducPhones();
+async function addToCart(productName, realQuantity, productColor, ram, rom, price) {
+  const products = await getProductPhones();
   const product = products.find((item) => (item.tensp).toLowerCase().trim() === productName.toLowerCase().trim());
 
   if (!product) {
@@ -333,21 +312,24 @@ async function addToCart(productName, realQuantity) {
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   const existingProductIndex = cart.findIndex(
-    (item) => item.name === product.tensp
+    (item) => item.name === product.tensp && item.ram === ram && item.rom === rom && item.price === price
   );
 
   if (existingProductIndex !== -1) {
     let temp = parseInt(cart[existingProductIndex].quantity, 10);
-    if (realQuantity) 
+    if (realQuantity)
       temp += parseInt(realQuantity, 10);
-    else 
+    else
       temp += 1;
     cart[existingProductIndex].quantity = temp;
   } else {
     cart.push({
       name: product.tensp,
-      price: Math.round(product.price * (1 - product.sale)),
-      image: product.img,
+      color: productColor,
+      ram: ram,
+      rom: rom,
+      price: price,
+      image: product.hinhanh,
       quantity: realQuantity ? realQuantity : 1,
     });
   }
@@ -367,6 +349,12 @@ async function attachAddToCartEvents() {
   productItems.forEach((productItem) => {
     const addToCartButton = productItem.querySelector(".add-to-cart .button");
     const buyNowButton = productItem.querySelector(".buy-btn .button");
+    const detailWrapper = productItem.querySelector(".product-detail-hidden.selected");
+    const ram = detailWrapper.querySelector(".ram")?.dataset.ram;
+    const rom = detailWrapper.querySelector(".rom")?.dataset.rom;
+    const mausac = detailWrapper.querySelector(".mausac")?.dataset.mausac;
+    const price = detailWrapper.querySelector(".price")?.dataset.price;
+
 
     if (!addToCartButton || !buyNowButton) {
       console.warn("Không tìm thấy nút 'Thêm vào giỏ hàng' hoặc 'Mua ngay' cho sản phẩm:", productItem);
@@ -386,7 +374,7 @@ async function attachAddToCartEvents() {
 
     newAddToCartButton.addEventListener("click", () => {
       console.log(`Đang thêm sản phẩm: ${productName}`);
-      addToCart(productName);
+      addToCart(productName, 1, mausac, ram, rom, price);
       increaseCartCount();
     });
 
@@ -396,7 +384,7 @@ async function attachAddToCartEvents() {
     newBuyNowButton.addEventListener("click", () => {
       if (sessionStorage.getItem("login")) {
         console.log(`Đang thêm sản phẩm và chuyển đến giỏ hàng: ${productName}`);
-        addToCart(productName);
+        addToCart(productName, 1, mausac, ram, rom, price);
         increaseCartCount();
         // window.location.href = "cart.html";
       } else {
@@ -462,7 +450,7 @@ function createDonHang(orderId, userId, userAddress, totalOrderPrice, formattedD
 }
 
 function createChiTietDonHang(orderId, selectedItems, totalOrderPrice) {
-  const products = getProducPhones();
+  const products = getProductPhones();
   return selectedItems.map((item) => {
     const product = products.find((prod) => {
       const normalize = (str) => str.trim().toLowerCase();
@@ -643,13 +631,29 @@ async function attachAddToCartInDetails() {
       const productPrice = parseFloat(document.querySelector(".new-price")?.textContent.replace(/\D/g, "")) || 0;
       const productImage = document.querySelector(".product-image img")?.src;
       const productQuantity = document.querySelector(".quantity-cart")?.value;
+      const productColor = document.querySelector(".color-option.selected")?.getAttribute("data-value");
+      const element = document.querySelector('.storage-option.selected');
+      const ram = element?.getAttribute("data-ram");
+      const rom = element?.getAttribute("data-rom");
+      const price = element?.getAttribute("data-price");
 
       if (!productName || !productPrice || !productImage) {
         console.error("Không thể lấy thông tin sản phẩm từ Product Details.");
         return;
       }
 
-      addToCart(productName, productQuantity);
+      if (!ram || !rom) {
+        alert("Vui lòng chọn phiên bản bộ nhớ (RAM/ROM)!");
+        return;
+      }
+      
+      if (!productColor) {
+        alert("Vui lòng chọn màu sắc!");
+        return;
+      }
+
+      console.log(ram, rom, price, element, productColor);
+      addToCart(productName, productQuantity, productColor, ram, rom, price);
       increaseCartCount();
     }), 200, "add-to-cart");
     button.dataset.eventAttached = true;
@@ -666,17 +670,31 @@ async function attachAddToCartInDetails() {
     const productPrice = parseFloat(document.querySelector(".new-price")?.textContent.replace(/\D/g, "")) || 0;
     const productImage = document.querySelector(".product-image img")?.src;
     const productQuantity = document.querySelector(".quantity-cart")?.value;
+    const element = document.querySelector('.storage-option.selected');
+    const productColor = document.querySelector(".color-option.selected")?.value;
+    const ram = element?.getAttribute("data-ram");
+    const rom = element?.getAttribute("data-rom");
+    const price = element?.getAttribute("data-price");
 
     if (!productName || !productPrice || !productImage) {
       console.error("Không thể lấy thông tin sản phẩm từ Product Details.");
       return;
     }
-    addToCart(productName, productQuantity);
+
+    if (!ram || !rom) {
+      alert("Vui lòng chọn phiên bản bộ nhớ (RAM/ROM)!");
+      return;
+    }
+    
+    if (!productColor) {
+      alert("Vui lòng chọn màu sắc!");
+      return;
+    }    
+
+    addToCart(productName, productQuantity, productColor, ram, rom, price);
     increaseCartCount();
     // window.location.href = "cart.html";
   })), 200, "buy-now");
-
-  // 
 }
 
 

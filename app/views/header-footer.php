@@ -98,7 +98,7 @@ function renderHeader()
                          <div class="flex align-center full-height">
                               <div id="no-sign-in" class="flex justify-center align-center">
                                    <i class="fa-regular fa-circle-user fa-xl" style="color: var(--main-color)"></i>
-                                   <p class="padding-left-8">Tài khoản</p>
+                                   <p class="user-name-account padding-left-8">Tài khoản</p>
                               </div>
 
                               <div class="header-user-info flex justify-center align-center disable">

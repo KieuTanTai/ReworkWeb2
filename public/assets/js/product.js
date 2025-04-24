@@ -6,7 +6,7 @@ import * as Navigate from "./navigates.js";
 import { GetColor, GetDetailPRoducts, GetProducts, GetRam, GetRom } from "./getdata.js";
 import { attachAddToCartEvents, attachAddToCartInDetails } from "./carts.js";
 //! get / set products (NEED TO CHANGE)
-function getProducPhones() {
+function getProductPhones() {
   return GetProducts();
 }
 
@@ -98,7 +98,7 @@ async function dynamicDetail(product) {
   // productContainers(list, sameAuthor);
   displayDefaultSpect(product);
   displayProductDetails(product);
-  productContainers(await getProducPhones(), productLike);
+  productContainers(await getProductPhones(), productLike);
   callFuncsAgain(elementsObj);
   renderColorOptions(product);
   renderStorageOptions(product);
@@ -122,6 +122,7 @@ async function renderProductDetails(list, wrapper) {
         let newURL = `${location.href.slice(0, location.href.lastIndexOf("/") + 1)}?name=${bookName}`;
         window.history.pushState({}, "", newURL);
         hiddenException("detail-content");
+        Bridge.default().getProductLikeContainer().style.display = "flex";
         dynamicDetail(list[index]);
       });
     });
@@ -145,6 +146,17 @@ async function renderProducts(list, wrapper) {
           <span class="product-image js-item">
             <img src="assets/images/Phone/RedMagics/vn-11134207-7ras8-m2nn2bl6q4922e.jpg" alt="${product.tensp}">
           </span>
+
+          <div class="product-detail-hidden disable selected">
+            <div class="detail-item ram" data-ram="${productDetails.ram}">${await getRamText(productDetails.ram)} GB RAM</div>
+            <div class="detail-item rom" data-rom="${productDetails.rom}">${await getRomText(productDetails.rom)} GB ROM</div>
+            <div class="detail-item mausac" data-mausac="${productDetails.mausac}">${await getColorText(productDetails.mausac)}</div>
+            <div class="detail-item price" data-price="${productDetails.giaban * (1 - 0.29)}">${productDetails.giaban.toLocaleString('vi-VN')} ₫</div>
+            <div class="detail-item oldprice" data-oldprice="${productDetails.giaban}">
+              ${(productDetails.giaban).toLocaleString('vi-VN')} ₫
+            </div>
+          </div>
+
           <div class="sale-label">${Math.round(0.29 * 100)}%</div>
           <div class="sale-off font-bold capitalize ${product.trangthai > 0 ? "" : "active"}">hết hàng</div>
           <div class="info-inner flex justify-center align-center line-height-1-6">
@@ -178,7 +190,6 @@ async function renderProducts(list, wrapper) {
   // attachAddToCartEvents();
   // await attachAddToCartInDetails();
 }
-
 
 //! get container for product and call render products
 async function productContainers(productsList, container) {
@@ -225,13 +236,17 @@ async function productContainers(productsList, container) {
 
   if (isEmpty(container)) return;
 }
-
+//! NEED TO CHANGE HERE
 async function displayProductDetails(product) {
-  // Tạo cấu trúc HTML cho overlay
-  const overlayContent = `
+  const detail = await GetDetailPRoducts(product.masp);
+
+  const ram = await getRamSize(detail?.ram);
+  const rom = await getRomSize(detail?.rom);
+
+  const html = `
     <div class="grid wide">
-      <div class="grid-row">
-        <div class="overlay-content bg-white grid-col col-l-12 bg-white padding-12 border-1-solid-black">
+      <div class="grid-row justify-center">
+        <div class="overlay-content bg-white grid-col col-l-4 bg-white padding-12 border-1-solid-black">
           <h2>Thông tin chi tiết</h2>
           <ul id="specs-list">
             <li><strong>Thông tin chung</strong></li>
@@ -243,7 +258,7 @@ async function displayProductDetails(product) {
               Loại màn hình: ${product.monitorType || 'Không có thông tin'}
               ${product.monitorColor ? `<br>Màu màn hình: ${product.monitorColor}` : ''}
               ${product.monitorStandard ? `<br>Chuẩn màn hình: ${product.monitorStandard}` : ''}
-              ${product.kichthuocman ? `<br>${product.kichthuocman}` : ''}
+              ${product.kichthuocman ? `<br>${product.kichthuocman}"` : ''}
               ${product.screenGlass ? `<br>${product.screenGlass}` : ''}
             </li>
             <li class="product-resolution">Độ phân giải: ${product.resolution || 'Không có thông tin'}</li>
@@ -259,79 +274,82 @@ async function displayProductDetails(product) {
             <li class="product-cpu">Chipset: ${product.chipxuly || 'Không có thông tin'}
               ${product.cpuCores ? `<br>Số nhân: ${product.cpuCores}` : ''}
             </li>
-            <li class="product-ram">RAM: ${(await GetDetailPRoducts(product.masp)).ram || 'Không có thông tin'}</li>
+            <li class="product-ram">RAM: ${ram ? ram + " GB" : "Không có thông tin"}</li>
             
             <li><strong>Bộ nhớ & Lưu trữ</strong></li>
-            <li class="product-rom">Bộ nhớ trong: ${(await GetDetailPRoducts(product.masp)).rom || 'Không có thông tin'}</li>
+            <li class="product-rom">Bộ nhớ trong: ${rom ? rom + " GB" : "Không có thông tin"}</li>
             
             <li><strong>Pin & Sạc</strong></li>
-            <li class="product-battery">Dung lượng pin: ${product.dungluongpin || 'Không có thông tin'}
+            <li class="product-battery">Dung lượng pin: ${product.dungluongpin || 'Không có thông tin'} mAh
               ${product.batteryType ? `<br>Loại pin: ${product.batteryType}` : ''}
             </li>
             <li class="product-battery-tech">Công nghệ pin: ${product.batteryTech || 'Không có thông tin'}</li>
             <li class="product-charging-port">Cổng sạc: ${product.chargingPort || 'Không có thông tin'}</li>
           </ul>
-          <button onclick="closeOverlay()" 
-            class="more-detail-form-close button bg-main-color text-white padding-12 margin-top-12">Đóng</button>
+          <div class="grid-col col-l-12 justify-end flex">          
+              <button onclick="closeOverlay()" class="more-detail-form-close button bg-main-color text-white padding-12 margin-top-12">Đóng</button>
+          </div>
         </div>
       </div>
     </div>
   `;
 
-  const overlay = document.getElementById('overlay-more-detail');
-  overlay.innerHTML = overlayContent;
+  document.getElementById('overlay-more-detail').innerHTML = html;
 }
 
 async function displayDefaultSpect(product) {
-  const detail = `
-                <ul>
-                    <li class="product-monitor"><strong>Màn hình:</strong> ${product.kichthuocman}
-                    </li>
-                    <li class="product-os"><strong>Hệ điều hành:</strong> ${product.hedieuhanh}</li>
-                    <li class="product-rear-camera"><strong>Camera sau:</strong>${product.camerasau}</li>
-                    <li class="product-font-camera"><strong>Camera trước:</strong>${product.cameratruoc}</li>
-                    <li class="product-cpu"><strong>CPU:</strong> <span>${product.chipxuly}</span></li>
-                    <li class="product-ram"><strong>RAM:</strong> ${(await GetDetailPRoducts(product.masp)).ram}</li>
-                    <li class="product-rom"><strong>Bộ nhớ trong:</strong> ${(await GetDetailPRoducts(product.masp)).rom}</li>
-                    <li class="product-battery"><strong>Dung lượng pin:</strong> ${product.dungluongpin}</li>
-                </ul>
-  `
-  const overlay = document.getElementById('some-product-detail');
-  overlay.innerHTML = detail;
+  const detailList = await GetDetailPRoducts(product.masp);
+  const detail = Array.isArray(detailList) ? detailList[0] : detailList;
+  if (!detail) return;
+
+  const rom = `${await getRomSize(detail.rom)}GB`;
+  const ram = `${await getRamSize(detail.ram)}GB`;
+  const osName = product.hedieuhanh;
+
+  const html = `
+    <ul>
+      <li class="product-monitor"><strong>Màn hình:</strong> ${product.kichthuocman}</li>
+      <li class="product-os"><strong>Hệ điều hành:</strong> ${osName}</li>
+      <li class="product-rear-camera"><strong>Camera sau:</strong> ${product.camerasau}</li>
+      <li class="product-font-camera"><strong>Camera trước:</strong> ${product.cameratruoc}</li>
+      <li class="product-cpu"><strong>CPU:</strong> ${product.chipxuly}</li>
+      <li class="product-ram"><strong>RAM:</strong> ${ram}</li>
+      <li class="product-rom"><strong>Bộ nhớ trong:</strong> ${rom}</li>
+      <li class="product-battery"><strong>Dung lượng pin:</strong> ${product.dungluongpin} mAh</li>
+    </ul>
+  `;
+
+  document.getElementById("some-product-detail").innerHTML = html;
 }
 
 async function renderColorOptions(product) {
-  let listProductColor = (await GetDetailPRoducts()).filter(detail => detail.masp == product.masp);
-  let colors = await getColors();
+  const details = (await GetDetailPRoducts()).filter(d => d.masp == product.masp);
+  const colors = await getColors();
+  const uniqueColors = new Set();
+  let html = "";
 
-  // Lọc duy nhất theo mã màu
-  const uniqueColorsMap = new Map();
-  listProductColor.forEach(element => {
-    if (!uniqueColorsMap.has(element.mausac)) {
-      uniqueColorsMap.set(element.mausac, element);
-    }
-  });
+  for (const detail of details) {
+    if (uniqueColors.has(detail.mausac)) continue;
+    uniqueColors.add(detail.mausac);
 
-  let scriptHtml = "";
-  for (let [, element] of uniqueColorsMap) {
-    let color = colors.find(c => c.mamau == element.mausac);
+    const color = colors.find(c => c.mamau == detail.mausac);
     if (color) {
-      scriptHtml += `
+      html += `
         <div class="color-option col-l-3 margin-right-8 padding-bottom-4 padding-top-4 border-1-solid-black text-white"
-             data-value="${color.tenmau.toLowerCase()}" >
+             data-value="${detail.mausac}">
           ${color.tenmau.toLowerCase()}
         </div>
       `;
     }
   }
 
-  const overlay = document.querySelector('.color-options');
-  overlay.innerHTML = scriptHtml;
-  const colorOptions = overlay.querySelectorAll('.color-option');
-  colorOptions.forEach(option => {
-    option.addEventListener('click', () => {
-      colorOptions.forEach(opt => opt.classList.remove('selected')); // bỏ selected cũ
-      option.classList.add('selected'); // thêm selected mới
+  const container = document.querySelector(".color-options");
+  container.innerHTML = html;
+
+  container.querySelectorAll(".color-option").forEach(option => {
+    option.addEventListener("click", () => {
+      container.querySelectorAll(".color-option").forEach(el => el.classList.remove("selected"));
+      option.classList.add("selected");
     });
   });
 }
@@ -340,46 +358,86 @@ async function renderStorageOptions(product) {
   const details = (await GetDetailPRoducts()).filter(p => p.masp === product.masp);
   const rams = await getRams();
   const roms = await getRoms();
-
   const container = document.querySelector(".storage-options");
+  if (!container) return;
+
   let html = "";
   const uniqueCombo = new Set();
 
   details.forEach(detail => {
-      const comboKey = `${detail.ram}-${detail.rom}`;
-      if (!uniqueCombo.has(comboKey)) {
-          uniqueCombo.add(comboKey);
-          const ram = rams.find(r => r.madlram == detail.ram);
-          const rom = roms.find(r => r.madlrom == detail.rom);
+    const comboKey = `${detail.ram}-${detail.rom}`;
+    if (uniqueCombo.has(comboKey)) return;
+    uniqueCombo.add(comboKey);
 
-          html += `
-          <div class="storage-option padding-bottom-4 padding-top-4 font-size-14 col-l-6 border-1-solid-black button bg-dark"
-               data-ram="${detail.ram}" data-rom="${detail.rom}" 
-               data-price="${detail.giaban}" data-oldprice="${detail.giagoc}">
-               ${rom.kichthuocrom}GB + ${ram.kichthuocram}GB
-          </div>`;
-      }
+    const ram = rams.find(r => r.madlram == detail.ram);
+    const rom = roms.find(r => r.madlrom == detail.rom);
+    const ramText = ram ? ram.kichthuocram + "GB" : "RAM?";
+    const romText = rom ? rom.kichthuocrom + "GB" : "ROM?";
+    const price = detail.giaban || 0;
+    const oldPrice = detail.giagoc || price;
+
+    html += `
+      <div class="storage-option padding-bottom-4 padding-top-4 font-size-14 col-l-6 border-1-solid-black button bg-dark"
+           data-ram="${detail.ram}" data-rom="${detail.rom}" 
+           data-price="${price}" data-oldprice="${oldPrice}">
+        ${romText} + ${ramText}
+      </div>`;
   });
 
   container.innerHTML = html;
 
   // Gán sự kiện click để cập nhật giá
-  container.querySelectorAll('.storage-option').forEach(option => {
-      option.addEventListener('click', function () {
-          container.querySelectorAll('.storage-option').forEach(el => el.classList.remove("selected"));
-          this.classList.add("selected");
+  container.querySelectorAll(".storage-option").forEach(option => {
+    option.addEventListener("click", function () {
+      container.querySelectorAll(".storage-option").forEach(el => el.classList.remove("selected"));
+      this.classList.add("selected");
 
-          const price = parseInt(Math.round(this.dataset.price * (1 - 0.29))).toLocaleString('vi-VN');
-          const oldPrice = parseInt(Math.round(this.dataset.price)).toLocaleString('vi-VN');
+      const price = parseInt(this.dataset.price);
+      const discountPrice = Math.round(price * (1 - 0.29));
+      const formattedPrice = discountPrice.toLocaleString("vi-VN");
+      const formattedOldPrice = price.toLocaleString("vi-VN");
 
-          document.querySelector(".new-price").innerHTML = `${price}&nbsp;₫`;
-          document.querySelector(".old-price").innerHTML = `${oldPrice}&nbsp;₫`;
-          console.log(`💰 Giá mới: ${price} - Giá gốc: ${oldPrice}`);
-      });
+      document.querySelector(".new-price").innerHTML = `${formattedPrice}&nbsp;₫`;
+      document.querySelector(".old-price").innerHTML = `${formattedOldPrice}&nbsp;₫`;
+
+      console.log(`💰 Giá mới: ${formattedPrice} - Giá gốc: ${formattedOldPrice}`);
+    });
   });
 }
 
 
+async function getRamText(ramId) {
+  const rams = await getRams();
+  const ram = rams.find(r => r.madlram == ramId);
+  return ram ? `${ram.kichthuocram}GB` : null;
+}
 
+async function getRomText(romId) {
+  const roms = await getRoms();
+  const rom = roms.find(r => r.madlrom == romId);
+  return rom ? `${rom.kichthuocrom}GB` : null;
+}
 
-export { getProducPhones, setProductBooks, productContainers, getValueQuery, renderProductDetails, renderProducts, dynamicDetail, callFuncsAgain };
+async function getColorText(colorId) {
+  const colors = await getColors();
+  const color = colors.find(c => c.mamau == colorId);
+  return color ? color.tenmau : null;
+}
+
+function getFormattedPrice(price, discount = 0.29) {
+  const discounted = Math.round(price * (1 - discount));
+  return discounted.toLocaleString("vi-VN") + " ₫";
+}
+
+async function getRamSize(id) {
+  const rams = await getRams();
+  return rams.find(r => r.madlram == id)?.kichthuocram || "0";
+}
+
+async function getRomSize(id) {
+  const roms = await getRoms();
+  return roms.find(r => r.madlrom == id)?.kichthuocrom || "0";
+}
+
+export { getProductPhones, setProductBooks, productContainers, getValueQuery, renderProductDetails, renderProducts, dynamicDetail, callFuncsAgain };
+export { getRoms, getRams, getColors, getDetailPhones }

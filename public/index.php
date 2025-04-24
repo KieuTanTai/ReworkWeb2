@@ -31,12 +31,11 @@ session_start();
           if ($_GET["mode"] === "admin") {
                require "../app/controller/adminController.php";
                helloAdmin();
-          } else {
-               require "../app/controller/endUserController.php";
-               helloUser();
           }
+     } else {
+          require '../app/controller/urlController.php';
+          renderDynamicScript();
      }
-     var_dump($_GET);
      ?>
 </body>
 

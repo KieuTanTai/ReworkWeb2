@@ -1,3 +1,4 @@
+
 <?php
 define('ROOT_PATH', realpath(__DIR__ . '/../../'));
 require_once ROOT_PATH . '/app/config/database.php';
@@ -30,19 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = registerUser($tenkhachhang, $email, $password, $sdt, $diachi);
         
         if ($result['success']) {
-            // Đăng ký thành công, tự động đăng nhập
-            $loginResult = loginUser($email, $password);
-            
-            if ($loginResult['success']) {
-                // Chuyển về trang chủ
-                header(__DIR__ ."Location: /index.php");
-                exit();
-            } else {
-                // Nếu đăng nhập thất bại, chuyển đến trang đăng nhập
-                $_SESSION['login_message'] = "Đăng ký thành công! Vui lòng đăng nhập.";
-                header("Location: ../views/login.php");
-                exit();
-            }
+            // Đăng ký thành công, chuyển về trang đăng nhập
+            $_SESSION['login_message'] = "Đăng ký thành công! Vui lòng đăng nhập.";
+            header("Location: login_controller.php");
+            exit();
         } else {
             // Đăng ký thất bại
             $_SESSION['register_error'] = $result['message'];

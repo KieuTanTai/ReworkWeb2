@@ -23,11 +23,11 @@
      color: var(--btn-hover);
 }
 
-#login, 
+/* #login, 
 #register, 
 #forgot-password {
      display: none;
-}
+} */
 
 .user-box #login-layout form,
 .user-box #register-layout form,

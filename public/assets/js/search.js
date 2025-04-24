@@ -8,7 +8,7 @@ import {
   scrollView,
 } from "./interfaces.js";
 import { execQueryHandler } from "./navigates.js";
-import { getProducPhones, renderProducts } from "./product.js";
+import { getDetailPhones, getProductPhones, renderProducts } from "./product.js";
 
 function searchBtn() {
   let searchBtn = Bridge.$("button[type=button].search-btn");
@@ -17,7 +17,7 @@ function searchBtn() {
   searchBtn.addEventListener("click", () => {
     const bookName = searchInput?.value.trim();
     renderSearchDOM(bookName);
-    hiddenException
+    hiddenException("search-content");
   });
 
   searchInput?.addEventListener("keypress", (event) => {
@@ -37,7 +37,7 @@ async function renderSearchDOM(bookName) {
   let newURL = `${location.href.slice(
     0,
     location.href.lastIndexOf("/") + 1
-  )}?query=${bookName}`;
+  )}?query=${bookName.toLowerCase()}`;
   window.history.pushState({}, "", newURL); // Cập nhật URL
   initSearchFilters(); // Hiển thị sản phẩm theo từ khóa
 }
@@ -60,7 +60,7 @@ function searchDOM() {
                 <option value="0-4000000">0đ - 4,000,000đ</option>
                 <option value="4000000-7000000">4,000,000đ - 7,000,000đ</option>
                 <option value="7000000-10000000">7,000,000đ - 10,000,000đ</option>
-                <option value="1000000-">10,000,000đ trở lên</option>
+                <option value="10000000-">10,000,000đ trở lên</option>
           </select>
       </section>
 
@@ -80,14 +80,19 @@ function searchDOM() {
   `;
 }
 
-function applyFilters(productList, searchQuery, elementsObj) {
+async function applyFilters(productList, searchQuery, elementsObj) {
   if (!elementsObj) elementsObj = Bridge.default();
+  
+  // Lấy dữ liệu chi tiết trước
+  const detailPhones = await getDetailPhones();
+  
   const categoryFilter = elementsObj.getCategoryFilter();
   const priceFilter = elementsObj.getPriceFilter();
   const category = categoryFilter?.value;
   const priceRange = priceFilter?.value;
-  // Lọc theo từ khóa (nếu có)
-  return productList.filter((product) => {
+  
+  // Sau đó lọc
+  return productList.filter(product => {
     const name = product.tensp?.toLowerCase() || "";
     const brand = product.thuonghieu?.toLowerCase() || ""; 
     const queryMatch = searchQuery ? name.includes(searchQuery) || brand.includes(searchQuery) : true;
@@ -95,22 +100,24 @@ function applyFilters(productList, searchQuery, elementsObj) {
     // Lọc theo thể loại
     const categoryMatch = category ? (product.thuonghieu.toLowerCase()).includes(category) : true;
 
-    //! Lọc theo khoảng giá
-    const price = 10000000 * (1 - 0.29); // Giá sau giảm giá
+    // Lọc theo khoảng giá
+    const phoneDetail = detailPhones.find(item => item.masp == product.masp);
+    const price = phoneDetail?.giaban * (1 - 0.29); // Giá sau giảm giá
+    
     let priceMatch = true;
-    if (priceRange) {
-      const [min, max] = priceRange.split("-").map(Number);
+    if (priceRange && price) {
+      const [min, max] = priceRange.split("-").map(val => val ? Number(val) : null);
       priceMatch = max ? price >= min && price <= max : price >= min;
     }
+    
     return queryMatch && categoryMatch && priceMatch;
   });
-
 }
 
-function displayProducts(productList, searchQuery, elementsObj, currentPage = 1, itemsPerPage = 15) {
+
+async function displayProducts(productList, searchQuery, elementsObj, currentPage = 1, itemsPerPage = 15) {
   if (!elementsObj) elementsObj = Bridge.default();
-  const filteredProducts = applyFilters(productList, searchQuery);
-  console.log(filteredProducts);
+  const filteredProducts = await applyFilters(productList, searchQuery);
   const productContainer = elementsObj
     .getResultContainer()
     ?.querySelector(".product-container");
@@ -160,7 +167,7 @@ function renderPaginationControls(container, currentPage, totalPages, onPageChan
 async function initSearchFilters() {
   let elementsObj = Bridge.default();
   const query = execQueryHandler("query");
-  let productList = await getProducPhones();
+  let productList = await getProductPhones();
   displayProducts(productList, query, elementsObj, 1, 15);
   changeByFilter([elementsObj.getCategoryFilter(), elementsObj.getPriceFilter()], query, productList);
 }

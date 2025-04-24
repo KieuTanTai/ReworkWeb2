@@ -1,4 +1,4 @@
-import { getProducPhones, renderProducts } from './product.js';
+import { getProductPhones, renderProducts } from './product.js';
 import { hiddenException, resizeImages } from './interfaces.js';
 import { formatPrices } from "./interfaces.js";
 import { $, $$ } from './bridges.js';
@@ -55,7 +55,7 @@ async function initializePage() {
         // Hiển thị section mục tiêu
         showTargetSection(categoryId);
         //! Lấy danh sách sản phẩm từ localStorage (CHANGE TO DB)
-        const allProducts = await getProducPhones();
+        const allProducts = await getProductPhones();
         // Lọc sản phẩm theo danh mục
         const filteredProducts = filterProductsByCategory(allProducts, categoryId);
         // Tích hợp phân trang

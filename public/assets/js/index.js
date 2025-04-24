@@ -58,3 +58,4 @@ document.addEventListener("DOMContentLoaded", () => {
   Pages.initializePage();
 });
 
+export {Cart, Interface, Bridge, Search, Products}
