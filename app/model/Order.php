@@ -106,7 +106,7 @@ class Order {
             $result->free(); 
             return (int) $row['total'];
         }
-        error_log("Lỗi truy vấn đếm người dùng: " . $this->conn->error);
+        error_log("Lỗi truy vấn đếm đơn hàng: " . $this->conn->error);
         return 0; 
     }
 
@@ -123,5 +123,77 @@ class Order {
         return $result; 
     }
 
+    public function updateOrderStatus(int $orderID, int $newStatus){
+        $query = "UPDATE " . $this->table_name . " SET trangthai = ? WHERE madonhang = ?";
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bind_param("ii", $newStatus, $orderID);
+
+        if($stmt->execute()){
+            $stmt->close();
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getOrderById(int $orderId): ?array
+    {
+        $query = "SELECT dh.*
+                  FROM " . $this->table_name . " dh
+                  LEFT JOIN " . $this->ctdonhang_table_name . " ct ON dh.madonhang = ct.madonhang
+                  WHERE dh.madonhang = ?
+                  LIMIT 1"; 
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bind_param("i", $orderId);
+
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return null;
+        }
+
+        $result = $stmt->get_result();
+        $orderData = $result->fetch_assoc(); 
+
+        $stmt->close();
+        $result->free();
+
+        return $orderData ?: null; 
+    }
+
+    public function getOrderItems(int $orderId): array
+    {
+        $query = "SELECT ct.*
+                  FROM " . $this->ctdonhang_table_name . " ct
+                  LEFT JOIN " . $this->pbsp_table_name . " sp ON ct.maphienbansp = sp.maphienbansp
+                  WHERE ct.madonhang = ?";
+
+        $stmt = $this->conn->prepare($query);
+         if (!$stmt) {
+            error_log("Prepare failed for getOrderItems: " . $this->conn->error);
+            return []; 
+        }
+
+        $stmt->bind_param("i", $orderId);
+
+        if (!$stmt->execute()) {
+             error_log("Execute failed for getOrderItems: " . $stmt->error);
+             $stmt->close();
+             return [];
+        }
+
+        $result = $stmt->get_result();
+        $items = [];
+        while ($row = $result->fetch_assoc()) {
+            $items[] = $row;
+        }
+
+        $stmt->close();
+        $result->free();
+
+        return $items; 
+    }
 }
 ?>
