@@ -1,0 +1,282 @@
+/* CSS cho trang thông tin cá nhân */
+.profile-container {
+     display: flex;
+     flex-wrap: wrap;
+     margin-top: 16px;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+     border-radius: 5px;
+     overflow: hidden;
+ }
+ 
+ /* Phần sidebar */
+ .profile-sidebar {
+     background-color: #f5f5f5;
+     min-height: 500px;
+     padding: 16px 0;
+ }
+ 
+ .profile-avatar {
+     margin-bottom: 20px;
+ }
+ 
+ .avatar-image {
+     width: 100px;
+     height: 100px;
+     border-radius: 50%;
+     border: 3px solid var(--main-color);
+ }
+ 
+ .profile-menu-list {
+     list-style: none;
+     padding: 0;
+     margin: 0;
+ }
+ 
+ .profile-menu-item {
+     padding: 12px 30px; /* Tăng padding-left và padding-right từ 20px lên 30px */
+     cursor: pointer;
+     transition: all 0.3s ease;
+     display: flex;
+     align-items: center;
+     width: 100%; /* Đảm bảo nút chiếm toàn bộ chiều rộng */
+     box-sizing: border-box; /* Giữ kích thước ổn định */
+ }
+ 
+ .profile-menu-item:hover {
+     background-color: #e9e9e9;
+     color: var(--main-color);
+ }
+ 
+ .profile-menu-item.active {
+     background-color: var(--main-color);
+     color: white;
+ }
+ 
+ .profile-menu-item i {
+     margin-right: 10px;
+     width: 20px;
+     text-align: center;
+ }
+ 
+ /* Phần nội dung */
+ .profile-content {
+     padding: 24px;
+     background-color: #fff;
+ }
+ 
+ .profile-tab {
+     display: none;
+ }
+ 
+ .profile-tab.active {
+     display: block;
+ }
+ 
+ /* Hiển thị thông tin tài khoản */
+ .user-info-display {
+     border: 1px solid #eee;
+     border-radius: 5px;
+     padding: 16px;
+ }
+ 
+ .info-row {
+     display: flex;
+     margin-bottom: 16px;
+     border-bottom: 1px solid #f0f0f0;
+     padding-bottom: 8px;
+ }
+ 
+ .info-label {
+     flex: 1;
+     color: #666;
+     font-size: 14px;
+ }
+ 
+ .info-value {
+     flex: 2;
+     font-weight: bold;
+ }
+ 
+ /* Form chỉnh sửa thông tin */
+ .profile-form {
+     width: 100%;
+ }
+ 
+ .profile-form .form-row {
+     display: flex;
+     flex-wrap: wrap;
+     margin-left: -8px;
+     margin-right: -8px;
+     margin-bottom: 16px;
+ }
+ 
+ .profile-form .form-group {
+     margin-bottom: 16px;
+     padding: 0 8px;
+ }
+ 
+ .profile-form label {
+     display: block;
+     margin-bottom: 8px;
+     font-weight: 500;
+     color: #333;
+ }
+ 
+ .profile-form input,
+ .profile-form select {
+     width: 100%;
+     padding: 10px 12px;
+     border: 1px solid #ddd;
+     border-radius: 4px;
+     font-size: 14px;
+     background-color: #fff;
+ }
+ 
+ /* Radio buttons cho giới tính */
+ .gender-options {
+     display: flex;
+     gap: 20px;
+ }
+ 
+ .radio-label {
+     display: flex;
+     align-items: center;
+     cursor: pointer;
+ }
+ 
+ .radio-label input[type="radio"] {
+     width: auto;
+     margin-right: 5px;
+ }
+ 
+ .radio-text {
+     font-weight: normal;
+ }
+ 
+ /* Form đổi mật khẩu */
+ .password-input-container {
+     position: relative;
+     width: 100%;
+ }
+ 
+ .toggle-password {
+     position: absolute;
+     right: 10px;
+     top: 50%;
+     transform: translateY(-50%);
+     background: none;
+     border: none;
+     cursor: pointer;
+     color: #999;
+ }
+ 
+ .toggle-password:hover {
+     color: var(--main-color);
+ }
+ 
+ /* Nút đăng ký */
+ .profile-form .button {
+     background-color: #000;
+     color: #fff;
+     border: none;
+     border-radius: 4px;
+     padding: 12px 24px;
+     font-size: 14px;
+     font-weight: bold;
+     cursor: pointer;
+     transition: background-color 0.3s;
+     text-transform: uppercase;
+ }
+ 
+ .profile-form .button:hover {
+     background-color: var(--main-color);
+ }
+ 
+ .full-width {
+     width: 100%;
+ }
+ 
+ /* Lịch sử đơn hàng */
+ .order-item {
+     border: 1px solid #ddd;
+     border-radius: 4px;
+     margin-bottom: 16px;
+     padding: 16px;
+ }
+ 
+ .order-header {
+     display: flex;
+     justify-content: space-between;
+     padding-bottom: 8px;
+     border-bottom: 1px solid #eee;
+     margin-bottom: 8px;
+ }
+ 
+ .order-products {
+     margin-bottom: 8px;
+ }
+ 
+ .order-footer {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding-top: 8px;
+     border-top: 1px solid #eee;
+ }
+ 
+ .order-status {
+     padding: 4px 8px;
+     border-radius: 4px;
+     font-size: 12px;
+     font-weight: bold;
+ }
+ 
+ .status-pending {
+     background-color: #fff8e1;
+     color: #ff8f00;
+ }
+ 
+ .status-confirmed {
+     background-color: #e3f2fd;
+     color: #1976d2;
+ }
+ 
+ .status-shipped {
+     background-color: #e8f5e9;
+     color: #388e3c;
+ }
+ 
+ .status-delivered {
+     background-color: #e8f5e9;
+     color: #388e3c;
+ }
+ 
+ .status-cancelled {
+     background-color: #ffebee;
+     color: #d32f2f;
+ }
+ 
+ /* Responsive */
+ @media (max-width: 768px) {
+     .profile-sidebar {
+         width: 100%;
+         min-height: auto;
+     }
+     
+     .profile-content {
+         width: 100%;
+     }
+     
+     .info-row {
+         flex-direction: column;
+     }
+     
+     .info-label {
+         margin-bottom: 4px;
+     }
+     
+     .gender-options {
+         flex-direction: column;
+         gap: 10px;
+     }
+ }

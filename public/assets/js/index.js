@@ -11,6 +11,7 @@ import * as Register from "./registers.js";
 import * as Cart from "./carts.js";
 import * as Pages from "./pages.js";
 import * as Gets from "./getdata.js";
+import * as Profile from "./profile.js";
 document.addEventListener("DOMContentLoaded", () => {
   let elementsObj = Bridge.default();
   Gets.GetProducts();
@@ -40,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
       Actions.trackingNavigate(elementsObj);
       Actions.smNavigationMenu(elementsObj);
       Search.searchBtn();
+      Profile.handleProfileNavigation();
       // show more product here
       Pages.handleCategoryNavigation();
       // remove Interval

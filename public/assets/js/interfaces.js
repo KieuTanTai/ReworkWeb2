@@ -14,6 +14,7 @@ function scrollView() {
 }
 
 // change header info when user has been login
+// change header info when user has been login
 function headerUserInfo(elementsObj) {
   let container = elementsObj.getHeaderUserInfo();
   let noSignIn = elementsObj.getNoSignIn();
@@ -21,27 +22,36 @@ function headerUserInfo(elementsObj) {
   let registerBtn = elementsObj.getJsRegisterBtn();
   let logoutBtn = elementsObj.getJsSignoutBtn();
   let userName = container.querySelector(".user-name");
-  const hasLogin = sessionStorage.getItem("hasLogin");
-  let hasLoginAccount = sessionStorage.getItem("hasLoginAccount");
-  hasLoginAccount = hasLoginAccount ? JSON.parse(hasLoginAccount) : false;
-  if (hasLogin && hasLoginAccount) {
-    noSignIn.classList.add("disable");
-    // disable login - register btn
-    loginBtn?.forEach((btn) => btn.classList.add("disable"));
-    registerBtn?.forEach((btn) => btn.classList.add("disable"));
-    logoutBtn?.forEach((btn) => btn.classList.remove("disable"));
-    container.classList.remove("disable");
-    userName.innerHTML = hasLoginAccount.lastName + " " + hasLoginAccount.firstName;
-    container.addEventListener("click", () => userDetail(elementsObj));
-
+  
+  // Sử dụng session từ PHP (đã được chuyển sang sessionStorage)
+  const isLoggedIn = sessionStorage.getItem("login") === 'true';
+  let userAccount = null;
+  
+  try {
+      userAccount = JSON.parse(sessionStorage.getItem("loginAccount"));
+  } catch (e) {
+      console.error("Error parsing loginAccount:", e);
+  }
+  
+  if (isLoggedIn && userAccount) {
+      noSignIn.classList.add("disable");
+      // disable login - register btn
+      loginBtn?.forEach((btn) => btn.classList.add("disable"));
+      registerBtn?.forEach((btn) => btn.classList.add("disable"));
+      logoutBtn?.forEach((btn) => btn.classList.remove("disable"));
+      container.classList.remove("disable");
+      
+      // Hiển thị tên người dùng từ session
+      userName.innerHTML = userAccount.tenkhachhang || userAccount.user_name || "Người dùng";
+      container.addEventListener("click", () => userDetail(elementsObj));
   }
   else {
-    noSignIn.classList.remove("disable");
-    loginBtn?.forEach((btn) => btn.classList.remove("disable"));
-    registerBtn?.forEach((btn) => btn.classList.remove("disable"));
-    logoutBtn?.forEach((btn) => btn.classList.add("disable"));
-    container.classList.add("disable");
-    userName.innerHTML = hasLoginAccount.firstName + hasLoginAccount.lastName;
+      noSignIn.classList.remove("disable");
+      loginBtn?.forEach((btn) => btn.classList.remove("disable"));
+      registerBtn?.forEach((btn) => btn.classList.remove("disable"));
+      logoutBtn?.forEach((btn) => btn.classList.add("disable"));
+      container.classList.add("disable");
+      userName.innerHTML = "";
   }
 }
 

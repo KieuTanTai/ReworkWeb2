@@ -13,6 +13,7 @@ session_start();
      <link rel="stylesheet" href="./assets/fonts/fontawesome-6.6.0/css/all.min.css" />
      <link rel="stylesheet" href="./assets/css/index.css" />
      <link rel="stylesheet" href="./assets/css/responsive.css" />
+     <link rel="stylesheet" href="./assets/css/profile.css" />
      <script type="module" src="./assets/js/index.js"></script>
      <title>Light Novel World</title>
      <?php
@@ -21,6 +22,8 @@ session_start();
      require __DIR__ . '/../app/views/cart.php';
      require __DIR__ . '/../app/views/homepage.php';
      require __DIR__ . '/../app/views/search_result.php';
+     require __DIR__ . '/../app/views/profile.php';
+     
 
      ?>
 </head>

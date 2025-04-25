@@ -221,6 +221,8 @@ function loadDefaultHomepage()
                               <!-- TEST FORM -->
                               <?php renderDetailProduct(); ?>
                               
+                              <!-- Thông tin cá nhân -->
+                              <?php renderProfile(); ?>
                               <!-- cart content -->
                               <?php renderSearch(); ?>
                               <?php renderCart(); ?>

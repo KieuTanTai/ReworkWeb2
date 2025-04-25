@@ -119,10 +119,10 @@ function renderHeader()
                                         <div class="font-bold uppercase">Đăng ký</div>
                                    </a>
                                    <?php else: ?>
-                                   <a href="profile.php" title="Thông tin cá nhân" class="lnw-btn margin-bottom-16 font-size-14 text-center">
+                                        <a title="Thông tin cá nhân" class="profile-btn lnw-btn margin-bottom-16 font-size-14 text-center">
                                         <div class="font-bold uppercase">Thông tin cá nhân</div>
                                    </a>
-                                   <a href="../app/controller/logout_controller.php" title="Đăng xuất" class="lnw-btn active js-login margin-bottom-16 font-size-14 text-center">
+                                   <a href="../app/controller/logout_controller.php" title="Đăng xuất" class="lnw-btn active .js-signout margin-bottom-16 font-size-14 text-center">
                                         <div class="font-bold uppercase">Đăng xuất</div>
                                    </a>
                                    <?php endif; ?>
