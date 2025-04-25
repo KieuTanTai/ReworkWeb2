@@ -50,7 +50,7 @@ function getElementsHandler() {
     getFSCountDown: () => $(".fs-countdown"),
     getHistoryOrder: () => $(".history-tracking-container #history-order-container"),
     //cart
-    getCartItems: () => $$(".block-product"), 
+    getCartItems: () => $$(".block-product.block-cart"), 
     getQuantityInputs: () => $$(".quantity-cart"), 
     getTotalPrice: () => $(".total-price"),  
     getshippingFee: () => $(".shipping-fee"),
@@ -83,6 +83,17 @@ function getElementsHandler() {
     getResultContainer: () => $("#search-results-container"),
     getCategoryFilter: () => $("#category-filter"),
     getPriceFilter: () => $("#price-filter"),
+    //profile
+    getProfileContent: () => $("#profile-content"),
+getProfileTabs: () => $$(".profile-tab"),
+getActiveProfileTab: () => $(".profile-tab.active"),
+getProfileMenuItems: () => $$(".profile-menu-item"),
+getProfileBtn: () => $$(".profile-btn"),
+getProfileInfoForm: () => $("#profile-info-form"),
+getPasswordForm: () => $("#change-password-form"),
+getProfileInputs: () => $("#profile-info-form input, #profile-info-form select"),
+getPasswordInputs: () => $("#change-password-form input"),
+getPasswordToggleButtons: () => $$(".toggle-password"),
     // others
     getScrollTop: () => $("#scroll-top"),
     getDotsBar: () => $$(".dots-bar"),

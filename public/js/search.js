@@ -8,7 +8,7 @@ import {
   scrollView,
 } from "./interfaces.js";
 import { execQueryHandler } from "./navigates.js";
-import { getProductBooks, renderProducts } from "./product.js";
+import { getDetailPhones, getProductPhones, renderProducts } from "./product.js";
 
 function searchBtn() {
   let searchBtn = Bridge.$("button[type=button].search-btn");
@@ -17,6 +17,7 @@ function searchBtn() {
   searchBtn.addEventListener("click", () => {
     const bookName = searchInput?.value.trim();
     renderSearchDOM(bookName);
+    hiddenException("search-content");
   });
 
   searchInput?.addEventListener("keypress", (event) => {
@@ -36,7 +37,7 @@ async function renderSearchDOM(bookName) {
   let newURL = `${location.href.slice(
     0,
     location.href.lastIndexOf("/") + 1
-  )}?query=${bookName}`;
+  )}?query=${bookName.toLowerCase()}`;
   window.history.pushState({}, "", newURL); // Cập nhật URL
   initSearchFilters(); // Hiển thị sản phẩm theo từ khóa
 }
@@ -56,10 +57,10 @@ function searchDOM() {
           <label for="price-filter" class="padding-left-12">Khoảng giá:</label>
           <select id="price-filter">
                 <option value="">Tất cả</option>
-                <option value="0-1000000">0đ - 1,000,000đ</option>
-                <option value="1000000-3000000">1,000,000đ - 3,000,000đ</option>
-                <option value="3000000-6000000">3,000,000đ - 6,000,000đ</option>
-                <option value="600000-">6,000,000đ trở lên</option>
+                <option value="0-4000000">0đ - 4,000,000đ</option>
+                <option value="4000000-7000000">4,000,000đ - 7,000,000đ</option>
+                <option value="7000000-10000000">7,000,000đ - 10,000,000đ</option>
+                <option value="10000000-">10,000,000đ trở lên</option>
           </select>
       </section>
 
@@ -79,39 +80,44 @@ function searchDOM() {
   `;
 }
 
-function applyFilters(productList, searchQuery, elementsObj) {
+async function applyFilters(productList, searchQuery, elementsObj) {
   if (!elementsObj) elementsObj = Bridge.default();
+  
+  // Lấy dữ liệu chi tiết trước
+  const detailPhones = await getDetailPhones();
+  
   const categoryFilter = elementsObj.getCategoryFilter();
   const priceFilter = elementsObj.getPriceFilter();
   const category = categoryFilter?.value;
   const priceRange = priceFilter?.value;
-  // Lọc theo từ khóa (nếu có)
-  return productList.filter((product) => {
+  
+  // Sau đó lọc
+  return productList.filter(product => {
     const name = product.tensp?.toLowerCase() || "";
     const brand = product.thuonghieu?.toLowerCase() || ""; 
     const queryMatch = searchQuery ? name.includes(searchQuery) || brand.includes(searchQuery) : true;
 
     // Lọc theo thể loại
-    console.log(category);
-    console.log(priceRange);
     const categoryMatch = category ? (product.thuonghieu.toLowerCase()).includes(category) : true;
 
-    //! Lọc theo khoảng giá
-    const price = 10000000 * (1 - 0.29); // Giá sau giảm giá
+    // Lọc theo khoảng giá
+    const phoneDetail = detailPhones.find(item => item.masp == product.masp);
+    const price = phoneDetail?.giaban * (1 - 0.29); // Giá sau giảm giá
+    
     let priceMatch = true;
-    if (priceRange) {
-      const [min, max] = priceRange.split("-").map(Number);
+    if (priceRange && price) {
+      const [min, max] = priceRange.split("-").map(val => val ? Number(val) : null);
       priceMatch = max ? price >= min && price <= max : price >= min;
     }
-    console.log(queryMatch, categoryMatch, priceMatch);
+    
     return queryMatch && categoryMatch && priceMatch;
   });
 }
 
-function displayProducts(productList, searchQuery, elementsObj, currentPage = 1, itemsPerPage = 15) {
+
+async function displayProducts(productList, searchQuery, elementsObj, currentPage = 1, itemsPerPage = 15) {
   if (!elementsObj) elementsObj = Bridge.default();
-  const filteredProducts = applyFilters(productList, searchQuery);
-  console.log(filteredProducts);
+  const filteredProducts = await applyFilters(productList, searchQuery);
   const productContainer = elementsObj
     .getResultContainer()
     ?.querySelector(".product-container");
@@ -129,8 +135,8 @@ function displayProducts(productList, searchQuery, elementsObj, currentPage = 1,
 
   if (productsToShow.length > 0) {
     renderProducts(productsToShow, productContainer);
-    formatPrices(elementsObj);
     resizeImages(elementsObj);
+    formatPrices(elementsObj);
   } else
     productContainer.innerHTML =
       '<div class="font-size-13 font-bold">Không tìm thấy sản phẩm nào phù hợp</div>';
@@ -161,15 +167,17 @@ function renderPaginationControls(container, currentPage, totalPages, onPageChan
 async function initSearchFilters() {
   let elementsObj = Bridge.default();
   const query = execQueryHandler("query");
-  let productList = await getProductBooks();
+  let productList = await getProductPhones();
   displayProducts(productList, query, elementsObj, 1, 15);
   changeByFilter([elementsObj.getCategoryFilter(), elementsObj.getPriceFilter()], query, productList);
 }
 
 function changeByFilter(elements, query, productList) {
   elements.forEach((filter) =>
-    filter?.addEventListener("change", () =>
-      displayProducts(productList, query, null, 1)
+    filter?.addEventListener("change", () => {
+      displayProducts(productList, query, null, 1);
+      formatPrices(Bridge.default());
+    }
     )
   );
 }

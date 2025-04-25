@@ -1,27 +1,41 @@
 "use strict";
 import * as Bridge from "./bridges.js";
 import { validateRegister } from "./registers.js";
-import { getProductBooks } from "./product.js";
+import { getDetailPhones, getProductPhones } from "./product.js";
 import { formatPrices, hiddenException } from "./interfaces.js";
 import { sleep } from "./navigates.js";
 import { userDetail } from "./action.js";
 
 // cart navigation
-function handleCartNavigation() {
+async function handleCartNavigation() {
   const cartButtons = Bridge.$$(".cart-btn");
-  const categoryButton = Bridge.default().getCartContent();
+  // const categoryButton = Bridge.default().getCartContent();
 
   cartButtons.forEach((button) => {
-    button.addEventListener("click", (event) => {
+    button.addEventListener("click", async (event) => {
       event.preventDefault();
       hiddenException("cart-content");
+      const currentURL = window.location.origin + window.location.pathname;
+      history.pushState({}, "", currentURL + "?type=cart");
+      callCartFunctions();
+      Bridge.default().getMainContainer().scrollIntoView({ behavior: "smooth", block: "start", inline: "start" });
     });
   });
+}
 
-  categoryButton.addEventListener("click", (event) => {
-    event.preventDefault();
-    hiddenException();
-  })
+function callCartFunctions() {
+  let elementsObj = Bridge.default();
+  let lastPath = location.href;
+  lastPath = lastPath.slice(lastPath.lastIndexOf("/") + 1, lastPath.length);
+  if (lastPath.includes("type=cart")) {
+    displayCartItems(elementsObj);
+    updateCartTotal(elementsObj);
+    handleQuantityChange(elementsObj);
+    handleCheckboxChange(elementsObj);
+    handleSelectAllCheckbox(elementsObj);
+    handleRemoveItem(elementsObj);
+    handleOrderPlacement(elementsObj);
+  }
 }
 
 function updateCartTotal(elementsObj) {
@@ -83,7 +97,7 @@ function handleQuantityChange(elementsObj) {
   quantityInputs.forEach((input, index) => {
     input.addEventListener("change", () => {
       const cartItems = elementsObj.getCartItems();
-      const item = cartItems[index];
+      const item = cartItems[index - 1];
       const pricePerItemElement = item.querySelector(".price-per-item");
       const priceElement = item.querySelector(".price");
 
@@ -92,7 +106,7 @@ function handleQuantityChange(elementsObj) {
 
       const quantity = parseInt(input.value, 10);
 
-      if (isNaN(price) || isNaN(quantity)) {
+      if (isNaN(price) || isNaN(quantity) || price < 0) {
         console.error("Giá hoặc số lượng không hợp lệ:", { price, quantity });
         return;
       }
@@ -224,13 +238,18 @@ function increaseCartCount() {
   });
 }
 
-function updateCartCount() {
+// ! NEED TO FIX 
+async function updateCartCount() {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const cartCount = cart.length;
+
   document.querySelectorAll(".cart-count").forEach((el) => {
     el.textContent = cartCount;
   });
+
 }
+
+// !NEED TO CHANGE HERE
 function displayCartItems(elementsObj) {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const cartContainer = document.querySelector(".list-carts");
@@ -239,30 +258,22 @@ function displayCartItems(elementsObj) {
     cartContainer.innerHTML = "<p>Giỏ hàng trống</p>";
     return;
   }
-
   cartContainer.innerHTML = "";
   cart.forEach((item, index) => {
-    const priceAfterDiscount =
-      typeof item.price === "number" &&
-        typeof item.sale === "number" &&
-        item.sale >= 0 &&
-        item.sale <= 1
-        ? Math.round(item.price * (1 - item.sale))
-        : item.price || 0;
-    const totalPricePerItem = priceAfterDiscount * item.quantity || 0;
+    let discountPrice = Math.round(item.price * 0.71);
+    const totalPricePerItem = discountPrice * item.quantity || 0;
     cartContainer.innerHTML += `
-            <div class="block-product">
+            <div class="block-product block-cart">
                 <input type="checkbox" name="select-block-product" id="block-product-${index}" class="grid-col col-l-1 col-m-1 col-s-1"/>
                 <div class="product-cart grid-col col-l-1 col-m-1 col-s-1 no-gutter full-width">
-                    <img src="${item.image}" alt="${item.name}" />
+                    <img class="mini-image" src="${'assets/images/Phone/RedMagics/red-magic-supernova_1_2_2_2.webp'}" alt="${item.name}" />
                 </div>
                 <div class="grid-col col-l-10 col-m-10 col-s-10 no-gutter flex align-center">
                     <div class="info-product-cart padding-left-8 grid-col col-l-6 col-m-12 col-s-12">
-                        <p class="font-bold capitalize margin-bottom-16">${item.name
-      }</p>
+                        <p class="font-bold capitalize margin-bottom-16">${item.name}</p>
                         <div class="block-product-price">
-                            <span class="new-price font-bold padding-right-8 price">${priceAfterDiscount}</span>
-                            <del class="price old-price">${item.price || 0}</del>
+                            <span class="new-price font-bold padding-right-8 price">${discountPrice}</span>
+                            <del class="price old-price">${Math.round(item.price)}</del>
                         </div>
                     </div>
                     <div class="number-product-cart grid-col col-l-2 col-m-10 col-s-10 no-gutter">
@@ -289,9 +300,10 @@ function displayCartItems(elementsObj) {
   console.log("Giỏ hàng đã được hiển thị:", cart);
 }
 
-function addToCart(productName) {
-  const products = getProductBooks();
-  const product = products.find((item) => item.name === productName);
+// !NEED TO CHANGE HERE
+async function addToCart(productName, realQuantity, productColor, ram, rom, price) {
+  const products = await getProductPhones();
+  const product = products.find((item) => (item.tensp).toLowerCase().trim() === productName.toLowerCase().trim());
 
   if (!product) {
     console.error(`Sản phẩm "${productName}" không tìm thấy!`);
@@ -300,36 +312,49 @@ function addToCart(productName) {
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   const existingProductIndex = cart.findIndex(
-    (item) => item.name === product.name
+    (item) => item.name === product.tensp && item.ram === ram && item.rom === rom && item.price === price
   );
 
   if (existingProductIndex !== -1) {
-    cart[existingProductIndex].quantity += 1;
+    let temp = parseInt(cart[existingProductIndex].quantity, 10);
+    if (realQuantity)
+      temp += parseInt(realQuantity, 10);
+    else
+      temp += 1;
+    cart[existingProductIndex].quantity = temp;
   } else {
     cart.push({
-      name: product.name,
-      price: Math.round(product.price * (1 - product.sale)),
-      image: product.img,
-      quantity: 1,
+      name: product.tensp,
+      color: productColor,
+      ram: ram,
+      rom: rom,
+      price: price,
+      image: product.hinhanh,
+      quantity: realQuantity ? realQuantity : 1,
     });
   }
 
   localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCount();
 }
 
-function attachAddToCartEvents() {
-  const mainContainer = document.querySelector("#main-container");
+async function attachAddToCartEvents() {
+  const mainContainer = document.querySelector("#index-content");
 
   if (!mainContainer) {
     console.error("Không tìm thấy #main-container!");
     return;
   }
-
   const productItems = mainContainer.querySelectorAll(".product-item");
-
   productItems.forEach((productItem) => {
     const addToCartButton = productItem.querySelector(".add-to-cart .button");
     const buyNowButton = productItem.querySelector(".buy-btn .button");
+    const detailWrapper = productItem.querySelector(".product-detail-hidden.selected");
+    const ram = detailWrapper.querySelector(".ram")?.dataset.ram;
+    const rom = detailWrapper.querySelector(".rom")?.dataset.rom;
+    const mausac = detailWrapper.querySelector(".mausac")?.dataset.mausac;
+    const price = detailWrapper.querySelector(".price")?.dataset.price;
+
 
     if (!addToCartButton || !buyNowButton) {
       console.warn("Không tìm thấy nút 'Thêm vào giỏ hàng' hoặc 'Mua ngay' cho sản phẩm:", productItem);
@@ -349,7 +374,7 @@ function attachAddToCartEvents() {
 
     newAddToCartButton.addEventListener("click", () => {
       console.log(`Đang thêm sản phẩm: ${productName}`);
-      addToCart(productName);
+      addToCart(productName, 1, mausac, ram, rom, price);
       increaseCartCount();
     });
 
@@ -357,11 +382,11 @@ function attachAddToCartEvents() {
     const newBuyNowButton = productItem.querySelector(".buy-btn .button");
 
     newBuyNowButton.addEventListener("click", () => {
-      if (sessionStorage.getItem("hasLogin")) {
+      if (sessionStorage.getItem("login")) {
         console.log(`Đang thêm sản phẩm và chuyển đến giỏ hàng: ${productName}`);
-        addToCart(productName);
+        addToCart(productName, 1, mausac, ram, rom, price);
         increaseCartCount();
-        window.location.href = "cart.html";
+        // window.location.href = "cart.html";
       } else {
         alert("Phải đăng nhập trước");
       }
@@ -378,7 +403,7 @@ function handleCategoryNavigation() {
       const parentSection = button.closest("section");
       if (parentSection && parentSection.id) {
         const categoryId = parentSection.id;
-        window.location.href = `index.html?category=${categoryId}`;
+        // window.location.href = `index.html?category=${categoryId}`;
       }
     });
   });
@@ -394,11 +419,11 @@ function handleDefaultAddressCheckbox() {
   }
 
   checkbox.addEventListener("change", () => {
-    const user = JSON.parse(sessionStorage.getItem("hasLoginAccount"));
+    const user = JSON.parse(sessionStorage.getItem("loginAccount"));
 
     if (checkbox.checked) {
-      if (user && user.address) {
-        userAddressInput.value = user.address;
+      if (user && user.diachi) {
+        userAddressInput.value = user.diachi;
       } else {
         alert("Không tìm thấy địa chỉ mặc định của người dùng. Vui lòng kiểm tra lại thông tin đăng nhập.");
         checkbox.checked = false;
@@ -425,7 +450,7 @@ function createDonHang(orderId, userId, userAddress, totalOrderPrice, formattedD
 }
 
 function createChiTietDonHang(orderId, selectedItems, totalOrderPrice) {
-  const products = getProductBooks();
+  const products = getProductPhones();
   return selectedItems.map((item) => {
     const product = products.find((prod) => {
       const normalize = (str) => str.trim().toLowerCase();
@@ -444,7 +469,7 @@ function createChiTietDonHang(orderId, selectedItems, totalOrderPrice) {
 
 function handleOrderPlacement(elementsObj) {
   const checkoutButton = document.querySelector(".checkout-btn");
-  let accountLogin = JSON.parse(sessionStorage.getItem("hasLoginAccount"));
+  let accountLogin = JSON.parse(sessionStorage.getItem("loginAccount"));
   if (!checkoutButton) {
     console.warn("Không tìm thấy nút 'checkout-btn'.");
     return;
@@ -457,7 +482,7 @@ function handleOrderPlacement(elementsObj) {
       return;
     }
 
-    if (!sessionStorage.getItem("hasLogin")) {
+    if (!sessionStorage.getItem("login")) {
       alert("Vui lòng đăng nhập");
       return;
     }
@@ -501,12 +526,12 @@ function handleOrderPlacement(elementsObj) {
     const userAddress = document.querySelector("#user-address").value.trim();
     const userNote = document.querySelector("#user-note").value.trim();
 
-    if (!userAddress && !accountLogin.address) {
+    if (!userAddress && !accountLogin.diachi) {
       alert("Hãy nhập địa chỉ giao hàng.");
       return;
     }
 
-    if (!accountLogin.phone) {
+    if (!accountLogin.sdt) {
       alert("chưa nhập số điện thoại liên lạc.");
       userDetail(Bridge.default());
     }
@@ -528,13 +553,13 @@ function handleOrderPlacement(elementsObj) {
       currentDate.getDate()
     ).padStart(2, "0")}/${String(currentDate.getFullYear()).slice(-2)} ${currentDate.toLocaleTimeString("en-US")}`;
     const orderId = `DH${String(Date.now()).slice(-5)}`;
-    const user = JSON.parse(sessionStorage.getItem("hasLoginAccount"));
+    const user = JSON.parse(sessionStorage.getItem("loginAccount"));
     const userName = user ? `${user.firstName} ${user.lastName}` : "Khách hàng";
     const status = userName === "Khách hàng" ? "2" : "1";
     let userId, phone;
     if (user?.userID) {
       userId = user.userID;
-      phone = user.phone;
+      phone = user.sdt;
     } else {
       userId = generateId(user);
       phone = generateId(user);
@@ -545,6 +570,7 @@ function handleOrderPlacement(elementsObj) {
       return;
     }
 
+    // !NEED TO CHANGE HERE
     // Create donhang and chitiet_donhang
     const donHang = createDonHang(orderId, userId, userAddress, totalOrderPrice, formattedDate, phone, userName, status);
     const chiTietDonHang = createChiTietDonHang(orderId, selectedItems, totalOrderPrice);
@@ -586,7 +612,7 @@ function handleOrderPlacement(elementsObj) {
 }
 
 
-function attachAddToCartInDetails() {
+async function attachAddToCartInDetails() {
   const addToCartButton = Bridge.$$(".add-to-cart.button");
   const buyNowButton = Bridge.$$(".buy-btn.button");
   let historyCart = Bridge.$$(".block-product .cart-content");
@@ -596,6 +622,7 @@ function attachAddToCartInDetails() {
     return;
   }
 
+  // add to cart
   addToCartButton.forEach((button) => {
     if (button.dataset.eventAttached)
       return;
@@ -603,27 +630,38 @@ function attachAddToCartInDetails() {
       const productName = document.querySelector(".product-title h1")?.textContent.trim();
       const productPrice = parseFloat(document.querySelector(".new-price")?.textContent.replace(/\D/g, "")) || 0;
       const productImage = document.querySelector(".product-image img")?.src;
+      const productQuantity = document.querySelector(".quantity-cart")?.value;
+      const productColor = document.querySelector(".color-option.selected")?.getAttribute("data-value");
+      const element = document.querySelector('.storage-option.selected');
+      const ram = element?.getAttribute("data-ram");
+      const rom = element?.getAttribute("data-rom");
+      const price = element?.getAttribute("data-price");
 
       if (!productName || !productPrice || !productImage) {
         console.error("Không thể lấy thông tin sản phẩm từ Product Details.");
         return;
       }
 
-      const product = {
-        name: productName,
-        price: productPrice,
-        img: productImage,
-        quantity: 1,
-      };
+      if (!ram || !rom) {
+        alert("Vui lòng chọn phiên bản bộ nhớ (RAM/ROM)!");
+        return;
+      }
+      
+      if (!productColor) {
+        alert("Vui lòng chọn màu sắc!");
+        return;
+      }
 
-      addToCart(productName);
+      console.log(ram, rom, price, element, productColor);
+      addToCart(productName, productQuantity, productColor, ram, rom, price);
       increaseCartCount();
     }), 200, "add-to-cart");
     button.dataset.eventAttached = true;
   });
 
+  //buy now
   buyNowButton.forEach((button) => button.addEventListener("click", Bridge.throttle(() => {
-    if (!sessionStorage.getItem("hasLogin")) {
+    if (!sessionStorage.getItem("login")) {
       alert("Bạn cần đăng nhập để mua ngay.");
       return;
     }
@@ -631,25 +669,34 @@ function attachAddToCartInDetails() {
     const productName = document.querySelector(".product-title h1")?.textContent.trim();
     const productPrice = parseFloat(document.querySelector(".new-price")?.textContent.replace(/\D/g, "")) || 0;
     const productImage = document.querySelector(".product-image img")?.src;
+    const productQuantity = document.querySelector(".quantity-cart")?.value;
+    const element = document.querySelector('.storage-option.selected');
+    const productColor = document.querySelector(".color-option.selected")?.value;
+    const ram = element?.getAttribute("data-ram");
+    const rom = element?.getAttribute("data-rom");
+    const price = element?.getAttribute("data-price");
 
     if (!productName || !productPrice || !productImage) {
       console.error("Không thể lấy thông tin sản phẩm từ Product Details.");
       return;
     }
 
-    const product = {
-      name: productName,
-      price: productPrice,
-      img: productImage,
-      quantity: 1,
-    };
+    if (!ram || !rom) {
+      alert("Vui lòng chọn phiên bản bộ nhớ (RAM/ROM)!");
+      return;
+    }
+    
+    if (!productColor) {
+      alert("Vui lòng chọn màu sắc!");
+      return;
+    }    
 
-    addToCart(productName);
+    addToCart(productName, productQuantity, productColor, ram, rom, price);
     increaseCartCount();
-    window.location.href = "cart.html";
+    // window.location.href = "cart.html";
   })), 200, "buy-now");
-
 }
+
 
 function handlePaymentOptionChange() {
   const qrCodeMomo = document.querySelector("#qr-code-momo");
@@ -689,4 +736,4 @@ function handlePaymentOptionChange() {
 
 
 export { addToCart, attachAddToCartEvents, increaseCartCount, displayCartItems, updateCartCount, updateCartTotal, handleOrderPlacement, attachAddToCartInDetails, handlePaymentOptionChange };
-export { handleQuantityChange, handleCheckboxChange, handleSelectAllCheckbox, handleRemoveItem, handleCartNavigation, handleCategoryNavigation, handleDefaultAddressCheckbox };
+export { handleQuantityChange, handleCheckboxChange, handleSelectAllCheckbox, handleRemoveItem, handleCartNavigation, handleCategoryNavigation, handleDefaultAddressCheckbox, callCartFunctions };

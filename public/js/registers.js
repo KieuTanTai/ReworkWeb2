@@ -4,8 +4,8 @@ import * as Bridge from "./bridges.js";
 function validateRegister() {
   const registerForm = document.querySelector("#register-layout form");
   if (!registerForm) return;
-  // let nodeFirstName = Bridge.$("#customer-first-name");
-  let nodefullName = Bridge.$("#customer-full-name");
+  let nodeFirstName = Bridge.$("#customer-first-name");
+  let nodeLastName = Bridge.$("#customer-last-name");
   let nodeEmail = Bridge.$("#customer-email-register");
   let nodePassword = Bridge.$("#customer-password-register");
   let confirmPassword = Bridge.$("#customer-confirm-password-register");
@@ -37,14 +37,14 @@ function validateRegister() {
     }
 
     const userID = generateId(users);
-    // let firstName = nodeFirstName.value;
-    let fullName = nodefullName.value;
+    let firstName = nodeFirstName.value;
+    let lastName = nodeLastName.value;
     let email = nodeEmail.value;
     let password = nodePassword.value;
     const phone = "";
     const address = "";
 
-    const newUser = { userID, fullName, email, password, phone, address };
+    const newUser = { userID, firstName, lastName, email, password, phone, address };
     console.log(newUser);
     users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));

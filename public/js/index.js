@@ -11,11 +11,10 @@ import * as Register from "./registers.js";
 import * as Cart from "./carts.js";
 import * as Pages from "./pages.js";
 import * as Gets from "./getdata.js";
+import * as Profile from "./profile.js";
 document.addEventListener("DOMContentLoaded", () => {
   let elementsObj = Bridge.default();
-  let lastPath = location.href;
-  lastPath = lastPath.slice(lastPath.lastIndexOf("/") + 1, lastPath.length);
-  Gets.GetProducts();   
+  Gets.GetProducts();
 
   // DOM ON action.js
   Navigate.forbiddenDOM();
@@ -42,8 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
       Actions.trackingNavigate(elementsObj);
       Actions.smNavigationMenu(elementsObj);
       Search.searchBtn();
+      Profile.handleProfileNavigation();
       // show more product here
-      Pages.handleCategoryNavigation(); 
+      Pages.handleCategoryNavigation();
       // remove Interval
       clearInterval(checkDOM);
     }
@@ -56,17 +56,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // login
   Login.validateAccount();
   Register.validateRegister();
-  if (lastPath.includes("cart")) {
-    Cart.displayCartItems(elementsObj);
-    Cart.updateCartTotal(elementsObj);
-    Cart.handleQuantityChange(elementsObj);
-    Cart.handleCheckboxChange(elementsObj);
-    Cart.handleSelectAllCheckbox(elementsObj);
-    Cart.handleRemoveItem(elementsObj);
-    Cart.handleOrderPlacement(elementsObj);
-  }
-
   // others
   Pages.initializePage();
+  const accountInfo = JSON.parse(sessionStorage.getItem("loginAccount"));
+  const formatName = (name) => name.charAt(0).toUpperCase() + name.slice(1);
+  Bridge.$(".user-name-account").innerHTML = accountInfo?.tenkhachhang ? formatName(accountInfo.tenkhachhang) : "Tài Khoản";
+
 });
 
+export { Cart, Interface, Bridge, Search, Products }

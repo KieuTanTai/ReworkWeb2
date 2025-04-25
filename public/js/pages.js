@@ -1,5 +1,5 @@
-import { getProductBooks, renderProducts } from './product.js';
-import { resizeImages } from './interfaces.js';
+import { getProductPhones, renderProducts } from './product.js';
+import { hiddenException, resizeImages } from './interfaces.js';
 import { formatPrices } from "./interfaces.js";
 import { $, $$ } from './bridges.js';
 
@@ -40,7 +40,7 @@ function eventForSubHeader(navCategories) {
 
 
 // page.js: Xử lý hiển thị phần nội dung dựa trên URL
-const ITEMS_PER_PAGE = 5; // Số sản phẩm trên mỗi trang
+const ITEMS_PER_PAGE = 10; // Số sản phẩm trên mỗi trang
 /**
  * Hàm khởi tạo trang
  */
@@ -55,11 +55,9 @@ async function initializePage() {
         // Hiển thị section mục tiêu
         showTargetSection(categoryId);
         //! Lấy danh sách sản phẩm từ localStorage (CHANGE TO DB)
-        const allProducts = await getProductBooks();
+        const allProducts = await getProductPhones();
         // Lọc sản phẩm theo danh mục
         const filteredProducts = filterProductsByCategory(allProducts, categoryId);
-        // console.log("Filtered Products:", filteredProducts);
-
         // Tích hợp phân trang
         setupPagination(filteredProducts, categoryId);
     }
@@ -80,7 +78,7 @@ function filterProductsByCategory(products, categoryId) {
         case 'samsung-phone-container':
         case "samsung":
             return products.filter((product) => product.thuonghieu.toLowerCase().includes('samsung'));
-        case 'iphone-container':
+        case 'ip-container':
         case "iphone":
             return products.filter((product) => product.thuonghieu.toLowerCase().includes('iphone'));
         case 'other-phones-container':
