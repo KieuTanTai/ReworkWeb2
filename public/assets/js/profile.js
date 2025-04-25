@@ -7,9 +7,42 @@ import { isLoggedIn, getCurrentUser } from "./auth.js";
  * Điều hướng đến trang thông tin cá nhân
  */
 async function handleProfileNavigation() {
-    const profileButtons = document.querySelectorAll(".profile-btn");
+    const profileButtons = Bridge.default().getProfileBtn();
+    const navProfile = Bridge.default().getHeaderUserInfo();
+    addEventForProfileButtons(profileButtons);
+    addEventForProfileButtons([navProfile]);
+}
+
+function loadUserInfoFromSession() {
+    // Đầu tiên thử lấy từ sessionStorage
+    let user = getCurrentUser();
     
-    profileButtons.forEach((button) => {
+    if (!user || !user.makh) {
+        // Nếu không có trong sessionStorage, lấy từ server
+        fetch('../app/controller/user_profile_controller.php', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error('Lỗi khi lấy thông tin người dùng:', data.error);
+                return;
+            }
+            
+            displayUserInfo(data);
+        })
+        .catch(error => {
+            console.error('Lỗi khi gọi API:', error);
+        });
+    } else {
+        // Nếu có trong sessionStorage, hiển thị luôn
+        displayUserInfo(user);
+    }
+}
+
+function addEventForProfileButtons(buttons) {
+    buttons.forEach((button) => {
         button.addEventListener("click", function(event) {
             event.preventDefault();
             
@@ -40,36 +73,6 @@ async function handleProfileNavigation() {
     });
 }
 
-/**
- * Tải thông tin người dùng từ session hoặc server
- */
-function loadUserInfoFromSession() {
-    // Đầu tiên thử lấy từ sessionStorage
-    let user = getCurrentUser();
-    
-    if (!user || !user.makh) {
-        // Nếu không có trong sessionStorage, lấy từ server
-        fetch('../app/controller/user_profile_controller.php', {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                console.error('Lỗi khi lấy thông tin người dùng:', data.error);
-                return;
-            }
-            
-            displayUserInfo(data);
-        })
-        .catch(error => {
-            console.error('Lỗi khi gọi API:', error);
-        });
-    } else {
-        // Nếu có trong sessionStorage, hiển thị luôn
-        displayUserInfo(user);
-    }
-}
 
 /**
  * Hiển thị thông tin người dùng

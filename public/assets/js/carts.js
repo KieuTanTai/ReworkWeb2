@@ -4,8 +4,7 @@ import { validateRegister } from "./registers.js";
 import { getDetailPhones, getProductPhones } from "./product.js";
 import { formatPrices, hiddenException } from "./interfaces.js";
 import { sleep } from "./navigates.js";
-import { userDetail } from "./action.js";
-import { GetUserById } from "./getdata.js";
+import { CreateOrder, CreateOrderDetail, GetOrderDetails, GetOrders, GetUserById, GetVariantId } from "./getdata.js";
 
 // cart navigation
 async function handleCartNavigation() {
@@ -269,6 +268,7 @@ function displayCartItems(elementsObj) {
                 <div class="product-cart grid-col col-l-1 col-m-1 col-s-1 no-gutter full-width">
                     <img class="mini-image" src="${'assets/images/Phone/RedMagics/red-magic-supernova_1_2_2_2.webp'}" alt="${item.name}" />
                 </div>
+                <div class="detail-id disable">${item.id}</div>
                 <div class="grid-col col-l-10 col-m-10 col-s-10 no-gutter flex align-center">
                     <div class="info-product-cart padding-left-8 grid-col col-l-6 col-m-12 col-s-12">
                         <p class="font-bold capitalize margin-bottom-16">${item.name}</p>
@@ -305,6 +305,7 @@ function displayCartItems(elementsObj) {
 async function addToCart(productName, realQuantity, productColor, ram, rom, price) {
   const products = await getProductPhones();
   const product = products.find((item) => (item.tensp).toLowerCase().trim() === productName.toLowerCase().trim());
+  const detail = await GetVariantId(product.masp, productColor, ram, rom);
 
   if (!product) {
     console.error(`Sản phẩm "${productName}" không tìm thấy!`);
@@ -325,6 +326,7 @@ async function addToCart(productName, realQuantity, productColor, ram, rom, pric
     cart[existingProductIndex].quantity = temp;
   } else {
     cart.push({
+      id: detail,
       name: product.tensp,
       color: productColor,
       ram: ram,
@@ -435,39 +437,6 @@ function handleDefaultAddressCheckbox() {
   });
 }
 
-
-
-function createDonHang(orderId, userId, userAddress, totalOrderPrice, formattedDate, phone, userName, status) {
-  return {
-    id_donhang: orderId,
-    id_khachhang: userId,
-    date: formattedDate,
-    ten_khach_hang: userName,
-    dia_chi: userAddress,
-    phonenumber: phone,
-    tong: totalOrderPrice,
-    trang_thai: status,
-  };
-}
-
-function createChiTietDonHang(orderId, selectedItems, totalOrderPrice) {
-  const products = getProductPhones();
-  return selectedItems.map((item) => {
-    const product = products.find((prod) => {
-      const normalize = (str) => str.trim().toLowerCase();
-      return normalize(prod.name) === normalize(item.name);
-    });
-    return {
-      id_donhang: orderId,
-      id_sanpham: product?.productID || "",
-      sanpham: product?.name || item.name,
-      don_gia: item.price.toString(),
-      sl: item.quantity.toString(),
-      tong: totalOrderPrice.toString(),
-    };
-  });
-}
-
 async function handleOrderPlacement(elementsObj) {
   const checkoutButton = document.querySelector(".checkout-btn");
   let accountLogin = await GetUserById(JSON.parse(sessionStorage.getItem("loginAccount"))["makh"]);
@@ -476,7 +445,7 @@ async function handleOrderPlacement(elementsObj) {
     return;
   }
 
-  checkoutButton.addEventListener("click", () => {
+  checkoutButton.addEventListener("click", async () => {
     const cartItems = document.querySelectorAll(".block-product");
     if (cartItems.length === 0) {
       alert("Giỏ hàng của bạn đang trống. Hãy thêm sản phẩm trước khi đặt hàng!");
@@ -506,9 +475,10 @@ async function handleOrderPlacement(elementsObj) {
         const name = item
           .querySelector(".info-product-cart p")
           .innerText.trim();
+        const id = item.querySelector(".detail-id").innerText.trim();
         const productID = item.dataset.productId; // Assume productID is stored as a data attribute
         const image = item.querySelector("img").src;
-        return { name, price, quantity, image, productID };
+        return { id, name, price, quantity, image, productID };
       });
 
     if (selectedItems.length === 0) {
@@ -532,10 +502,8 @@ async function handleOrderPlacement(elementsObj) {
       return;
     }
 
-    if (!accountLogin.sdt) {
+    if (!accountLogin.sdt)
       alert("chưa nhập số điện thoại liên lạc.");
-      userDetail(Bridge.default());
-    }
 
     const voucherCode = document.querySelector("#voucher-code").value.trim();
 
@@ -550,59 +518,49 @@ async function handleOrderPlacement(elementsObj) {
     //! NEED TO CHANGE HERE
     const totalOrderPrice =
       Prices + shippingFee - shippingDiscount - voucherDiscount;
-    const currentDate = new Date();
-    const formattedDate = `${String(currentDate.getMonth() + 1).padStart(2, "0")}/${String(
-      currentDate.getDate()
-    ).padStart(2, "0")}/${String(currentDate.getFullYear()).slice(-2)} ${currentDate.toLocaleTimeString("en-US")}`;
-    const orderId = `DH${String(Date.now()).slice(-5)}`;
-    const user = JSON.parse(sessionStorage.getItem("loginAccount"));
-    const userName = user ? `${user.firstName} ${user.lastName}` : "Khách hàng";
-    const status = userName === "Khách hàng" ? "2" : "1";
-    let userId, phone;
-    if (user?.userID) {
-      userId = user.userID;
-      phone = user.sdt;
-    } else {
-      userId = generateId(user);
-      phone = generateId(user);
-    }
+    const now = new Date();
+    const formattedDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}`;    
+    const status = accountLogin.trangthai;
+    let userId = accountLogin["makh"];
+    let phone = accountLogin["sdt"];
 
     if (!phone || phone === "Unknown") {
       alert("Số điện thoại không hợp lệ. Vui lòng cập nhật thông tin của bạn trước khi đặt hàng.");
       return;
     }
+    if (!userId) {
+      alert("error userID");
+      return;
+    }
+
+    console.log(formattedDate)
 
     // !NEED TO CHANGE HERE
     // Create donhang and chitiet_donhang
-    const donHang = createDonHang(orderId, userId, userAddress, totalOrderPrice, formattedDate, phone, userName, status);
-    const chiTietDonHang = createChiTietDonHang(orderId, selectedItems, totalOrderPrice);
-
-    // Save to localStorage
-    let orders = JSON.parse(localStorage.getItem("donhang")) || [];
-    orders.push(donHang);
-    localStorage.setItem("donhang", JSON.stringify(orders));
-
-    let orderDetails = JSON.parse(localStorage.getItem("chitiet_donhang")) || [];
-    orderDetails = orderDetails.concat(chiTietDonHang);
-    localStorage.setItem("chitiet_donhang", JSON.stringify(orderDetails));
+    const donHang = createDonHang(userId, userAddress, totalOrderPrice, formattedDate, status);
+    
+    CreateOrder(donHang);
+    const listOrders = await GetOrders();
+    const chiTietDonHang = await createChiTietDonHang(listOrders[listOrders.length - 1].madonhang, selectedItems);
+    for(let d of chiTietDonHang)
+      CreateOrderDetail(d);
 
     // Update cart
-    const updatedCart = Array.from(cartItems)
-      .filter((item) => {
-        const checkbox = item.querySelector('input[type="checkbox"]');
-        return !checkbox || !checkbox.checked;
-      })
-      .map((item) => {
-        const name = item.querySelector(".info-product-cart p").innerText.trim();
-        const priceElement = item.querySelector(".price");
-        const quantityElement = item.querySelector(".quantity-cart");
-        const rawPrice = priceElement ? priceElement.innerText.replace(/\D/g, "") : "0";
-        const price = parseFloat(rawPrice) || 0;
-        const quantity = quantityElement ? parseInt(quantityElement.value, 10) : 1;
-        const image = item.querySelector("img").src;
-        return { name, price, quantity, image };
-      });
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    // Lấy giỏ hàng hiện tại
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Lặp từng sản phẩm đã mua
+    for (const d of chiTietDonHang) {
+      const cartItem = cart.find(item => item.id == d.maphienbansp);
+      if (cartItem) {
+        cartItem.quantity -= Number(d.soluong);
+
+        if (cartItem.quantity <= 0)
+          cart = cart.filter(item => item.id != d.maphienbansp);
+      }
+    }
+    // Lưu lại cart mới
+    localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
     displayCartItems(elementsObj);
     handleQuantityChange(elementsObj);
@@ -612,7 +570,29 @@ async function handleOrderPlacement(elementsObj) {
     alert("Đặt hàng thành công!");
   });
 }
+//! DEBUG HERE
+function createDonHang(userId, userAddress, totalOrderPrice, formattedDate, status) {
+  return {
+    makh: userId,
+    thoigian: formattedDate,
+    tongtien: totalOrderPrice,
+    diachi: userAddress,
+    trangthai: status,
+  };
+}
 
+async function createChiTietDonHang(orderId, selectedItems) {
+  const products = await getProductPhones();
+  return selectedItems.map((item) => {
+    const product = products.find((prod) => prod.tensp.toLowerCase() === item.name.toLowerCase());
+    return {
+      madonhang: orderId,
+      maphienbansp: item.id,
+      dongia: item.price.toString(),
+      soluong: item.quantity.toString(),
+    };
+  });
+}
 
 async function attachAddToCartInDetails() {
   const addToCartButton = Bridge.$$(".add-to-cart.button");
@@ -648,7 +628,7 @@ async function attachAddToCartInDetails() {
         alert("Vui lòng chọn phiên bản bộ nhớ (RAM/ROM)!");
         return;
       }
-      
+
       if (!productColor) {
         alert("Vui lòng chọn màu sắc!");
         return;
@@ -687,11 +667,11 @@ async function attachAddToCartInDetails() {
       alert("Vui lòng chọn phiên bản bộ nhớ (RAM/ROM)!");
       return;
     }
-    
+
     if (!productColor) {
       alert("Vui lòng chọn màu sắc!");
       return;
-    }    
+    }
 
     addToCart(productName, productQuantity, productColor, ram, rom, price);
     increaseCartCount();

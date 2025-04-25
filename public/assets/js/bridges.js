@@ -50,15 +50,15 @@ function getElementsHandler() {
     getFSCountDown: () => $(".fs-countdown"),
     getHistoryOrder: () => $(".history-tracking-container #history-order-container"),
     //cart
-    getCartItems: () => $$(".block-product.block-cart"), 
-    getQuantityInputs: () => $$(".quantity-cart"), 
-    getTotalPrice: () => $(".total-price"),  
+    getCartItems: () => $$(".block-product.block-cart"),
+    getQuantityInputs: () => $$(".quantity-cart"),
+    getTotalPrice: () => $(".total-price"),
     getshippingFee: () => $(".shipping-fee"),
     getshippingDiscount: () => $(".shipping-discount"),
     getvoucherDiscount: () => $(".voucher-discount"),
-    getPrices:() =>$(".prices"),
-    getRemoveButtons: () => $$(".fa-trash"),  
-    getSelectAllCheckbox: () => $('#selection-item'),  
+    getPrices: () => $(".prices"),
+    getRemoveButtons: () => $$(".fa-trash"),
+    getSelectAllCheckbox: () => $('#selection-item'),
     // buttons
     getHomepageBtn: () => $$(".return-homepage"),
     getNavBtn: () => $$(".nav-btn"),
@@ -85,15 +85,15 @@ function getElementsHandler() {
     getPriceFilter: () => $("#price-filter"),
     //profile
     getProfileContent: () => $("#profile-content"),
-getProfileTabs: () => $$(".profile-tab"),
-getActiveProfileTab: () => $(".profile-tab.active"),
-getProfileMenuItems: () => $$(".profile-menu-item"),
-getProfileBtn: () => $$(".profile-btn"),
-getProfileInfoForm: () => $("#profile-info-form"),
-getPasswordForm: () => $("#change-password-form"),
-getProfileInputs: () => $("#profile-info-form input, #profile-info-form select"),
-getPasswordInputs: () => $("#change-password-form input"),
-getPasswordToggleButtons: () => $$(".toggle-password"),
+    getProfileTabs: () => $$(".profile-tab"),
+    getActiveProfileTab: () => $(".profile-tab.active"),
+    getProfileMenuItems: () => $$(".profile-menu-item"),
+    getProfileBtn: () => $$(".profile-btn"),
+    getProfileInfoForm: () => $("#profile-info-form"),
+    getPasswordForm: () => $("#change-password-form"),
+    getProfileInputs: () => $("#profile-info-form input, #profile-info-form select"),
+    getPasswordInputs: () => $("#change-password-form input"),
+    getPasswordToggleButtons: () => $$(".toggle-password"),
     // others
     getScrollTop: () => $("#scroll-top"),
     getDotsBar: () => $$(".dots-bar"),
@@ -114,11 +114,12 @@ function throttle(callback, delayTime, key) {
 
   return function (...restArgs) {
     let shouldWait = throttleList[key].shouldWait;
-  
+
     if (shouldWait) return;
     callback(...restArgs);
     throttleList[key].shouldWait = true;
-    setTimeout(() => (throttleList[key].shouldWait = false), delayTime)};
+    setTimeout(() => (throttleList[key].shouldWait = false), delayTime)
+  };
 }
 
 function debounce(callback, delayTime, key) {
@@ -147,7 +148,7 @@ async function promiseDOMHandler(fileAddress) {
 function navigateRootURL() {
   // window.location.replace(`${location.href.slice(0, location.href.lastIndexOf("/") + 1)}`);
 
-  
+
   // const indexContent = getElementsHandler().getIndexContainer();
   // const rootSessionContents = getElementsHandler().getRootSessionContent();
   // indexContent.classList.toggle("disable");
@@ -157,16 +158,16 @@ function navigateRootURL() {
   //       element.classList.toggle("disable")
   //     else 
   //       return;
-        
+
   //   }
   //   else if (element.hasAttribute("id") && element.classList.contains("disable"))
   //     return;
   //   else 
   //     element.classList.toggle("disable");
-      
+
   // });
   hiddenException("index-content");
-  
+
 }
 
 export default getElementsHandler;

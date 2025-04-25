@@ -1,5 +1,6 @@
 const USER_API = '../../../app/api/userAPI.php';
 const ORDER_API = '../../../app/api/orderAPI.php';
+const DETAIL_API = '../../../app/api/detailOrderAPI.php';
 
 async function GetProducts() {
      try {
@@ -25,6 +26,22 @@ async function GetDetailPRoducts(id) {
           console.error("Lỗi khi gọi API:", error);
      }
 }
+
+async function GetVariantId(masp, mausac, ram, rom) {
+     try {
+         const response = await fetch(`../../../app/api/phienbansoAPi.php?masp=${masp}&mausac=${mausac}&ram=${ram}&rom=${rom}`);
+         const data = await response.json();
+         if (data.status === "success") {
+             return data.data.maphienbansp;
+         } else {
+             console.error("Lỗi:", data.message);
+             return null;
+         }
+     } catch (error) {
+         console.error("Lỗi khi gọi API GetVariantId:", error);
+         return null;
+     }
+ } 
 
 async function GetColor() {
      try {
@@ -234,6 +251,8 @@ async function GetOrderById(madonhang) {
 
 async function CreateOrder(order) {
      try {
+          console.log(order);
+          console.log(JSON.stringify(order));
           const res = await fetch(ORDER_API, {
                method: 'POST',
                headers: { 'Content-Type': 'application/json' },
@@ -306,21 +325,96 @@ async function GetOrdersByCustomer(makh) {
      }
 }
 
-async function GetInvoices() {
-
-     return;
+async function GetOrderDetails(madonhang) {
+     try {
+          const response = await fetch(`${DETAIL_API}?madonhang=${madonhang}`);
+          const data = await response.json();
+          if (data.status === 'success') {
+               return data.data; // mảng các chi tiết đơn
+          } else {
+               console.error('Lỗi:', data.message);
+          }
+     } catch (error) {
+          console.error('Lỗi khi gọi API GetOrderDetails:', error);
+     }
 }
 
-async function GetOthers() {
+async function GetOrderDetail(madonhang, maphienbansp) {
+     try {
+          const response = await fetch(
+               `${DETAIL_API}?madonhang=${madonhang}&maphienbansp=${maphienbansp}`
+          );
+          const data = await response.json();
+          if (data.status === 'success') {
+               return data.data; // object chi tiết đơn duy nhất
+          } else {
+               console.error('Lỗi:', data.message);
+          }
+     } catch (error) {
+          console.error('Lỗi khi gọi API GetOrderDetail:', error);
+     }
+}
 
-     return;
+async function CreateOrderDetail(detail) {
+     try {
+          console.log(detail);
+          console.log(JSON.stringify(detail));
+          const response = await fetch(DETAIL_API, {
+               method: 'POST',
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify(detail)
+          });
+          const data = await response.json();
+          if (data.status === 'success') {
+               return data.message;
+          } else {
+               console.error('Lỗi:', data.message);
+          }
+     } catch (error) {
+          console.error('Lỗi khi gọi API CreateOrderDetail:', error);
+     }
+}
+
+async function UpdateOrderDetail(detail) {
+     try {
+          const response = await fetch(DETAIL_API, {
+               method: 'PUT',
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify(detail)
+          });
+          const data = await response.json();
+          if (data.status === 'success') {
+               return data.message;
+          } else {
+               console.error('Lỗi:', data.message);
+          }
+     } catch (error) {
+          console.error('Lỗi khi gọi API UpdateOrderDetail:', error);
+     }
+}
+
+async function DeleteOrderDetail(madonhang, maphienbansp) {
+     try {
+          const response = await fetch(DETAIL_API, {
+               method: 'DELETE',
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify({ madonhang, maphienbansp })
+          });
+          const data = await response.json();
+          if (data.status === 'success') {
+               return data.message;
+          } else {
+               console.error('Lỗi:', data.message);
+          }
+     } catch (error) {
+          console.error('Lỗi khi gọi API DeleteOrderDetail:', error);
+     }
 }
 
 export {
      GetProducts,
-     GetInvoices,
-     GetOthers,
      GetDetailPRoducts,
+     GetVariantId,
      GetColor,
      GetRam,
      GetRom,
@@ -340,6 +434,11 @@ export {
      UpdateOrder,
      UpdateOrderStatus,
      DeleteOrder,
-     GetOrdersByCustomer
+     GetOrdersByCustomer,
+     GetOrderDetails,
+     GetOrderDetail,
+     CreateOrderDetail,
+     UpdateOrderDetail,
+     DeleteOrderDetail
 };
 

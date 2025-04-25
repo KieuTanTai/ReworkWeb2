@@ -1,7 +1,8 @@
 "use strict";
 import * as Bridge from "./bridges.js";
-import { GetDetailPRoducts, GetOrdersByCustomer, GetProducts } from "./getdata.js";
+import { GetDetailPRoducts, GetOrderDetail, GetOrderDetails, GetOrdersByCustomer, GetProducts } from "./getdata.js";
 import { disableSiblingContainer, formatPrices, headerUserInfo, hiddenException, scrollView } from "./interfaces.js";
+import { getDetailPhones, getProductPhones } from "./product.js";
 
 function returnHomepage(elementsObj) {
      let testURL = location.pathname;
@@ -12,7 +13,7 @@ function returnHomepage(elementsObj) {
      homepageBtns?.forEach((btn) =>
           btn.addEventListener("click", () => Bridge.navigateRootURL())
      );
-     webLogo?.forEach((element) => 
+     webLogo?.forEach((element) =>
           element.addEventListener("click", () => Bridge.navigateRootURL()));
 }
 
@@ -61,6 +62,7 @@ function showTracking(trackers) {
      const container = elementsObj.getStatusContainer();
      const blankOrder = container?.querySelector("#blank-order");
      const customerOrder = container?.querySelector("#customer-order");
+     let isLoggedIn = sessionStorage.getItem("login");
      // navigate to index.html if not have any container
      if (!container) {
           sessionStorage.setItem("retryTracking", "true");
@@ -73,11 +75,11 @@ function showTracking(trackers) {
      const hasOrders = Array.isArray(trackers) && trackers.length > 0;
 
      if (!hasOrders || !isLoggedIn) {
-       blankOrder.classList.add("active");
-       customerOrder.classList.remove("active");
+          blankOrder.classList.add("active");
+          customerOrder.classList.remove("active");
      } else {
-       customerOrder.classList.add("active");
-       blankOrder.classList.remove("active");
+          customerOrder.classList.add("active");
+          blankOrder.classList.remove("active");
      }
 }
 
@@ -109,14 +111,14 @@ function historyNavigate(elementsObj) {
 }
 
 // ! NEED CHANGE HERE
-function showOrderContent() {
+async function showOrderContent() {
      let elementsObj = Bridge.default();
      let historyContainer = elementsObj.getHistoryOrder();
-     let lists = localStorage.getItem("donhang");
+     let lists = await GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["makh"]);
      let orderContainer = elementsObj.getOrderContent();
      hiddenException("order-content");
      disableSiblingContainer(orderContainer);
-     if (!lists || !JSON.parse(sessionStorage.getItem("hasLogin"))) {
+     if (!lists || !JSON.parse(sessionStorage.getItem("login"))) {
           blankOrder(elementsObj);
           return;
      }
@@ -126,113 +128,107 @@ function showOrderContent() {
           Bridge.navigateRootURL();
      }
 
-     // elementsObj.getHistoryContainer()?.classList.remove("disable");
-     // if (historyContainer.classList.contains("active")) return;
-     // historyContainer.classList.add("active");
-     // renderOrder(elementsObj);
+     elementsObj.getHistoryContainer()?.classList.remove("disable");
+     if (historyContainer.classList.contains("active")) return;
+     historyContainer.classList.add("active");
+     renderOrder(elementsObj);
 }
 
-function scriptOrder(customer, detailOrder) {
+async function scriptOrder(customer) {
+     let productsList = await getProductPhones();
+     let details = await GetOrderDetails(customer.madonhang);
+     let idProduct = (await getDetailPhones()).find((detail) => detail.maphienbansp == details[0].maphienbansp).masp;
+     let product = productsList.find((product) => product.masp === idProduct);
      let status;
-     let productsList = JSON.parse(localStorage.getItem("products"));
-     let product = productsList.find((product) => product.productID === detailOrder.id_sanpham);
-     let deliveried = addDaysToDate(customer.date, 3).toLocaleDateString("vi-VN", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false,
-          timeZone: "Asia/Ho_Chi_Minh",
-     });
+     console.log(customer);
+     console.log(product);
+     console.log(idProduct);
 
-     // get status of this order
-     if (status == 1) status = "chờ xử lý";
-     else if (status == 2) status = "chờ lấy hàng";
-     else if (status == 3) status = "chờ giao hàng";
-     else if (status == 4) status = "đã giao hàng";
-     // get script html and append it 
+     // get status of this order (cập nhật trạng thái cho đơn hàng)
+     if (customer.trangthai === 1) status = "chờ xử lý";
+     else if (customer.trangthai === 2) status = "chờ lấy hàng";
+     else if (customer.trangthai === 3) status = "chờ giao hàng";
+     else if (customer.trangthai === 4) status = "đã giao hàng";
+
+     // get script html and append it (render đơn hàng)
      let script = `
-          <div class="block-product">
+<div class="block-product">
               <div class="cart-content">
                   <div class="completed-order-info margin-bottom-8">
-                        <img src="${product?.img}">
+                        <img src="${`/public/assets/images/Phone/RedMagics/red-magic-supernova_1_2_2_2.webp`}">
                         <div class="full-width padding-left-12">
-                            <p class="capitalize padding-bottom-8">${product.name}</p>
+                            <p class="capitalize padding-bottom-8">${product.tensp}</p>
                             <div class="block-product-price text-end">
-                                  <div class="quantity-cart">x${detailOrder.sl}</div>
-                                  <div class="new-price price">${detailOrder.don_gia * (1 - product.sale)}</div>
+                                  <div class="quantity-cart">x${details.length}</div>
+                                  <div class="new-price price">${customer.tongtien}</div>
                             </div>
                         </div>
                   </div>
                   <div
                         class="flex justify-space-between padding-bottom-8 padding-top-8">
-                        <div class="total-item opacity-0-6">${detailOrder.sl} item</div>
-                        <div class="price total-price font-bold text-end">${Math.round(detailOrder.don_gia * (1 - product.sale) * detailOrder.sl)}</div>
+                        <div class="total-item opacity-0-6">${details.length} item</div>
+                        <div class="price total-price font-bold text-end">${customer.tongtien}</div>
                   </div>
                   <div class="order-status flex justify-space-between padding-top-8 padding-bottom-8">
                         <span class="opacity-0-8 font-size-13 ${status === "đã giao hàng" ? "success-color" : "waiting-color"}">${status ? status : "chờ xử lý"}</span>
                         <div><i class="fa-solid fa-chevron-right fa-xs" style="color: var(--main-color);"></i></div></div>
                   <div class="flex align-center justify-space-between padding-top-8">
                         <span class="delivered-day flex opacity-0-8">
-                            <div>${deliveried}</div>
+                            <div>${status}</div>
                         </span>
 
                         <div class="flex">
-                          <span class="remove-btn button ${customer.status != 4 ? "" : "disable"}">
+                          <span class="remove-btn button ${customer.trangthai != 4 ? "" : "disable"}">
                                 <div class="capitalize"> Hủy Đơn</div>
                           </span>
                         </div>
                   </div>
               </div>
         </div>
-  `
+  `;
      return new DOMParser().parseFromString(script, "text/html").body.firstChild;
 }
 
-function renderOrder(elementsObj) {
+async function renderOrder(elementsObj) {
      let container = elementsObj.getHistoryOrderTable();
-     let ordersList = JSON.parse(localStorage.getItem("donhang"));
-     let detailOrders = JSON.parse(localStorage.getItem("chitiet_donhang"));
-     let loginAccount = JSON.parse(sessionStorage.getItem("hasLoginAccount"));
-     let customer = ordersList.filter((order) => order.id_khachhang === loginAccount.userID);
+     let ordersList = await GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["makh"]);
+     let loginAccount = JSON.parse(sessionStorage.getItem("loginAccount"));
+     let orders = ordersList.filter((order) => order.makh === loginAccount.makh);
+     let details = [];
 
-     if (customer && container) {
-          let details = [];
-          detailOrders.forEach((detail) => {
-               customer.forEach((cus) => {
-                    if (cus.id_donhang === detail.id_donhang) {
-                         let temp = {};
-                         temp.customer = cus;
-                         temp.detail = detail;
-                         details.push(temp);
-                    }
-               })
-          });
-          details.forEach((detail) => {
-               let script = scriptOrder(detail.customer, detail.detail);
+     for (let item of orders) {
+          const orderDetails = await GetOrderDetails(item.madonhang);
+          details.push(orderDetails);
+     }
+     console.log(details);
+
+     if (orders && container) {
+          // Render mỗi đơn hàng từ orders
+          orders.forEach(async (order) => {
+               let script = await scriptOrder(order);  // Gọi scriptOrder với đơn hàng tổng quát
                let removeBtn = script.querySelector(".remove-btn");
+
+               // Thêm sự kiện xóa đơn hàng
                removeBtn.addEventListener("click", () => {
                     container.removeChild(removeBtn.offsetParent);
-                    // reduce array of detail order on local
-                    detailOrders = detailOrders.filter((element) => element.id_donhang !== detail.id_donhang || element.id_sanpham !== detail.id_sanpham);
-                    if (detailOrders.filter((element) => element.id_donhang === customer.id_donhang).length === 0)
-                         ordersList = ordersList.filter((order) => order.id_khachhang !== loginAccount.userID);
-                    // update arrays
-                    localStorage.setItem("donhang", JSON.stringify(ordersList));
-                    localStorage.setItem("chitiet_donhang", JSON.stringify(detailOrders));
 
-                    // change container when not have any product
-                    if (container.childNodes.length === 0)
-                         blankOrder(elementsObj);
+                    // Cập nhật lại danh sách đơn hàng sau khi xóa
+                    ordersList = ordersList.filter((o) => o.id_donhang !== order.id_donhang);
+                    localStorage.setItem("donhang", JSON.stringify(ordersList));
+
+                    // Thay đổi container khi không còn sản phẩm
+                    if (container.childNodes.length === 0) blankOrder(elementsObj);
                });
+
                container.appendChild(script);
           });
+
           formatPrices(elementsObj);
      }
-     if (container.childNodes.length === 0)
-          blankOrder(elementsObj);
+
+     if (container.childNodes.length === 0) blankOrder(elementsObj);
 }
+
 
 function blankOrder(elementsObj) {
      let orderContainer = elementsObj.getOrderContent();
@@ -268,25 +264,25 @@ async function setQuantityBox(elementsObj) {
      const productID = Bridge.$(".product-id")?.innerHTML;
      const product = (await GetProducts()).find((product) => product.masp === productID);
      const realQuantity = (await GetDetailPRoducts(product?.masp)).soluongton;
- 
+
      reduceBtn.addEventListener("click", () => {
-         const value = parseInt(quantity.value) || 1;
-         quantity.value = Math.max(1, value - 1);
+          const value = parseInt(quantity.value) || 1;
+          quantity.value = Math.max(1, value - 1);
      });
- 
+
      increaseBtn.addEventListener("click", () => {
-         const value = parseInt(quantity.value) || 1;
-         quantity.value = Math.min(realQuantity, value + 1);
+          const value = parseInt(quantity.value) || 1;
+          quantity.value = Math.min(realQuantity, value + 1);
      });
- 
+
      quantity.addEventListener("change", () => {
-         let value = parseInt(quantity.value);
-         if (isNaN(value) || value < 1) value = 1;
-         if (value > realQuantity) value = realQuantity;
-         quantity.value = value;
+          let value = parseInt(quantity.value);
+          if (isNaN(value) || value < 1) value = 1;
+          if (value > realQuantity) value = realQuantity;
+          quantity.value = value;
      });
- }
- 
+}
+
 
 // handle scrolls
 function scrollToHandler(nameStaticPage) {
@@ -428,44 +424,6 @@ function singoutAccount(elementsObj) {
      Bridge.navigateRootURL();
 }
 
-function userDetail(elementsObj) {
-     let userDetailForm = elementsObj.getUserDetail();
-     let loginRegistrationForm = elementsObj.getAccountForm();
-     let historyBill = elementsObj.getHistoryBill();
-     let userOrders = elementsObj.getUserOrders();
-     // for checking account have order or not
-     let ordersList = JSON.parse(localStorage.getItem("donhang"));
-     if (!ordersList) ordersList = [];
-
-     let loginAccount = JSON.parse(sessionStorage.getItem("hasLoginAccount"));
-     let customer = ordersList.find((order) => order.id_khachhang === loginAccount.userID);
-
-     if (!userDetailForm) {
-          sessionStorage.setItem("userDetail", true);
-          Bridge.navigateRootURL();
-     }
-
-     // init action
-     hiddenException("account-content");
-     userDetailForm?.classList.remove("disable");
-     loginRegistrationForm?.classList.add("disable");
-     changeInfoUser(elementsObj);
-
-     // case action
-     if (!customer) {
-          historyBill.classList.add("disable");
-          userOrders.innerHTML = "Bạn chưa đặt mua sản phẩm.";
-     }
-     else {
-          historyBill.classList.remove("disable");
-          userOrders.innerHTML = `
-      <div class="order-tracking uppercase text-center font-bold font-size-16 button padding-8" 
-          style="max-width: 25%; background-color: var(--main-color);">tra cứu đơn hàng</div>
-    `;
-          trackingNavigate(elementsObj);
-     }
-}
-
 function changeInfoUser(elementsObj) {
      let editInfoBtn = elementsObj.getJsEditBtn();
      let submitInfoBtn = elementsObj.getJsSubmitBtn();
@@ -549,4 +507,4 @@ function updateListAccount(newInfo) {
 }
 
 export { cancelButtons, accountEvents, staticContents, historyNavigate, setQuantityBox, returnHomepage, trackingNavigate, smNavigationMenu };
-export { showOrderContent, showTracking, showLogin, showRegister, showForgotPassword, userDetail};
+export { showOrderContent, showTracking, showLogin, showRegister, showForgotPassword };

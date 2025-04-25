@@ -36,6 +36,35 @@ class DetailProduct {
             return null;
         }
     }
+
+    public function getVariantId(int $masp, int $mausac, int $ram, int $rom): ?int
+    {
+        $query = "SELECT maphienbansp 
+                  FROM {$this->table_name}
+                  WHERE masp = ?
+                    AND mausac = ?
+                    AND ram = ?
+                    AND rom = ?
+                  LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        if (!$stmt) {
+            error_log("Prepare failed in getVariantId: " . $this->conn->error);
+            return null;
+        }
+
+        $stmt->bind_param("iiii", $masp, $mausac, $ram, $rom);
+        if (!$stmt->execute()) {
+            error_log("Execute failed in getVariantId: " . $stmt->error);
+            $stmt->close();
+            return null;
+        }
+
+        $result = $stmt->get_result();
+        $row    = $result->fetch_assoc();
+
+        $stmt->close();
+        return $row ? (int)$row['maphienbansp'] : null;
+    }
 }
 
 

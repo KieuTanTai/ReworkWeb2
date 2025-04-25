@@ -3,7 +3,6 @@ require_once '../controller/order/orderController.php';
 
 $controller = new OrderController();
 
-<<<<<<< HEAD
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
   $action = $_POST['action'];
 
@@ -13,8 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     exit;
 }
 }  
-=======
->>>>>>> 968e9fef6a1dcbb3eeac786b2864ab5386736a48
 $viewData = $controller->index();
 $ordersToDisplay = $viewData['orders'];
 $currentPage = $viewData['currentPage'];
@@ -122,32 +119,6 @@ include("sidebar1.php");
             <div class="row g-3">
               <!--begin::Col-->
               <div class="col-md-2">
-<<<<<<< HEAD
-=======
-                <!-- <div class="btn-group">
-                <br> 
-                <br>
-                <br>
-                <br>
-                <button
-                    type="button"
-                    class="btn btn-primary dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    id="statusButton"
-                >
-                    Tình Trạng Đơn Hàng
-                </button>
-                <ul class="dropdown-menu" onchange="findOrderStatus()" id="statusButton2">
-                    <li class="dropdown-item" onclick="updateStatus(this)" value="">Tất Cả</li>
-                    <li class="dropdown-item" onclick="updateStatus(this)" value="1">Chưa xác nhận</li>
-                    <li class="dropdown-item" onclick="updateStatus(this)" value="2">Đã xác nhận</li>
-                    <li class="dropdown-item" onclick="updateStatus(this)" value="3">Đã giao</li>
-                    <li class="dropdown-item" onclick="updateStatus(this)" value="4">Huỷ đơn</li>
-                </ul>  
-                
-            </div> -->
->>>>>>> 968e9fef6a1dcbb3eeac786b2864ab5386736a48
                 <div class="mb-3">
                   <label for="statusButton1" class="form-label">Tình Trạng</label>
                   <select name="" id="statusButton1" class="form-control">
@@ -236,11 +207,7 @@ include("sidebar1.php");
                       </form>
                     </td>
                     <td>
-<<<<<<< HEAD
                       <a href="order_detail.php?id=<?= htmlspecialchars($order['madonhang']) ?>">
-=======
-                      <a href="order_detail.php">
->>>>>>> 968e9fef6a1dcbb3eeac786b2864ab5386736a48
                         <button class="btn btn-primary">Xem chi tiết</button>
                       </a>
                     </td>
@@ -275,11 +242,7 @@ include("sidebar1.php");
                     }
 
                     for ($i = $start; $i <= $end; $i++): ?>
-<<<<<<< HEAD
                       <li class="page-item <?= ($i == $currentPage) ? 'active' : '' ?>">
-=======
-                      <li class="page-item <?= ($i = $currentPage) ? 'active' : '' ?>">
->>>>>>> 968e9fef6a1dcbb3eeac786b2864ab5386736a48
                         <a class="page-link" href="order.php?page=<?= $i ?>"><?= $i ?></a>
                       </li>
                     <?php endfor;

@@ -1,5 +1,4 @@
 "use strict";
-import { userDetail } from "./action.js";
 import * as Bridge from "./bridges.js";
 import * as FlashSale from "./flashsale.js";
 import { sleep } from "./navigates.js";
@@ -43,7 +42,6 @@ function headerUserInfo(elementsObj) {
       
       // Hiển thị tên người dùng từ session
       userName.innerHTML = userAccount.tenkhachhang || userAccount.user_name || "Người dùng";
-      container.addEventListener("click", () => userDetail(elementsObj));
   }
   else {
       noSignIn.classList.remove("disable");
@@ -218,7 +216,7 @@ async function getInitProducts(elementsObj) {
     resizeImages(elementsObj);
     categoryIsEmpty();
     // console.log(await Get.GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["makh"]));
-    console.log(await Get.GetOrders());
+    // console.log(await Get.GetOrders());
   } catch (error) {
     console.error(error);
   }
