@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/orderTracking.php';
 function loadDefaultHomepage()
 { ?>
      <div class="web-content">
@@ -223,6 +224,7 @@ function loadDefaultHomepage()
                               <!-- cart content -->
                               <?php renderSearch(); ?>
                               <?php renderCart(); ?>
+                              <?php renderTracking();?>
                     </section>
                </div>
           </main>

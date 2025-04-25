@@ -16,11 +16,11 @@ session_start();
      <script type="module" src="./assets/js/index.js"></script>
      <title>Light Novel World</title>
      <?php
+     require "../app/views/orderTracking.php";
      require "../app/views/header-footer.php";
      require "../app/views/detail_product.php";
      require "../app/views/cart.php";
      require "../app/views/homepage.php";
-     require "../app/views/search_result.php"
      ?>
 </head>
 

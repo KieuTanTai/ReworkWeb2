@@ -83,7 +83,7 @@
                         <tr>
                           <td>
                             <img
-                              src="../../dist/assets/img/default-150x150.png"
+                              src="../../public/assets/images/icons/Web_logo/yang-icon-5.webp"
                               alt="Product 1"
                               class="rounded-circle img-size-32 me-2"
                             />
@@ -104,7 +104,7 @@
                         <tr>
                           <td>
                             <img
-                              src="../../dist/assets/img/default-150x150.png"
+                              src="../../public/assets/images/icons/Web_logo/yang-icon-2.webp"
                               alt="Product 1"
                               class="rounded-circle img-size-32 me-2"
                             />
@@ -125,7 +125,7 @@
                         <tr>
                           <td>
                             <img
-                              src="../../dist/assets/img/default-150x150.png"
+                              src="../../public/assets/images/icons/Web_logo/yang-icon-4.webp"
                               alt="Product 1"
                               class="rounded-circle img-size-32 me-2"
                             />
@@ -146,7 +146,7 @@
                         <tr>
                           <td>
                             <img
-                              src="../../dist/assets/img/default-150x150.png"
+                              src="../../public/assets/images/icons/Web_logo/yang-icon-3.webp"
                               alt="Product 1"
                               class="rounded-circle img-size-32 me-2"
                             />

@@ -67,7 +67,7 @@ $products = $controller->index(); // lấy danh sách sản phẩm
             </table>
         </div>
         <!-- /.card-body -->
-        <div class="card-footer clearfix">
+        <div class="card-footer grid col col-l-12 flex justify-end clearfix">
             <ul class="pagination pagination-sm m-0 float-end">
                 <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
                 <li class="page-item"><a class="page-link" href="#">1</a></li>

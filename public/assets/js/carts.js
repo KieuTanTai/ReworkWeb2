@@ -5,6 +5,7 @@ import { getDetailPhones, getProductPhones } from "./product.js";
 import { formatPrices, hiddenException } from "./interfaces.js";
 import { sleep } from "./navigates.js";
 import { userDetail } from "./action.js";
+import { GetUserById } from "./getdata.js";
 
 // cart navigation
 async function handleCartNavigation() {
@@ -467,9 +468,9 @@ function createChiTietDonHang(orderId, selectedItems, totalOrderPrice) {
   });
 }
 
-function handleOrderPlacement(elementsObj) {
+async function handleOrderPlacement(elementsObj) {
   const checkoutButton = document.querySelector(".checkout-btn");
-  let accountLogin = JSON.parse(sessionStorage.getItem("loginAccount"));
+  let accountLogin = await GetUserById(JSON.parse(sessionStorage.getItem("loginAccount"))["makh"]);
   if (!checkoutButton) {
     console.warn("Không tìm thấy nút 'checkout-btn'.");
     return;
@@ -546,6 +547,7 @@ function handleOrderPlacement(elementsObj) {
     const shippingDiscount = 5250;
     const voucherDiscount = 3000;
 
+    //! NEED TO CHANGE HERE
     const totalOrderPrice =
       Prices + shippingFee - shippingDiscount - voucherDiscount;
     const currentDate = new Date();

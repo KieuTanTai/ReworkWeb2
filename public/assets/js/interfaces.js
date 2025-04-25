@@ -207,6 +207,8 @@ async function getInitProducts(elementsObj) {
     formatPrices(elementsObj);
     resizeImages(elementsObj);
     categoryIsEmpty();
+    // console.log(await Get.GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["makh"]));
+    console.log(await Get.GetOrders());
   } catch (error) {
     console.error(error);
   }

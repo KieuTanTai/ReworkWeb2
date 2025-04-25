@@ -1,6 +1,6 @@
 "use strict";
 import * as Bridge from "./bridges.js";
-import { GetDetailPRoducts, GetProducts } from "./getdata.js";
+import { GetDetailPRoducts, GetOrdersByCustomer, GetProducts } from "./getdata.js";
 import { disableSiblingContainer, formatPrices, headerUserInfo, hiddenException, scrollView } from "./interfaces.js";
 
 function returnHomepage(elementsObj) {
@@ -46,11 +46,11 @@ function cancelButtons(elementsObj) {
 }
 
 //! navigate to order-tracking
-function trackingNavigate(elementsObj) {
+async function trackingNavigate(elementsObj) {
      // navigate to index.html if not have any container
      const buttons = elementsObj.getOrderTrackingBtn();
      if (!buttons) return;
-     const trackers = localStorage.getItem("donhang");
+     const trackers = await GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["makh"]);
      buttons.forEach((btn) =>
           btn.addEventListener("click", Bridge.throttle(() => showTracking(trackers), 200, "statusNav")));
      if (trackers) orderInfo();
@@ -70,13 +70,15 @@ function showTracking(trackers) {
      hiddenException("order-content");
      disableSiblingContainer(elementsObj.getOrderContent());
      elementsObj.getStatusContainer()?.classList.remove("disable");
-     // if (!trackers || !JSON.parse(sessionStorage.getItem("hasLogin"))) {
-     //      blankOrder.classList.add("active");
-     //      customerOrder.classList.contains("active") ? customerOrder.classList.remove("active") : customerOrder;
-     // } else {
-     //      customerOrder.classList.add("active");
-     //      blankOrder.classList.contains("active") ? blankOrder.classList.remove("active") : blankOrder;
-     // }
+     const hasOrders = Array.isArray(trackers) && trackers.length > 0;
+
+     if (!hasOrders || !isLoggedIn) {
+       blankOrder.classList.add("active");
+       customerOrder.classList.remove("active");
+     } else {
+       customerOrder.classList.add("active");
+       blankOrder.classList.remove("active");
+     }
 }
 
 function orderInfo() {

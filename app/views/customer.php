@@ -104,8 +104,10 @@ include ("sidebar1.php");
     
   
   
-<script src="../../dist/js/adminlte.js"></script>
+<script src="../../public/assets/js/adminlte.js"></script>
 <script src="https://unpkg.com/popper.js@1/dist/umd/popper.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.5.0/styles/overlayscrollbars.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.5.0/browser/overlayscrollbars.browser.es.min.js"></script>
 
 <script>
 const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -117,7 +119,7 @@ scrollbarClickScroll: true,
 document.addEventListener('DOMContentLoaded', function () {
 const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
 if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+OverlayScrollbarsGlobal?.OverlayScrollbars(sidebarWrapper, {
 scrollbars: {
   theme: Default.scrollbarTheme,
   autoHide: Default.scrollbarAutoHide,

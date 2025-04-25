@@ -20,7 +20,7 @@ class Order {
         $query = "SELECT * FROM ".$this->table_name;
         $result = $this->conn->query($query);
 
-        if($result){
+        if(!$result){
             die("Lỗi truy vấn: ".$this->conn->error);
         }
 
@@ -95,6 +95,10 @@ class Order {
         }
 
         return false;
+    }
+
+    public function getTableName() {
+        return $this->table_name;
     }
 
     public function getTotalOrdersCount(): int
@@ -194,6 +198,17 @@ class Order {
         $result->free();
 
         return $items; 
+    }
+    public function getByCustomer(int $makh)
+    {
+        $query = "SELECT * 
+                  FROM {$this->table_name}
+                  WHERE makh = ?
+                  ORDER BY thoigian DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $makh);
+        $stmt->execute();
+        return $stmt->get_result();
     }
 }
 ?>
