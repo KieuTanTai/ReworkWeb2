@@ -14,7 +14,7 @@ if (isLoggedIn()) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $login_input = trim($_POST['customer-login']);
     $password = $_POST['customer-password-login'];
-    
+
     // Xác thực đầu vào
     if (empty($login_input)) {
         $_SESSION['login_error'] = "Vui lòng nhập email hoặc số điện thoại!";
@@ -23,14 +23,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // Thực hiện đăng nhập - không cần truyền $conn vì đã được sử dụng toàn cục trong model
         $result = loginUser($login_input, $password);
-        
+
         if ($result['success']) {
-            // Đăng nhập thành công
-            // Chuyển hướng dựa vào quyền (nếu trangthai = 2 là admin)
+            // Gán thông tin khách hàng để truyền qua JS
+            $_SESSION['login_info'] = [
+                'makh' => $result['user']['makh'],
+                'tenkhachhang' => $result['user']['tenkhachhang'],
+            ];
+
             if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
                 header("Location: ../admin/admin.php");
             } else {
-                // Chuyển về trang chủ hoặc trang trước đó
                 $redirect = $_SESSION['redirect_url'] ?? '../../public/index.php';
                 unset($_SESSION['redirect_url']);
                 header("Location: $redirect");
@@ -41,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['login_error'] = $result['message'];
         }
     }
-    
+
     // Nếu có lỗi, chuyển hướng lại form đăng nhập
     header("Location: ../views/login.php");
     exit();

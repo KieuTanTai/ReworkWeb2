@@ -98,7 +98,7 @@ function renderHeader()
                          <div class="flex align-center full-height">
                               <div id="no-sign-in" class="flex justify-center align-center">
                                    <i class="fa-regular fa-circle-user fa-xl" style="color: var(--main-color)"></i>
-                                   <p class="padding-left-8">Tài khoản</p>
+                                   <p class="user-name-account padding-left-8">Tài khoản</p>
                               </div>
 
                               <div class="header-user-info flex justify-center align-center disable">
@@ -111,18 +111,18 @@ function renderHeader()
                               <!-- account -->
                               <nav class="nav-account flex justify-center align-center flex-direction-y">
                                    <?php if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true): ?>
-                                   <a href="../app/views/login.php" title="Đăng nhập" class="lnw-btn active js-login margin-bottom-16">
+                                   <a href="../app/views/login.php" title="Đăng nhập" class="lnw-btn active js-login margin-bottom-16 text-center font-size-14">
                                         <div class="font-bold uppercase">Đăng nhập</div>
                                    </a>
 
-                                   <a href="../app/views/register.php" title="Đăng ký" class="lnw-btn js-register">
+                                   <a href="../app/views/register.php" title="Đăng ký" class="lnw-btn js-register text-center font-size-14">
                                         <div class="font-bold uppercase">Đăng ký</div>
                                    </a>
                                    <?php else: ?>
-                                   <a href="profile.php" title="Thông tin cá nhân" class="lnw-btn margin-bottom-16">
+                                        <a title="Thông tin cá nhân" class="profile-btn lnw-btn margin-bottom-16 font-size-14 text-center">
                                         <div class="font-bold uppercase">Thông tin cá nhân</div>
                                    </a>
-                                   <a href="../app/controller/logout_controller.php" title="Đăng xuất" class="lnw-btn active js-login margin-bottom-16">
+                                   <a href="../app/controller/logout_controller.php" title="Đăng xuất" class="lnw-btn active .js-signout margin-bottom-16 font-size-14 text-center">
                                         <div class="font-bold uppercase">Đăng xuất</div>
                                    </a>
                                    <?php endif; ?>
@@ -229,7 +229,6 @@ function renderSubHeader()
                </div>
           </div>
      </section>
-     </main>
      <?php
 }
 ?>

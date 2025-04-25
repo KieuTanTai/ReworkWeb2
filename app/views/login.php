@@ -15,10 +15,10 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập - Mobile Phone Store</title>
     <link rel="shortcut icon" href="../../public/assets/images/icons/web_logo/main-logo.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="../../assets/fonts/fontawesome-6.6.0/css/all.min.css" />
-    <link rel="stylesheet" href="../../assets/css/index.css" />
-    <link rel="stylesheet" href="../../assets/css/responsive.css" />
-    <link rel="stylesheet" href="../../public/assets/css/login.css">
+    <link rel="stylesheet" href="../../public/assets/fonts/fontawesome-6.6.0/css/all.min.css" />
+    <link rel="stylesheet" href="../../public/assets/css/index.css" />
+    <link rel="stylesheet" href="../../public/assets/css/responsive.css" />
+    <link rel="stylesheet" href="/public/assets/css/login.css">
 </head>
 <body>
     <div id="account-content">

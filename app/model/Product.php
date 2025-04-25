@@ -24,7 +24,7 @@
 
         // Phương thức lấy tất cả sản phẩm
         public function getAll() {
-            $query = "SELECT * FROM " . $this->table_name;
+            $query = "SELECT * FROM " . $this->table_name . " WHERE trangthai = 1 ORDER BY masp ASC";
             $result = $this->conn->query($query);
             
             if (!$result) {
@@ -37,40 +37,57 @@
         // Phương thức tạo sản phẩm mới
         public function create() {
             $query = "INSERT INTO " . $this->table_name . " 
-            (tensp, hinhanh, chipxuly, dungluongpin, kichthuocman, hedieuhanh, camerasau, cameratruoc, thuonghieu) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+                      (tensp, hinhanh, chipxuly, dungluongpin, kichthuocman, hedieuhanh, camerasau, cameratruoc, thoigianbaohanh, thuonghieu, trangthai) 
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            
+            // Chuẩn bị truy vấn với MySQLi
             $stmt = $this->conn->prepare($query);
-
-            // Làm sạch dữ liệu
-            $this->tensp = htmlspecialchars(strip_tags($this->tensp));
-            $this->hinhanh = htmlspecialchars(strip_tags($this->hinhanh));
-            $this->chipxuly = htmlspecialchars(strip_tags($this->chipxuly));
-            $this->dungluongpin = htmlspecialchars(strip_tags($this->dungluongpin));
-            $this->kichthuocman = htmlspecialchars(strip_tags($this->kichthuocman));
-            $this->hedieuhanh = htmlspecialchars(strip_tags($this->hedieuhanh));
-            $this->camerasau = htmlspecialchars(strip_tags($this->camerasau));
-            $this->cameratruoc = htmlspecialchars(strip_tags($this->cameratruoc));
-            $this->thuonghieu = htmlspecialchars(strip_tags($this->thuonghieu));
-
-            // Bind các giá trị
-            $stmt->bind_param("sssiisssi", 
-            $this->tensp,
-            $this->hinhanh,
-            $this->chipxuly,
-            $this->dungluongpin, 
-            $this->kichthuocman, 
-            $this->hedieuhanh,   
-            $this->camerasau,
-            $this->cameratruoc,
-            $this->thuonghieu    
-        );
-
-            if($stmt->execute()) {
-                return true;
+            if ($stmt === false) {
+                file_put_contents(__DIR__ . '/sql_error.log', "Prepare failed: " . $this->conn->error);
+                return false;
             }
-            return false;
+        
+            // Làm sạch dữ liệu
+            $tensp = htmlspecialchars(strip_tags($this->tensp));
+            $hinhanh = htmlspecialchars(strip_tags($this->hinhanh));
+            $chipxuly = htmlspecialchars(strip_tags($this->chipxuly));
+            $dungluongpin = htmlspecialchars(strip_tags($this->dungluongpin));
+            $kichthuocman = htmlspecialchars(strip_tags($this->kichthuocman));
+            $hedieuhanh = htmlspecialchars(strip_tags($this->hedieuhanh));
+            $camerasau = htmlspecialchars(strip_tags($this->camerasau));
+            $cameratruoc = htmlspecialchars(strip_tags($this->cameratruoc));
+            $thoigianbaohanh = htmlspecialchars(strip_tags($this->thoigianbaohanh));
+            $thuonghieu = htmlspecialchars(strip_tags($this->thuonghieu));
+            $trangthai = htmlspecialchars(strip_tags($this->trangthai));
+        
+            // Bind giá trị với MySQLi
+            $stmt->bind_param(
+                'sssssssssss',
+                $tensp,
+                $hinhanh,
+                $chipxuly,
+                $dungluongpin,
+                $kichthuocman,
+                $hedieuhanh,
+                $camerasau,
+                $cameratruoc,
+                $thoigianbaohanh,
+                $thuonghieu,
+                $trangthai
+            );
+        
+            // Thực thi truy vấn
+            if ($stmt->execute()) {
+                $stmt->close();
+                return true;
+            } else {
+                // Ghi log lỗi
+                file_put_contents(__DIR__ . '/sql_error.log', "Execute failed: " . $stmt->error);
+                $stmt->close();
+                return false;
+            }
         }
+        
 
         // Phương thức cập nhật sản phẩm
         public function update() {
@@ -106,7 +123,7 @@
             $this->trangthai = htmlspecialchars(strip_tags($this->trangthai));
 
             // Bind các giá trị
-            $stmt->bind_param("sssddissiiii", 
+            $stmt->bind_param("ssssssssssii", 
                 $this->tensp,
                 $this->hinhanh,
                 $this->chipxuly,
@@ -129,17 +146,15 @@
 
         // Phương thức xóa sản phẩm
         public function delete() {
-            $query = "DELETE FROM " . $this->table_name . " WHERE masp = ?";
+            $query = "UPDATE " . $this->table_name . " SET trangthai = 0 WHERE masp = ?";
             $stmt = $this->conn->prepare($query);
-            
+        
             $this->masp = htmlspecialchars(strip_tags($this->masp));
             $stmt->bind_param("i", $this->masp);
-
-            if($stmt->execute()) {
-                return true;
-            }
-            return false;
+        
+            return $stmt->execute();
         }
+        
 
         // Phương thức lấy một sản phẩm theo ID
         public function getOne() {

@@ -1,11 +1,10 @@
+
 <?php
-session_start();
-require_once '../model/account.php';
-require_once '../config/database.php';
-require ('../../public/index.php');
-// Nếu người dùng đã đăng nhập, chuyển hướng về trang chủ
+define('ROOT_PATH', realpath(__DIR__ . '/../../'));
+require_once ROOT_PATH . '/app/config/database.php';
+require_once ROOT_PATH . '/app/model/account.php';
 if (isLoggedIn()) {
-    header("Location: ../../public/index.php");
+    header("Location: /index.php");
     exit();
 }
 
@@ -32,19 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = registerUser($tenkhachhang, $email, $password, $sdt, $diachi);
         
         if ($result['success']) {
-            // Đăng ký thành công, tự động đăng nhập
-            $loginResult = loginUser($email, $password);
-            
-            if ($loginResult['success']) {
-                // Chuyển về trang chủ
-                header("Location: ../../public/index.php");
-                exit();
-            } else {
-                // Nếu đăng nhập thất bại, chuyển đến trang đăng nhập
-                $_SESSION['login_message'] = "Đăng ký thành công! Vui lòng đăng nhập.";
-                header("Location: ../views/login.php");
-                exit();
-            }
+            // Đăng ký thành công, chuyển về trang đăng nhập
+            $_SESSION['login_message'] = "Đăng ký thành công! Vui lòng đăng nhập.";
+            header("Location: login_controller.php");
+            exit();
         } else {
             // Đăng ký thất bại
             $_SESSION['register_error'] = $result['message'];
