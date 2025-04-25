@@ -13,30 +13,34 @@ session_start();
      <link rel="stylesheet" href="./assets/fonts/fontawesome-6.6.0/css/all.min.css" />
      <link rel="stylesheet" href="./assets/css/index.css" />
      <link rel="stylesheet" href="./assets/css/responsive.css" />
+     <link rel="stylesheet" href="./assets/css/profile.css" />
      <script type="module" src="./assets/js/index.js"></script>
      <title>Light Novel World</title>
      <?php
-     require "../app/views/header-footer.php";
-     require "../app/views/detail_product.php";
-     require "../app/views/cart.php";
-     require "../app/views/homepage.php";
-     require "../app/views/search_result.php"
+     require __DIR__ . '/../app/views/header-footer.php';
+     require __DIR__ . '/../app/views/detail_product.php';
+     require __DIR__ . '/../app/views/cart.php';
+     require __DIR__ . '/../app/views/homepage.php';
+     require __DIR__ . '/../app/views/search_result.php';
+     require __DIR__ . '/../app/views/profile.php';
+     
+
      ?>
 </head>
 
 <body>
-     <?php loadDefaultHomepage();?>
-     <?php if(isset($_GET["mode"])) {
-          if($_GET["mode"] === "admin") {
+     <?php loadDefaultHomepage(); ?>
+     <?php if (isset($_GET["mode"])) {
+          if ($_GET["mode"] === "admin") {
                require "../app/controller/adminController.php";
                helloAdmin();
           }
-          else {
-               require "../app/controller/endUserController.php";
-               helloUser();
-          }
-     } 
-     var_dump($_GET);
+     } else {
+          require '../app/controller/urlController.php';
+          renderDynamicScript();
+          require_once __DIR__ . '/../app/utils/auth_view_script.php';
+          renderClientSessionJS();
+     }
      ?>
 </body>
 
