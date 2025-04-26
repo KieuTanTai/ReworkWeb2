@@ -13,7 +13,7 @@ function loadDefaultHomepage()
                ?>
                <!-- html for sub header -->
 
-               <div id="main-content">
+               <div id="main-content" style="min-height: 35em;">
                     <article id="scroll-top" class="s-m-hidden">
                          <img src="./assets/images/icons/web_logo/manga-icon-backtotop_550x700_1.png" alt="back to top" />
                     </article>

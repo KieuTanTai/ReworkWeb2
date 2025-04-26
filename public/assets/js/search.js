@@ -93,9 +93,9 @@ async function applyFilters(productList, searchQuery, elementsObj) {
   
   // Sau đó lọc
   return productList.filter(product => {
-    const name = product.tensp?.toLowerCase() || "";
+    const name = product.tensp?.toLowerCase();
     const brand = product.thuonghieu?.toLowerCase() || ""; 
-    const queryMatch = searchQuery ? name.includes(searchQuery) || brand.includes(searchQuery) : true;
+    const queryMatch = searchQuery ? name.includes(searchQuery) : true;
 
     // Lọc theo thể loại
     const categoryMatch = category ? (product.thuonghieu.toLowerCase()).includes(category) : true;

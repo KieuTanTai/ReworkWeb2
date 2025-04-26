@@ -290,6 +290,22 @@
   border-bottom-right-radius: 0.25em;
   box-shadow: 0 0.25em 0.5em var(--primary-dark);
 }
+
+.sub-menu {
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  max-width: 100%;
+  display: flex;
+  position: fixed;
+  transform: translateY(3.6em);
+  background: var(--primary-white);
+  max-height: var(--max-height-header);
+  box-shadow: 1px 0 0.2em var(--primary-dark);
+  border-bottom: 1px solid var(--border);
+}
+
 .qr-code-container img {
   max-width: none; /* Hoặc tăng kích thước như max-width: 400px; */
   width: 100%; /* Đảm bảo hình ảnh co giãn theo kích thước container */
@@ -360,7 +376,7 @@
 
 /* CSS for main content */
 #main-content {
-  padding-top: 1em;
+  padding-top: 3.5em;
   position: relative;
 }
 

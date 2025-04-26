@@ -1,6 +1,6 @@
 "use strict";
 import * as Bridge from "./bridges.js";
-import { GetDetailPRoducts, GetOrderDetail, GetOrderDetails, GetOrdersByCustomer, GetProducts } from "./getdata.js";
+import { GetDetailPRoducts, GetOrderDetail, GetOrderDetails, GetOrdersByCustomer, GetProducts, UpdateOrder } from "./getdata.js";
 import { disableSiblingContainer, formatPrices, headerUserInfo, hiddenException, scrollView } from "./interfaces.js";
 import { getDetailPhones, getProductPhones } from "./product.js";
 
@@ -140,15 +140,16 @@ async function scriptOrder(customer) {
      let idProduct = (await getDetailPhones()).find((detail) => detail.maphienbansp == details[0].maphienbansp).masp;
      let product = productsList.find((product) => product.masp === idProduct);
      let status;
-     console.log(customer);
-     console.log(product);
-     console.log(idProduct);
 
      // get status of this order (cập nhật trạng thái cho đơn hàng)
      if (customer.trangthai === 1) status = "chờ xử lý";
-     else if (customer.trangthai === 2) status = "chờ lấy hàng";
-     else if (customer.trangthai === 3) status = "chờ giao hàng";
-     else if (customer.trangthai === 4) status = "đã giao hàng";
+     else if (customer.trangthai === 2) status = "chờ giao hàng";
+     else if (customer.trangthai === 3) {
+          status = "đã hủy";
+          return;
+     }
+     // else if (customer.trangthai === 4) status = "đã giao hàng";
+
 
      // get script html and append it (render đơn hàng)
      let script = `
@@ -200,7 +201,6 @@ async function renderOrder(elementsObj) {
           const orderDetails = await GetOrderDetails(item.madonhang);
           details.push(orderDetails);
      }
-     console.log(details);
 
      if (orders && container) {
           // Render mỗi đơn hàng từ orders
@@ -213,17 +213,17 @@ async function renderOrder(elementsObj) {
                     container.removeChild(removeBtn.offsetParent);
 
                     // Cập nhật lại danh sách đơn hàng sau khi xóa
-                    ordersList = ordersList.filter((o) => o.id_donhang !== order.id_donhang);
-                    localStorage.setItem("donhang", JSON.stringify(ordersList));
-
+                    ordersList = ordersList.find((o) => o.madonhang === order.madonhang);
+                    ordersList.trangthai = 3;
+                    UpdateOrder(ordersList);
                     // Thay đổi container khi không còn sản phẩm
                     if (container.childNodes.length === 0) blankOrder(elementsObj);
                });
 
                container.appendChild(script);
+               formatPrices(elementsObj);
           });
 
-          formatPrices(elementsObj);
      }
 
      if (container.childNodes.length === 0) blankOrder(elementsObj);

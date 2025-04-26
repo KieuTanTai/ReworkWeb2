@@ -45,6 +45,7 @@ function updateCartTotal(elementsObj) {
   let shippingDiscount = 0;
   let voucherDiscount = 0;
   let Prices = 0;
+  // addQuantityChangeListener();
   cartItems.forEach((item) => {
     const checkbox = item.querySelector('input[type="checkbox"]');
     const priceElement = item.querySelector(".price");
@@ -85,11 +86,31 @@ function updateCartTotal(elementsObj) {
     shippingDiscountElement.innerText = formatCurrency(shippingDiscount);
   if (voucherDiscountElement)
     voucherDiscountElement.innerText = formatCurrency(voucherDiscount);
-
-  console.log(
-    `Tổng tiền: ${total}, Giá sản phẩm: ${Prices}, Phí vận chuyển: ${shippingFee}, Giảm giá vận chuyển: ${shippingDiscount}, Giảm giá voucher: ${voucherDiscount}`
-  );
 }
+
+
+// function updateCartQuantity(inputElement) {
+//   let newQuantity = inputElement.value;
+//   let cart = JSON.parse(localStorage.getItem('cart')) || [];
+//   let productId = inputElement.getAttribute('data-id');
+//   console.log(productId);
+//   let product = cart.find(item => item.id == productId);
+
+//   if (product) {
+//       product.quantity = newQuantity;
+//       localStorage.setItem('cart', JSON.stringify(cart));
+//   }
+// }
+
+// function addQuantityChangeListener() {
+//   const quantityInputs = document.querySelectorAll('.quantity-cart');
+
+//   quantityInputs.forEach(input => {
+//       input.addEventListener('input', function() {
+//           updateCartQuantity(input); 
+//       });
+//   });
+// }
 
 function handleQuantityChange(elementsObj) {
   const quantityInputs = elementsObj.getQuantityInputs();
@@ -713,9 +734,5 @@ function handlePaymentOptionChange() {
   });
 }
 
-
-
-
-
 export { addToCart, attachAddToCartEvents, increaseCartCount, displayCartItems, updateCartCount, updateCartTotal, handleOrderPlacement, attachAddToCartInDetails, handlePaymentOptionChange };
-export { handleQuantityChange, handleCheckboxChange, handleSelectAllCheckbox, handleRemoveItem, handleCartNavigation, handleCategoryNavigation, handleDefaultAddressCheckbox, callCartFunctions };
+export { handleQuantityChange, handleCheckboxChange, handleSelectAllCheckbox, handleRemoveItem, handleCartNavigation, handleCategoryNavigation, handleDefaultAddressCheckbox, callCartFunctions};

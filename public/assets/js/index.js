@@ -61,7 +61,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const accountInfo = JSON.parse(sessionStorage.getItem("loginAccount"));
   const formatName = (name) => name.charAt(0).toUpperCase() + name.slice(1);
   Bridge.$(".user-name-account").innerHTML = accountInfo?.tenkhachhang ? formatName(accountInfo.tenkhachhang) : "Tài Khoản";
-
 });
 
-export { Cart, Interface, Bridge, Search, Products }
+export { Cart, Interface, Bridge, Search, Products, Profile }

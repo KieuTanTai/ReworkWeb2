@@ -81,4 +81,5 @@ function renderProductDetailScript($productName)
      </script>
      <?php
 }
+
 ?>

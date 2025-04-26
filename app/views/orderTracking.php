@@ -7,7 +7,7 @@ function renderTracking()
           <!-- status -->
           <div class="order-status-container margin-y-24 grid-col col-l-12 col-m-12 col-s-12">
                <section id="blank-order" class="margin-y-16">
-                    <img src="https://m.media-amazon.com/images/G/31/cart/empty/kettle-desaturated._CB424694257_.svg">
+                    <img src="../../public/assets/images/backgrounds/kettle-desaturated._CB445243794_.svg">
                     <span class="font-size-16 padding-bottom-16 margin-y-12">Không có đơn đặt hàng nào.</span>
                     <section class="flex justify-center align-center font-bold capitalize margin-y-12">
                          <a href="./index.html" target="_self" class="return-homepage category-btn button">trang chủ</a>
