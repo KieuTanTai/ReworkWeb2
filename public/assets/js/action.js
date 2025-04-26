@@ -118,7 +118,10 @@ async function showOrderContent() {
      let orderContainer = elementsObj.getOrderContent();
      hiddenException("order-content");
      disableSiblingContainer(orderContainer);
-     if (!lists || !JSON.parse(sessionStorage.getItem("login"))) {
+     const hasOrders = Array.isArray(lists) && lists.length > 0;
+     console.log(lists);
+     console.log(hasOrders);
+     if (!hasOrders || !JSON.parse(sessionStorage.getItem("login"))) {
           blankOrder(elementsObj);
           return;
      }
@@ -196,6 +199,7 @@ async function renderOrder(elementsObj) {
      let loginAccount = JSON.parse(sessionStorage.getItem("loginAccount"));
      let orders = ordersList.filter((order) => order.makh === loginAccount.makh);
      let details = [];
+
 
      for (let item of orders) {
           const orderDetails = await GetOrderDetails(item.madonhang);
