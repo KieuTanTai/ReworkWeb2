@@ -405,12 +405,14 @@ async function attachAddToCartEvents() {
     buyNowButton.replaceWith(buyNowButton.cloneNode(true));
     const newBuyNowButton = productItem.querySelector(".buy-btn .button");
 
-    newBuyNowButton.addEventListener("click", () => {
+    newBuyNowButton.addEventListener("click", async () => {
       if (sessionStorage.getItem("login")) {
         console.log(`Đang thêm sản phẩm và chuyển đến giỏ hàng: ${productName}`);
-        addToCart(productName, 1, mausac, ram, rom, price);
+        await addToCart(productName, 1, mausac, ram, rom, price);
         increaseCartCount();
-        // window.location.href = "cart.html";
+        const url = new URL(window.location.href);
+        url.searchParams.set('type', 'cart');
+        window.location.href = url.href;
       } else {
         alert("Phải đăng nhập trước");
       }
@@ -640,6 +642,7 @@ async function attachAddToCartInDetails() {
       const rom = element?.getAttribute("data-rom");
       const price = element?.getAttribute("data-price");
 
+
       if (!productName || !productPrice || !productImage) {
         console.error("Không thể lấy thông tin sản phẩm từ Product Details.");
         return;
@@ -663,7 +666,7 @@ async function attachAddToCartInDetails() {
   });
 
   //buy now
-  buyNowButton.forEach((button) => button.addEventListener("click", Bridge.throttle(() => {
+  buyNowButton.forEach((button) => button.addEventListener("click", Bridge.throttle(async () => {
     if (!sessionStorage.getItem("login")) {
       alert("Bạn cần đăng nhập để mua ngay.");
       return;
@@ -674,7 +677,7 @@ async function attachAddToCartInDetails() {
     const productImage = document.querySelector(".product-image img")?.src;
     const productQuantity = document.querySelector(".quantity-cart")?.value;
     const element = document.querySelector('.storage-option.selected');
-    const productColor = document.querySelector(".color-option.selected")?.value;
+    const productColor = document.querySelector(".color-option.selected")?.getAttribute("data-value");
     const ram = element?.getAttribute("data-ram");
     const rom = element?.getAttribute("data-rom");
     const price = element?.getAttribute("data-price");
@@ -694,9 +697,11 @@ async function attachAddToCartInDetails() {
       return;
     }
 
-    addToCart(productName, productQuantity, productColor, ram, rom, price);
+    await addToCart(productName, productQuantity, productColor, ram, rom, price);
     increaseCartCount();
-    // window.location.href = "cart.html";
+    const url = new URL(window.location.href);
+    url.searchParams.set('type', 'cart');
+    window.location.href = url.href;
   })), 200, "buy-now");
 }
 
