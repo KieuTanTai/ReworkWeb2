@@ -197,10 +197,10 @@ include("sidebar1.php");
                           <option value="2" <?= $order['trangthai'] == 2 ? 'selected disabled' : ($order['trangthai'] > 2 ? 'disabled' : '') ?>>
                             Đã xác nhận
                           </option>
-                          <option value="3" <?= $order['trangthai'] == 3 ? 'selected disabled' : '' ?>>
+                          <option value="3" <?= $order['trangthai'] == 3 ? 'selected disabled' : ($order['trangthai'] > 3 ? 'disabled' : '') ?>>
                             Đã giao
                           </option>
-                          <option value="3" <?= $order['trangthai'] == 3 ? 'selected disabled' : '' ?>>
+                          <option value="4" <?= $order['trangthai'] == 4 ? 'selected disabled' : '' ?>>
                             Đã huỷ
                           </option>
                         </select>
