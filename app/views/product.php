@@ -85,7 +85,7 @@ $products = $controller->index(); // lấy danh sách sản phẩm
 </div>
 
 
-<script src="../../dist/js/adminlte.js"></script>
+<script src="../../public/assets/js/adminlte.js"></script>
 <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
