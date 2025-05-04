@@ -1,4 +1,19 @@
 <?php
+session_start();
+require_once '../model/account.php';
+
+// Kiểm tra đăng nhập
+if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
+    $_SESSION['login_error'] = "Vui lòng đăng nhập để tiếp tục!";
+    header("Location: ../views/login.php");
+    exit();
+}
+
+// Kiểm tra quyền - chỉ cho phép nhân viên và admin truy cập
+if (!isset($_SESSION['is_staff']) || $_SESSION['is_staff'] !== true) {
+    header("Location: ../../public/index.php");
+    exit();
+}
   include("header1.php");
   include("sidebar1.php");
 ?>  
@@ -83,7 +98,7 @@
                         <tr>
                           <td>
                             <img
-                              src="../../dist/assets/img/default-150x150.png"
+                              src="../../public/assets/images/icons/Web_logo/yang-icon-5.webp"
                               alt="Product 1"
                               class="rounded-circle img-size-32 me-2"
                             />
@@ -104,7 +119,7 @@
                         <tr>
                           <td>
                             <img
-                              src="../../dist/assets/img/default-150x150.png"
+                              src="../../public/assets/images/icons/Web_logo/yang-icon-2.webp"
                               alt="Product 1"
                               class="rounded-circle img-size-32 me-2"
                             />
@@ -125,7 +140,7 @@
                         <tr>
                           <td>
                             <img
-                              src="../../dist/assets/img/default-150x150.png"
+                              src="../../public/assets/images/icons/Web_logo/yang-icon-4.webp"
                               alt="Product 1"
                               class="rounded-circle img-size-32 me-2"
                             />
@@ -146,7 +161,7 @@
                         <tr>
                           <td>
                             <img
-                              src="../../dist/assets/img/default-150x150.png"
+                              src="../../public/assets/images/icons/Web_logo/yang-icon-3.webp"
                               alt="Product 1"
                               class="rounded-circle img-size-32 me-2"
                             />

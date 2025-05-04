@@ -134,6 +134,17 @@ class User
         return $result;
     }
 
+    public function getById(int $makh)
+    {
+        $query = "SELECT * FROM {$this->table_name} WHERE makh = ? LIMIT 1";
+        $stmt  = $this->conn->prepare($query);
+        $stmt->bind_param("i", $makh);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();  // Trả về mảng hoặc NULL nếu không tìm thấy
+    }
+    
+
     public function updateUserStatusInternal(int $makh, int $newStatus): bool
     {
         $query = "UPDATE " . $this->table_name . " SET trangthai = ? WHERE makh = ?";

@@ -70,5 +70,40 @@ class OrderController
         ];
     }
 
+    public function updateStatus(array $data){
+
+        $orderID = (int) $data['madonhang'];
+        $newStatus = (int) $data['new_status'];
+
+        return $this->order->updateOrderStatus($orderID, $newStatus);
+
+    }
+
+    public function showDetails(): array
+    {
+        $orderId = null;
+        if (isset($_GET['id'])) {
+            $orderId = (int)$_GET['id'];
+        }
+
+        if ($orderId === null || $orderId <= 0) {
+            error_log("Yêu cầu xem chi tiết đơn hàng với ID không hợp lệ.");
+            return ['order' => null, 'items' => []]; 
+        }
+
+        $orderData = $this->order->getOrderById($orderId);
+
+        if ($orderData === null) {
+            return ['order' => null, 'items' => []]; 
+        }
+
+        $orderItems = $this->order->getOrderItems($orderId);
+
+        return [
+            'order' => $orderData, 
+            'items' => $orderItems  
+        ];
+    }
+
 }
 ?>

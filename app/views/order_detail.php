@@ -1,6 +1,18 @@
 <?php 
-    include("header1.php"); 
-    include("sidebar1.php");
+
+require_once '../controller/order/OrderController.php'; // Giả sử đường dẫn là vậy
+
+$controller = new OrderController();
+
+// Gọi phương thức showDetails để lấy dữ liệu
+$viewData = $controller->showDetails();
+
+// Giải nén dữ liệu
+$order = $viewData['order'] ?? null; // Lấy thông tin đơn hàng (hoặc null nếu không tìm thấy)
+$items = $viewData['items'] ?? [];   // Lấy danh sách sản phẩm (hoặc mảng rỗng)
+
+include("header1.php"); 
+include("sidebar1.php");
 ?>
       <!--begin::App Main-->
       <main class="app-main">
@@ -38,30 +50,21 @@
                         <tr>
                             <th>Mã Đơn Hàng</th>
                             <th>Mã Phiên Bản Sản Phẩm</th>
-                            <th>Hình Ảnh</th>
+                            <th>Số Lượng</th>
                             <th>Đơn Giá</th>
                         </tr>
                     </thead>
                     <tbody style="vertical-align: middle;">
-                      <tr>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>2011-01-25</td>
-                            <td>TP.Hồ Chí Minh</td>
-                        </tr>
+                    <?php foreach ($items as $item): ?>
+                  <tr>
+                    <td><?= htmlspecialchars($item['madonhang']) ?></td>
+                    <td><?= htmlspecialchars($item['maphienbansp']) ?></td>
+                    <td><?= htmlspecialchars($item['soluong']) ?></td>
+                    <td><?= htmlspecialchars($item['dongia']) ?></td>
+                  </tr>
+                  <?php endforeach; ?>
                     </tbody>
                 </table>
-                <div class="card-body">
-                <nav aria-label="Page navigation example">
-                      <ul class="pagination float-end m-0">
-                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                      </ul>
-                    </nav>
-                </div>
             </div>
             </div>
             </div>  

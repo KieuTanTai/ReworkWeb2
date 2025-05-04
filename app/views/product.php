@@ -67,7 +67,7 @@ $products = $controller->index(); // lấy danh sách sản phẩm
             </table>
         </div>
         <!-- /.card-body -->
-        <div class="card-footer clearfix">
+        <div class="card-footer grid col col-l-12 flex justify-end clearfix">
             <ul class="pagination pagination-sm m-0 float-end">
                 <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
                 <li class="page-item"><a class="page-link" href="#">1</a></li>
@@ -85,7 +85,7 @@ $products = $controller->index(); // lấy danh sách sản phẩm
 </div>
 
 
-<script src="../../dist/js/adminlte.js"></script>
+<script src="../../public/assets/js/adminlte.js"></script>
 <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

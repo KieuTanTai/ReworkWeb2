@@ -10,12 +10,13 @@ function renderHeader()
                          <div class="overlay">
                               <div class="s-m-nav-content s-m-content">
                                    <div class="s-m-nav-btn flex align-center margin-y-12">
-                                   <?php if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true): ?>
-     <a href="login.php" class="lnw-btn js-login active">Đăng nhập</a>
-     <a href="register.php" class="lnw-btn js-register margin-left-16 active">Đăng ký</a>
-<?php else: ?>
-     <a href="/Web2/app/controllers/logout_controller.php" class="lnw-btn js-signout margin-left-16">Đăng xuất</a>
-<?php endif; ?>
+                                        <?php if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true): ?>
+                                             <a href="login.php" class="lnw-btn js-login active">Đăng nhập</a>
+                                             <a href="register.php" class="lnw-btn js-register margin-left-16 active">Đăng ký</a>
+                                        <?php else: ?>
+                                             <a href="/Web2/app/controllers/logout_controller.php"
+                                                  class="lnw-btn js-signout margin-left-16">Đăng xuất</a>
+                                        <?php endif; ?>
                                    </div>
                                    <ul class="s-m-nav-list">
                                         <li class="web-logo">
@@ -111,20 +112,24 @@ function renderHeader()
                               <!-- account -->
                               <nav class="nav-account flex justify-center align-center flex-direction-y">
                                    <?php if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true): ?>
-                                   <a href="../app/views/login.php" title="Đăng nhập" class="lnw-btn active js-login margin-bottom-16 text-center font-size-14">
-                                        <div class="font-bold uppercase">Đăng nhập</div>
-                                   </a>
+                                        <a href="../app/views/login.php" title="Đăng nhập"
+                                             class="lnw-btn active js-login margin-bottom-16 text-center font-size-14">
+                                             <div class="font-bold uppercase">Đăng nhập</div>
+                                        </a>
 
-                                   <a href="../app/views/register.php" title="Đăng ký" class="lnw-btn js-register text-center font-size-14">
-                                        <div class="font-bold uppercase">Đăng ký</div>
-                                   </a>
+                                        <a href="../app/views/register.php" title="Đăng ký"
+                                             class="lnw-btn js-register text-center font-size-14">
+                                             <div class="font-bold uppercase">Đăng ký</div>
+                                        </a>
                                    <?php else: ?>
-                                        <a title="Thông tin cá nhân" class="profile-btn lnw-btn margin-bottom-16 font-size-14 text-center">
-                                        <div class="font-bold uppercase">Thông tin cá nhân</div>
-                                   </a>
-                                   <a href="../app/controller/logout_controller.php" title="Đăng xuất" class="lnw-btn active .js-signout margin-bottom-16 font-size-14 text-center">
-                                        <div class="font-bold uppercase">Đăng xuất</div>
-                                   </a>
+                                        <a title="Thông tin cá nhân"
+                                             class="profile-btn lnw-btn margin-bottom-16 font-size-14 text-center">
+                                             <div class="font-bold uppercase">Thông tin cá nhân</div>
+                                        </a>
+                                        <a href="../app/controller/logout_controller.php" title="Đăng xuất"
+                                             class="lnw-btn active .js-signout margin-bottom-16 font-size-14 text-center">
+                                             <div class="font-bold uppercase">Đăng xuất</div>
+                                        </a>
                                    <?php endif; ?>
                               </nav>
                          </div>
@@ -148,81 +153,87 @@ function renderSubHeader()
           <div class="grid wide">
                <div class="grid-row">
                     <!-- Items in sub header  -->
-                    <div class="sub-menu min-height-40 grid-col col-l-12">
-                         <div class="sub-menu-item menu-nav grid-col col-l-2-4 no-gutter">
-                              <!-- Nav button -->
-                              <div class="flex justify-center align-center list-btn min-height-40 full-width">
-                                   <span><i class="fa-solid fa-list" style="color: var(--primary-white)"></i></span>
-                                   <p class="padding-left-8 font-size-13 font-bold"> Danh mục sản phẩm </p>
+                    <div class="sub-menu min-height-40 grid-col col-l-12 justify-center no-gutter">
+                         <div class="grid wide">
+                              <div class="grid-row">
+                                   <div class="grid-col col-l-12 flex" style="height:40px">
+                                   <div class="sub-menu-item menu-nav grid-col col-l-2-4 no-gutter">
+                                   <!-- Nav button -->
+                                   <div class="flex justify-center align-center list-btn min-height-40 full-width">
+                                        <span><i class="fa-solid fa-list" style="color: var(--primary-white)"></i></span>
+                                        <p class="padding-left-8 font-size-13 font-bold"> Danh mục sản phẩm </p>
 
-                                   <!-- Nav content -->
-                                   <nav class="nav-categories js-bg-white full-width">
-                                        <div class="nav-item">
-                                             <a href="" class="iphone flex full-width" title="iphone">
-                                                  <img src="./assets/images/icons/Other_icons/Manga.webp" alt="Iphone"
-                                                       width="20em" />
-                                                  <p class="padding-left-8 font-size-14 font-bold"> Iphone </p>
-                                             </a>
-                                        </div>
+                                        <!-- Nav content -->
+                                        <nav class="nav-categories js-bg-white full-width">
+                                             <div class="nav-item">
+                                                  <a href="" class="iphone flex full-width" title="iphone">
+                                                       <img src="./assets/images/icons/Other_icons/Manga.webp" alt="Iphone"
+                                                            width="20em" />
+                                                       <p class="padding-left-8 font-size-14 font-bold"> Iphone </p>
+                                                  </a>
+                                             </div>
 
-                                        <div class="nav-item">
-                                             <a href="" class="samsung flex full-width" title="samsung">
-                                                  <img src="./assets/images/icons/Other_icons/LN.webp" alt="light novel"
-                                                       width="20em" />
-                                                  <p class="padding-left-8 font-size-14 font-bold"> Samsung</p>
-                                             </a>
-                                        </div>
+                                             <div class="nav-item">
+                                                  <a href="" class="samsung flex full-width" title="samsung">
+                                                       <img src="./assets/images/icons/Other_icons/LN.webp" alt="light novel"
+                                                            width="20em" />
+                                                       <p class="padding-left-8 font-size-14 font-bold"> Samsung</p>
+                                                  </a>
+                                             </div>
 
-                                        <div class="nav-item">
-                                             <a href="" class="xiaomi flex full-width" title="xiaomi">
-                                                  <img src="./assets/images/icons/Other_icons/yang-icon-1.webp"
-                                                       alt="xiaomi" width="20em" />
-                                                  <p class="padding-left-8 font-size-14 font-bold"> Xiaomi </p>
-                                             </a>
-                                        </div>
+                                             <div class="nav-item">
+                                                  <a href="" class="xiaomi flex full-width" title="xiaomi">
+                                                       <img src="./assets/images/icons/Other_icons/yang-icon-1.webp"
+                                                            alt="xiaomi" width="20em" />
+                                                       <p class="padding-left-8 font-size-14 font-bold"> Xiaomi </p>
+                                                  </a>
+                                             </div>
 
-                                        <div class="nav-item">
-                                             <a href="" class="vivo-iqoo flex full-width" title="iqoo">
-                                                  <img src="./assets/images/icons/Other_icons/yang-icon-4.webp"
-                                                       alt="vivo iqoo" width="20em" />
-                                                  <p class="padding-left-8 font-size-14 font-bold">Vivo Iqoo</p>
-                                             </a>
-                                        </div>
-                                   </nav>
+                                             <div class="nav-item">
+                                                  <a href="" class="vivo-iqoo flex full-width" title="iqoo">
+                                                       <img src="./assets/images/icons/Other_icons/yang-icon-4.webp"
+                                                            alt="vivo iqoo" width="20em" />
+                                                       <p class="padding-left-8 font-size-14 font-bold">Vivo Iqoo</p>
+                                                  </a>
+                                             </div>
+                                        </nav>
+                                   </div>
                               </div>
-                         </div>
 
-                         <div class="sub-menu-item history-order-link grid-col col-l-2-4">
-                              <div class="full-height full-width">
-                                   <span>
-                                        <i class="fa-solid fa-file-invoice fa-lg" style="color: var(--main-color)"></i>
-                                   </span>
-                                   <p class="padding-left-8 font-size-13 font-bold">Lịch sử mua hàng</p>
+                              <div class="sub-menu-item history-order-link grid-col col-l-2-4">
+                                   <div class="full-height full-width">
+                                        <span>
+                                             <i class="fa-solid fa-file-invoice fa-lg" style="color: var(--main-color)"></i>
+                                        </span>
+                                        <p class="padding-left-8 font-size-13 font-bold">Lịch sử mua hàng</p>
+                                   </div>
                               </div>
-                         </div>
 
-                         <div class="sub-menu-item grid-col col-l-2-4 news-nav">
-                              <div class="full-width full-height">
-                                   <span><i class="fa-regular fa-newspaper fa-lg"
-                                             style="color: var(--main-color)"></i></span>
-                                   <p class="padding-left-8 font-size-13 font-bold">Tin tức & Sự kiện</p>
+                              <div class="sub-menu-item grid-col col-l-2-4 news-nav">
+                                   <div class="full-width full-height">
+                                        <span><i class="fa-regular fa-newspaper fa-lg"
+                                                  style="color: var(--main-color)"></i></span>
+                                        <p class="padding-left-8 font-size-13 font-bold">Tin tức & Sự kiện</p>
+                                   </div>
                               </div>
-                         </div>
 
-                         <div class="sub-menu-item grid-col col-l-2-4 lnw-store light-novel-world-test">
-                              <div class="full-height full-width">
-                                   <span><i class="fa-brands fa-fantasy-flight-games fa-lg"
-                                             style="color: var(--main-color)"></i></span>
-                                   <p class="padding-left-8 font-size-13 font-bold">Mobile Phone Store</p>
+                              <div class="sub-menu-item grid-col col-l-2-4 lnw-store light-novel-world-test">
+                                   <div class="full-height full-width">
+                                        <span><i class="fa-brands fa-fantasy-flight-games fa-lg"
+                                                  style="color: var(--main-color)"></i></span>
+                                        <p class="padding-left-8 font-size-13 font-bold">Mobile Phone Store</p>
+                                   </div>
                               </div>
-                         </div>
 
-                         <div class="sub-menu-item grid-col col-l-2-4 services">
-                              <div class="full-width full-height">
-                                   <span>
-                                        <i class="fa-solid fa-headset fa-lg" style="color: var(--main-color)"></i>
-                                   </span>
-                                   <p class="padding-left-8 font-size-13 font-bold">Liên hệ</p>
+                              <div class="sub-menu-item grid-col col-l-2-4 services">
+                                   <div class="full-width full-height">
+                                        <span>
+                                             <i class="fa-solid fa-headset fa-lg" style="color: var(--main-color)"></i>
+                                        </span>
+                                        <p class="padding-left-8 font-size-13 font-bold">Liên hệ</p>
+                                   </div>
+                              </div>
+                                   </div>
                               </div>
                          </div>
                     </div>

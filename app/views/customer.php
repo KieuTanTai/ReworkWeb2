@@ -1,4 +1,20 @@
 <?php
+session_start();
+require_once '../model/account.php';
+
+// Kiểm tra đăng nhập
+if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
+    $_SESSION['login_error'] = "Vui lòng đăng nhập để tiếp tục!";
+    header("Location: login.php");
+    exit();
+}
+
+// Kiểm tra quyền admin
+if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
+    // Nếu không phải admin, chuyển hướng về trang admin
+    header("Location: admin.php");
+    exit();
+}
 include ("header1.php");
 include ("sidebar1.php");
 ?>
@@ -104,8 +120,10 @@ include ("sidebar1.php");
     
   
   
-<script src="../../dist/js/adminlte.js"></script>
+<script src="../../public/assets/js/adminlte.js"></script>
 <script src="https://unpkg.com/popper.js@1/dist/umd/popper.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.5.0/styles/overlayscrollbars.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.5.0/browser/overlayscrollbars.browser.es.min.js"></script>
 
 <script>
 const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -117,7 +135,7 @@ scrollbarClickScroll: true,
 document.addEventListener('DOMContentLoaded', function () {
 const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
 if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+OverlayScrollbarsGlobal?.OverlayScrollbars(sidebarWrapper, {
 scrollbars: {
   theme: Default.scrollbarTheme,
   autoHide: Default.scrollbarAutoHide,

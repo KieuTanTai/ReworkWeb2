@@ -1,8 +1,29 @@
 <?php
 require_once '../controller/order/orderController.php';
+// Kiểm tra đăng nhập
+if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
+  $_SESSION['login_error'] = "Vui lòng đăng nhập để tiếp tục!";
+  header("Location: login.php");
+  exit();
+}
 
+// Kiểm tra quyền admin
+if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
+  // Nếu không phải admin, chuyển hướng về trang admin
+  header("Location: admin.php");
+  exit();
+}
 $controller = new OrderController();
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+  $action = $_POST['action'];
+
+  if ($action === 'update_status') {
+    $success = $controller->updateStatus($_POST);
+    header("Location: order.php?status=" . ($success ? 'add_success' : 'add_error'));
+    exit;
+}
+}  
 $viewData = $controller->index();
 $ordersToDisplay = $viewData['orders'];
 $currentPage = $viewData['currentPage'];
@@ -110,29 +131,6 @@ include("sidebar1.php");
             <div class="row g-3">
               <!--begin::Col-->
               <div class="col-md-2">
-                <!-- <div class="btn-group">
-                <br> 
-                <br>
-                <br>
-                <br>
-                <button
-                    type="button"
-                    class="btn btn-primary dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    id="statusButton"
-                >
-                    Tình Trạng Đơn Hàng
-                </button>
-                <ul class="dropdown-menu" onchange="findOrderStatus()" id="statusButton2">
-                    <li class="dropdown-item" onclick="updateStatus(this)" value="">Tất Cả</li>
-                    <li class="dropdown-item" onclick="updateStatus(this)" value="1">Chưa xác nhận</li>
-                    <li class="dropdown-item" onclick="updateStatus(this)" value="2">Đã xác nhận</li>
-                    <li class="dropdown-item" onclick="updateStatus(this)" value="3">Đã giao</li>
-                    <li class="dropdown-item" onclick="updateStatus(this)" value="4">Huỷ đơn</li>
-                </ul>  
-                
-            </div> -->
                 <div class="mb-3">
                   <label for="statusButton1" class="form-label">Tình Trạng</label>
                   <select name="" id="statusButton1" class="form-control">
@@ -221,7 +219,7 @@ include("sidebar1.php");
                       </form>
                     </td>
                     <td>
-                      <a href="order_detail.php">
+                      <a href="order_detail.php?id=<?= htmlspecialchars($order['madonhang']) ?>">
                         <button class="btn btn-primary">Xem chi tiết</button>
                       </a>
                     </td>
@@ -256,7 +254,7 @@ include("sidebar1.php");
                     }
 
                     for ($i = $start; $i <= $end; $i++): ?>
-                      <li class="page-item <?= ($i = $currentPage) ? 'active' : '' ?>">
+                      <li class="page-item <?= ($i == $currentPage) ? 'active' : '' ?>">
                         <a class="page-link" href="order.php?page=<?= $i ?>"><?= $i ?></a>
                       </li>
                     <?php endfor;

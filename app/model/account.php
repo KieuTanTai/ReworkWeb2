@@ -167,4 +167,69 @@ function getCurrentUser() {
     }
     return null;
 }
+// Hàm đăng nhập cho nhân viên (đã tắt hash password để dễ dàng testing)
+function loginStaff($login_input, $password) {
+    global $conn;
+    
+    // Xác định kiểu đầu vào (email hoặc số điện thoại)
+    if (filter_var($login_input, FILTER_VALIDATE_EMAIL)) {
+        $sql = "SELECT * FROM nhanvien WHERE email = ?";
+    } else {
+        $sql = "SELECT * FROM nhanvien WHERE sdt = ?";
+    }
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $login_input);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows == 0) {
+        return [
+            'success' => false,
+            'message' => 'Tài khoản không tồn tại!'
+        ];
+    }
+    
+    $staff = mysqli_fetch_assoc($result);
+    
+    // Kiểm tra trạng thái tài khoản
+    if ($staff['trangthai'] == 0) {
+        return [
+            'success' => false,
+            'message' => 'Tài khoản của bạn đã bị khóa!'
+        ];
+    }
+    
+    // So sánh mật khẩu trực tiếp (bỏ hash) - CHỈ SỬ DỤNG CHO TESTING
+    if ($password === $staff['matkhau']) {  // So sánh trực tiếp thay vì dùng password_verify
+        // Đăng nhập thành công, lưu thông tin vào session
+        $_SESSION['user_id'] = $staff['manv'];
+        $_SESSION['user_name'] = $staff['tennv'];
+        $_SESSION['user_email'] = $staff['email'];
+        $_SESSION['user_phone'] = $staff['sdt'];
+        $_SESSION['user_role'] = $staff['vaitro']; // 1: Nhân viên, 2: Quản lý
+        $_SESSION['is_logged_in'] = true;
+        $_SESSION['is_staff'] = true;
+        $_SESSION['is_admin'] = ($staff['vaitro'] == 2); // Admin nếu vai trò là 2
+        
+        return [
+            'success' => true,
+            'message' => 'Đăng nhập thành công!'
+        ];
+    } else {
+        return [
+            'success' => false,
+            'message' => 'Mật khẩu không chính xác!'
+        ];
+    }
+}
+// Kiểm tra người dùng có phải là nhân viên không
+function isStaff() {
+    return isset($_SESSION['is_staff']) && $_SESSION['is_staff'] === true;
+}
+
+// Kiểm tra người dùng có phải là admin không
+function isAdmin() {
+    return isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
+}
 ?>
