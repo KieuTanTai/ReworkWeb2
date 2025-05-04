@@ -4,7 +4,11 @@ include ("sidebar1.php");
 require_once '../controller/product/productController.php';
 
 $controller = new ProductController();
-$products = $controller->index(); // lấy danh sách sản phẩm
+$data = $controller->indexlimit(); // lấy danh sách sản phẩm
+$products = $data['products']; // danh sách sản phẩm
+$currentPage = $data['currentPage']; // trang hiện tại
+$totalPages = $data['totalPages']; // tổng số trang
+
 ?>
 
 <div class="app-content">
@@ -67,15 +71,53 @@ $products = $controller->index(); // lấy danh sách sản phẩm
             </table>
         </div>
         <!-- /.card-body -->
-        <div class="card-footer grid col col-l-12 flex justify-end clearfix">
-            <ul class="pagination pagination-sm m-0 float-end">
-                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-            </ul>
-        </div>
+        <div class="card-footer"> 
+                            <?php if ($totalPages > 1): ?>
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination float-end m-0">
+                                        <li class="page-item <?= ($currentPage <= 1) ? 'disabled' : '' ?>">
+                                            <a class="page-link" href="product.php?page=<?= $currentPage - 1 ?>"
+                                                aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+
+                                        <?php
+                                        $range = 2;
+                                        $start = max(1, $currentPage - $range);
+                                        $end = min($totalPages, $currentPage + $range);
+
+                                        if ($start > 1) {
+                                            echo '<li class="page-item"><a class="page-link" href="product.php?page=1">1</a></li>';
+                                            if ($start > 2) {
+                                                echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                            }
+                                        }
+
+                                        for ($i = $start; $i <= $end; $i++): ?>
+                                            <li class="page-item <?= ($i == $currentPage) ? 'active' : '' ?>">
+                                                <a class="page-link" href="product.php?page=<?= $i ?>"><?= $i ?></a>
+                                            </li>
+                                        <?php endfor;
+
+                                        if ($end < $totalPages) {
+                                            if ($end < $totalPages - 1) {
+                                                echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                            }
+                                            echo '<li class="page-item"><a class="page-link" href="product.php?page=' . $totalPages . '">' . $totalPages . '</a></li>';
+                                        }
+                                        ?>
+
+                                        <li class="page-item <?= ($currentPage >= $totalPages) ? 'disabled' : '' ?>">
+                                            <a class="page-link" href="product.php?page=<?= $currentPage + 1 ?>"
+                                                aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            <?php endif; ?>
+                        </div>
     </div>
 </div>
 
