@@ -54,10 +54,15 @@ if ($method === 'GET') {
             'data' => $result
         ]);
     }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
+    $controller->create();
 } else {
     echo json_encode([
         'status' => 'error',
         'message' => 'Phương thức không được hỗ trợ.'
     ]);
 }
+
+
+
 ?>
