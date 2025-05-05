@@ -217,7 +217,7 @@
                   <li class="nav-item">
                     <a href="user.php" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Quản Lý Người Dùng</p>
+                      <p>Quản Lý Khách Hàng</p>
                     </a>
                   </li>
                 </ul>
