@@ -41,7 +41,7 @@ if (!$product) {
                 <label class="input-group-text" for="inputGroupFile01">Hình Ảnh</label>
                 <input type="file" class="form-control" id="inputGroupFile01" onchange="previewImage(this)" name="hinhanh">
                 <input type="hidden" name="current_image" value="<?= $product->hinhanh ?>">
-            </div>
+                </div>
             
             <div class="input-group mb-3" style="width:400px;margin-top:20px;margin-left:5px;">
                 <span class="input-group-text" id="basic-addon1">Chip Xử Lý</span>
@@ -87,11 +87,10 @@ if (!$product) {
         </div>
         
         
-    <div class="image-preview-container">
         <div id="imagePreview">
-            <?php if (!empty($product->hinhanh)): ?>
-                <img src="<?= $product->hinhanh ?>" alt="Preview">
-            <?php endif; ?>
+    <?php if (!empty($product->hinhanh)): ?>
+        <img src="../../public/assets/images/<?= $product->hinhanh ?>" alt="Preview">
+    <?php endif; ?>
         </div>
         </form>
     </div>

@@ -51,7 +51,7 @@ class Product
             return false;
         }
 
-        $hinhanh = '/public/assets/images/Phone/' . $this->hinhanh;
+        $hinhanh =  $this->hinhanh;
         $hinhanh = htmlspecialchars(strip_tags($hinhanh));
 
         // Làm sạch dữ liệu
@@ -116,7 +116,7 @@ class Product
         $stmt = $this->conn->prepare($query);
 
         // Làm sạch dữ liệu
-        $this->hinhanh = '/public/assets/images/Phone/' . $this->hinhanh;
+        $this->hinhanh =$this->hinhanh;
         $this->hinhanh = htmlspecialchars(strip_tags($this->hinhanh));
 
         $this->masp = htmlspecialchars(strip_tags($this->masp));

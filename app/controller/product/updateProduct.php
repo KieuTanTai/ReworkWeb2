@@ -10,19 +10,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Lấy ID sản phẩm từ POST request
     $product_id = isset($_POST['masp']) ? intval($_POST['masp']) : 0;
-    
+    $current_image = $_POST['current_image'];
+
     // Xử lý file hình ảnh nếu có
-    $image_name = $_POST['current_image'];
+    $image_name = basename($current_image);
     if (isset($_FILES['hinhanh']) && $_FILES['hinhanh']['error'] == 0) {
         $upload_dir = __DIR__ . '/../../../public/assets/images/';
         $filename = time() . '_' . basename($_FILES['hinhanh']['name']);
         $upload_path = $upload_dir . $filename;
         
         if (move_uploaded_file($_FILES['hinhanh']['tmp_name'], $upload_path)) {
+            // Xóa file cũ nếu không phải file mặc định và nếu file có tồn tại
+            if ($image_name != '' && $image_name != 'default.jpg' && file_exists($upload_dir . $image_name)) {
+                @unlink($upload_dir . $image_name);
+            }
             $image_name = $filename;
         }
+    } else {
+        // Nếu không có file mới, giữ nguyên hình ảnh cũ
+        $image_name = $current_image;
     }
-    
     // Tạo mảng dữ liệu cập nhật
     $data = [
         'tensp' => isset($_POST['tensp']) ? $_POST['tensp'] : '',

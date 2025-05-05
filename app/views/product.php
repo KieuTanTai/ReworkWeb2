@@ -45,8 +45,7 @@ $totalPages = $data['totalPages']; // tổng số trang
                     <tr class="align-middle">
                         <td><?= $product['masp'] ?></td>
                         <td><?= $product['tensp'] ?></td>
-                        <td><img src="<?= $product['hinhanh'] ?>" width="80"></td>
-                        <td><?= $product['chipxuly'] ?></td>
+                        <td><img src="../../public/assets/images/<?php echo $product['hinhanh']; ?>" style="width: 50px; height: 50px;" /></td>                        <td><?= $product['chipxuly'] ?></td>
                         <td><?= $product['dungluongpin'] ?> mAh</td>
                         <td><?= $product['kichthuocman'] ?> inch</td>
                         <td><?= $product['hedieuhanh'] ?></td>
@@ -54,10 +53,9 @@ $totalPages = $data['totalPages']; // tổng số trang
                         <td><?= $product['cameratruoc'] ?></td>
                         <td><?= $product['thuonghieu'] ?></td>
                         <td style="cursor:pointer;">
-                        <a href="#" class="btn btn-primary btn-sm" onclick="editProduct(<?= $product['masp'] ?>); return false;">Sửa</a>
-              
-                        <a href="#"onclick="deleteProduct(<?= $product['masp'] ?>)" class="btn btn-danger btn-sm">Xóa</a> 
-
+                        <div class="button-group">
+                       <button href="#" class="btn btn-primary btn-sm" onclick="editProduct(<?= $product['masp'] ?>); return false;">Sửa</button><button onclick="deleteProduct(<?= $product['masp'] ?>)" class="btn btn-danger btn-sm">Xóa</button> <button class="btn btn-success" style="width:136px;" onclick="dtproduct()">Thêm Phiên Bản</button>
+                        </div>
                         </td>
                     </tr>
                     <?php endforeach; ?>
@@ -168,6 +166,12 @@ function editProduct(id) {
     document.querySelector(".app-content").style.filter = "blur(5px)";
     $(".container").load("sua1.php?id=" + id);
 }
+function dtproduct(){
+    $(".container").css("display", "block");
+    $(".container").fadeIn();
+    document.querySelector(".app-content").style.filter = "blur(5px)";
+    $(".container").load("test2.php");
+}
 function deleteProduct(productId) {
     if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
         $.ajax({
@@ -194,7 +198,10 @@ function deleteProduct(productId) {
 <style>
 .container {
     display: none;
-
+}
+.button-group {
+  display: flex;
+  gap: 5px; 
 
 }
 </style>
