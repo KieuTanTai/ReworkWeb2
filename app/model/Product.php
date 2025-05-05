@@ -198,7 +198,7 @@ class Product
     }
     public function getlimitproduct($start, $limit)
 {
-    $query = "SELECT * FROM " . $this->table_name . " WHERE trangthai = 1 ORDER BY masp ASC LIMIT ?, ?";
+    $query = "SELECT * FROM " . $this->table_name . " WHERE trangthai = 1 ORDER BY masp DESC LIMIT ?, ?";
     $stmt = $this->conn->prepare($query);
     $stmt->bind_param("ii", $start, $limit);
     $stmt->execute();
