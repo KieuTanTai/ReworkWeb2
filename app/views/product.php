@@ -1,10 +1,17 @@
 <?php
+session_start();
 include ("header1.php");
 include ("sidebar1.php");
 require_once '../controller/product/productController.php';
 
 $controller = new ProductController();
-$products = $controller->index(); // lấy danh sách sản phẩm
+$data = $controller->indexlimit(); // lấy danh sách sản phẩm
+$products = $data['products']; // danh sách sản phẩm
+$currentPage = $data['currentPage']; // trang hiện tại
+$totalPages = $data['totalPages']; // tổng số trang
+
+session_write_close();
+
 ?>
 
 <div class="app-content">
@@ -41,8 +48,7 @@ $products = $controller->index(); // lấy danh sách sản phẩm
                     <tr class="align-middle">
                         <td><?= $product['masp'] ?></td>
                         <td><?= $product['tensp'] ?></td>
-                        <td><img src="<?= $product['hinhanh'] ?>" width="80"></td>
-                        <td><?= $product['chipxuly'] ?></td>
+                        <td><img src="../../public/assets/images/<?php echo $product['hinhanh']; ?>" style="width: 50px; height: 50px;" /></td>                        <td><?= $product['chipxuly'] ?></td>
                         <td><?= $product['dungluongpin'] ?> mAh</td>
                         <td><?= $product['kichthuocman'] ?> inch</td>
                         <td><?= $product['hedieuhanh'] ?></td>
@@ -50,10 +56,9 @@ $products = $controller->index(); // lấy danh sách sản phẩm
                         <td><?= $product['cameratruoc'] ?></td>
                         <td><?= $product['thuonghieu'] ?></td>
                         <td style="cursor:pointer;">
-                        <a href="#" class="btn btn-primary btn-sm" onclick="editProduct(<?= $product['masp'] ?>); return false;">Sửa</a>
-              
-                        <a href="#"onclick="deleteProduct(<?= $product['masp'] ?>)" class="btn btn-danger btn-sm">Xóa</a> 
-
+                        <div class="button-group">
+                       <button href="#" class="btn btn-primary btn-sm" onclick="editProduct(<?= $product['masp'] ?>); return false;">Sửa</button><button onclick="deleteProduct(<?= $product['masp'] ?>)" class="btn btn-danger btn-sm">Xóa</button> <button class="btn btn-success" style="width:136px;" onclick="dtproduct()">Thêm Phiên Bản</button>
+                        </div>
                         </td>
                     </tr>
                     <?php endforeach; ?>
@@ -67,15 +72,53 @@ $products = $controller->index(); // lấy danh sách sản phẩm
             </table>
         </div>
         <!-- /.card-body -->
-        <div class="card-footer grid col col-l-12 flex justify-end clearfix">
-            <ul class="pagination pagination-sm m-0 float-end">
-                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-            </ul>
-        </div>
+        <div class="card-footer"> 
+                            <?php if ($totalPages > 1): ?>
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination float-end m-0">
+                                        <li class="page-item <?= ($currentPage <= 1) ? 'disabled' : '' ?>">
+                                            <a class="page-link" href="product.php?page=<?= $currentPage - 1 ?>"
+                                                aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+
+                                        <?php
+                                        $range = 2;
+                                        $start = max(1, $currentPage - $range);
+                                        $end = min($totalPages, $currentPage + $range);
+
+                                        if ($start > 1) {
+                                            echo '<li class="page-item"><a class="page-link" href="product.php?page=1">1</a></li>';
+                                            if ($start > 2) {
+                                                echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                            }
+                                        }
+
+                                        for ($i = $start; $i <= $end; $i++): ?>
+                                            <li class="page-item <?= ($i == $currentPage) ? 'active' : '' ?>">
+                                                <a class="page-link" href="product.php?page=<?= $i ?>"><?= $i ?></a>
+                                            </li>
+                                        <?php endfor;
+
+                                        if ($end < $totalPages) {
+                                            if ($end < $totalPages - 1) {
+                                                echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                            }
+                                            echo '<li class="page-item"><a class="page-link" href="product.php?page=' . $totalPages . '">' . $totalPages . '</a></li>';
+                                        }
+                                        ?>
+
+                                        <li class="page-item <?= ($currentPage >= $totalPages) ? 'disabled' : '' ?>">
+                                            <a class="page-link" href="product.php?page=<?= $currentPage + 1 ?>"
+                                                aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            <?php endif; ?>
+                        </div>
     </div>
 </div>
 
@@ -126,6 +169,12 @@ function editProduct(id) {
     document.querySelector(".app-content").style.filter = "blur(5px)";
     $(".container").load("sua1.php?id=" + id);
 }
+function dtproduct(){
+    $(".container").css("display", "block");
+    $(".container").fadeIn();
+    document.querySelector(".app-content").style.filter = "blur(5px)";
+    $(".container").load("test2.php");
+}
 function deleteProduct(productId) {
     if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
         $.ajax({
@@ -152,7 +201,10 @@ function deleteProduct(productId) {
 <style>
 .container {
     display: none;
-
+}
+.button-group {
+  display: flex;
+  gap: 5px; 
 
 }
 </style>

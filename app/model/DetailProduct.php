@@ -14,6 +14,47 @@ class DetailProduct {
         $this->conn = $db;
     }
 
+    public function setData($masp, $ram, $rom, $mausac, $giaban, $soluongton, $trangthai) {
+        $this->masp = $masp;
+        $this->ram = $ram;
+        $this->rom = $rom;
+        $this->mausac = $mausac;
+        $this->giaban = $giaban;
+        $this->soluongton = $soluongton;
+        $this->trangthai = $trangthai;
+    }
+
+    public function create() {
+        $query = "INSERT INTO {$this->table_name}
+                    (masp, ram, rom, mausac, giaban, soluongton, trangthai)
+                  VALUES (?, ?, ?, ?, ?, ?, ?)";
+    
+        $stmt = $this->conn->prepare($query);
+    
+        if (!$stmt) {
+            die("Lỗi prepare: " . $this->conn->error);
+        }
+    
+        $stmt->bind_param(
+            "iiisdii", // masp, ram, rom, mausac (string), giaban (double), soluongton, trangthai
+            $this->masp,
+            $this->ram,
+            $this->rom,
+            $this->mausac,
+            $this->giaban,
+            $this->soluongton,
+            $this->trangthai
+        );
+    
+        if ($stmt->execute()) {
+            return true;
+        }
+    
+        echo "Lỗi execute: " . $stmt->error;
+        return false;
+    }
+    
+
     public function getAllDetailProduct(){
       $query = "Select * from " . $this->table_name;  
       $result = $this->conn->query($query);

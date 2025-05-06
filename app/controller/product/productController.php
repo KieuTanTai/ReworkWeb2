@@ -5,6 +5,7 @@
     class ProductController {
         private $product;
         private $conn;
+        private $totalPages;
 
         public function __construct() {
             $this->conn = $GLOBALS['conn'];
@@ -24,6 +25,40 @@
             }
         
             return ($products); // Trả mảng sản phẩm cho view xử lý
+        }
+         public function indexlimit() {
+            $record=$this->product->getAll();
+            $row_per_page=5;
+            $total_row=$record->num_rows; // Tổng số bản ghi
+            $start = 0; // Vị trí bắt đầu lấy dữ liệu
+            $totalPages=ceil($total_row / $row_per_page); // Tổng số trang
+
+            if ($totalPages < 1)
+            $totalPages = 1;
+        $currentPage = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+        if ($currentPage < 1)
+            $currentPage = 1;
+        elseif ($currentPage > $totalPages)
+            $currentPage = $totalPages;
+
+            $offset = ($currentPage - 1) * $row_per_page;
+
+
+            $result = $this->product->getlimitproduct($offset, $row_per_page);
+        
+            $products = [];
+        
+            if ($result && $result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $products[] = $row;
+                }
+            }
+        
+            return [
+                'products' => $products,
+                'currentPage' => $currentPage,
+                'totalPages' => $totalPages
+            ];
         }
         
         public function indexJSON() {

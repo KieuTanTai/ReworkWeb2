@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Đảm bảo đường dẫn đúng
 require_once '../controller/user/userController.php';
 
@@ -30,7 +31,7 @@ $viewData = $controller->index();
 $usersToDisplay = $viewData['users'];
 $currentPage = $viewData['currentPage'];
 $totalPages = $viewData['totalPages'];
-
+session_write_close();
 include("header1.php");
 include("sidebar1.php");
 

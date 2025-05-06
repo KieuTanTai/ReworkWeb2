@@ -46,11 +46,17 @@
                 <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1" name="cameratruoc">
             </div>
 
-            <div style="text-align: center; margin-top: 30px; margin-left: 20px; position:fixed; top:86%;left:45%;">
+            <div style="text-align: center; margin-top: 30px; margin-left: 20px; position:fixed; top:86%;left:30%;">
                              <input type="submit" class="btn btn-primary " name="" id="" value="LƯU" style="width: 70px; height: 35px; font-size: 17px;font-weight: bold;" >
             </div>
+           
         </div>
-        
+        <div style="text-align: center; margin-top: 30px; margin-left: 100px; position:fixed; top:86%;left:40%;">
+        <button class="btn btn-danger" style="width: 70px; height: 35px; font-size: 17px; font-weight: bold;"
+    onclick="if(confirm('Bạn có chắc chắn muốn hủy không?')) window.location.href = 'product.php';">
+    HỦY
+</button>
+            </div>
         <div class="image-preview-container">
             <div id="imagePreview"></div>
         </div>

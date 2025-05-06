@@ -51,7 +51,7 @@ class Product
             return false;
         }
 
-        $hinhanh = '/public/assets/images/Phone/' . $this->hinhanh;
+        $hinhanh =  $this->hinhanh;
         $hinhanh = htmlspecialchars(strip_tags($hinhanh));
 
         // Làm sạch dữ liệu
@@ -116,7 +116,7 @@ class Product
         $stmt = $this->conn->prepare($query);
 
         // Làm sạch dữ liệu
-        $this->hinhanh = '/public/assets/images/Phone/' . $this->hinhanh;
+        $this->hinhanh =$this->hinhanh;
         $this->hinhanh = htmlspecialchars(strip_tags($this->hinhanh));
 
         $this->masp = htmlspecialchars(strip_tags($this->masp));
@@ -196,5 +196,14 @@ class Product
         }
         return false;
     }
+    public function getlimitproduct($start, $limit)
+{
+    $query = "SELECT * FROM " . $this->table_name . " WHERE trangthai = 1 ORDER BY masp DESC LIMIT ?, ?";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bind_param("ii", $start, $limit);
+    $stmt->execute();
+    return $stmt->get_result();
 }
+}
+
 ?>

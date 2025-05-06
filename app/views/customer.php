@@ -15,6 +15,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
     header("Location: admin.php");
     exit();
 }
+session_write_close();
 include ("header1.php");
 include ("sidebar1.php");
 ?>

@@ -41,7 +41,7 @@ if (!$product) {
                 <label class="input-group-text" for="inputGroupFile01">Hình Ảnh</label>
                 <input type="file" class="form-control" id="inputGroupFile01" onchange="previewImage(this)" name="hinhanh">
                 <input type="hidden" name="current_image" value="<?= $product->hinhanh ?>">
-            </div>
+                </div>
             
             <div class="input-group mb-3" style="width:400px;margin-top:20px;margin-left:5px;">
                 <span class="input-group-text" id="basic-addon1">Chip Xử Lý</span>
@@ -73,18 +73,26 @@ if (!$product) {
                 <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1" name="cameratruoc" value="<?= $product->cameratruoc ?>">
             </div>
     
-            <div style="text-align: center; margin-top: 30px; margin-left: 20px; position:fixed; top:86%;left:40%;">
+            <div style="text-align: center; margin-top: 30px; margin-left: 20px; position:fixed; top:86%;left:30%;">
                 <input type="submit" class="btn btn-primary" value="CẬP NHẬT" style="width: 120px; height: 35px; font-size: 17px;font-weight: bold;">
             </div>
-        </form>
+       
+   
     </div>
-    
-    <div class="image-preview-container">
-        <div id="imagePreview">
-            <?php if (!empty($product->hinhanh)): ?>
-                <img src="<?= $product->hinhanh ?>" alt="Preview">
-            <?php endif; ?>
+    <div style="text-align: center; margin-top: 30px; margin-left: 100px; position:fixed; top:86%;left:40%;">
+        <button class="btn btn-danger" style="width: 70px; height: 35px; font-size: 17px; font-weight: bold;"
+    onclick="if(confirm('Bạn có chắc chắn muốn hủy không?')) window.location.href = 'product.php';">
+    HỦY
+</button>
         </div>
+        
+        
+        <div id="imagePreview">
+    <?php if (!empty($product->hinhanh)): ?>
+        <img src="../../public/assets/images/<?= $product->hinhanh ?>" alt="Preview">
+    <?php endif; ?>
+        </div>
+        </form>
     </div>
 </div>
 
