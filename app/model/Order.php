@@ -116,7 +116,7 @@ class Order {
 
     public function getOrdersPaginated(int $limit, int $offset)
     {
-        $query = "SELECT * FROM " . $this->table_name . " ORDER BY madonhang ASC LIMIT ?, ?";
+        $query = "SELECT * FROM " . $this->table_name . " ORDER BY madonhang DESC LIMIT ?, ?";
         $stmt = $this->conn->prepare($query);
 
         $bindResult = $stmt->bind_param("ii", $offset, $limit);

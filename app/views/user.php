@@ -162,8 +162,7 @@ include("sidebar1.php");
                 <div class="card-header py-3">
                     <br>
                     <div id="overlay" class="overlay" onclick="closeForm()"></div>
-                    <button type="button" class="btn btn-primary mb-1" onclick="openForm2('add')">Thêm Người
-                        Dùng</button>
+                    <button type="button" class="btn btn-primary mb-1" onclick="openForm2('add')">Thêm Khách Hàng</button>
 
                     <div class="col-md-6" style="display:none;" id="userForm">
                         <div class="card card-primary card-outline mb-4">
