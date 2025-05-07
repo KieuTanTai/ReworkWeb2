@@ -42,7 +42,9 @@ class detailController
 
     public function create() {
         
-
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+          
+        
         // Giả sử bạn đang gửi dữ liệu qua POST
         $masp = $_POST['masp'] ?? null;
         $ram = $_POST['ram'] ?? null;
@@ -50,10 +52,10 @@ class detailController
         $mausac = $_POST['mausac'] ?? null;
         $giaban = $_POST['giaban'] ?? null;
         $soluongton = $_POST['soluongton'] ?? null;
-        $trangthai = $_POST['trangthai'] ?? null;
+      
 
         // Kiểm tra dữ liệu đầu vào
-        if (!$masp || !$ram || !$rom || !$mausac || !$giaban || !$soluongton || !isset($trangthai)) {
+        if (!$masp || !$ram || !$rom || !$mausac || !$giaban || !$soluongton ) {
             http_response_code(400);
             echo json_encode(["message" => "Dữ liệu không hợp lệ."]);
             return;
@@ -61,7 +63,7 @@ class detailController
 
         // Gọi model
         $detailProduct = new DetailProduct($this->conn);
-        $detailProduct->setData($masp, $ram, $rom, $mausac, $giaban, $soluongton, $trangthai);
+        $detailProduct->setData($masp, $rom, $ram, $mausac, $giaban, $soluongton);
 
         if ($detailProduct->create()) {
             http_response_code(201);
@@ -70,5 +72,6 @@ class detailController
             http_response_code(500);
             echo json_encode(["message" => "Không thể tạo phiên bản sản phẩm."]);
         }
+    }
     }
 }

@@ -6,9 +6,17 @@ $sql1="SELECT * FROM dungluongrom";
 $dlrom = mysqli_query($conn, $sql1);
 $sql2="SELECT * FROM mausac";
 $dlmau = mysqli_query($conn, $sql2);
+
+$product_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+// Khởi tạo controller và lấy thông tin sản phẩm
+$controller = new ProductController();
+$product = $controller->getOne($product_id);
+$masp= $product->masp;
+
 ?>
 <div class="econtainer ms-3">
-  <form action="" onsubmit="handleFormSubmit(event)" id="myForm2">
+  <form  action="" method="POST" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)" id="myForm2">
  
 <div class="input-group mb-3" style="width:400px;margin-top:20px;margin-left:8px;">
                <label class="input-group-text" for="inputGroupSelect01">Ram</label>
@@ -39,17 +47,18 @@ $dlmau = mysqli_query($conn, $sql2);
 </div>
 <div class="input-group mb-3" style="width:400px;margin-top:20px;margin-left:8px;">
   <span class="input-group-text">Giá Bán</span>
-  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" name="giaban">
   <span class="input-group-text">$</span>
 </div>
 <div class="input-group mb-3"style="width:400px;margin-top:20px;margin-left:8px;">
   <span class="input-group-text" id="basic-addon1">Số Lượng Tồn</span>
-  <input type="text" class="form-control"aria-label="Username" aria-describedby="basic-addon1">
+  <input type="text" class="form-control"aria-label="Username" aria-describedby="basic-addon1" name="soluongton"> 
 </div>
 <div class="input-group" style="width:95%;margin-top:20px;margin-left:8px; height: 200px;">
   <span class="input-group-text" >Mô Tả Sản Phẩm</span>
   <textarea class="form-control" aria-label="With textarea"></textarea>
 </div>
+
 
 
 <div style="text-align: center; margin-top: 30px; margin-left: 20px; position:fixed; top:86%;left:30%;">
@@ -63,8 +72,9 @@ $dlmau = mysqli_query($conn, $sql2);
 </button>
            </div>
     </div>
-           </form>
+          
 </div>
+</form>
 <style>
 
 
@@ -85,13 +95,14 @@ $dlmau = mysqli_query($conn, $sql2);
 
 </style>
 <script>
-
+ var masp = <?= json_encode($masp) ?>;
 function handleFormSubmit(event) {
         event.preventDefault(); 
         var form = document.getElementById('myForm2');
         var formDataa = new FormData(form);
+        formDataa.append('masp', masp);
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '../controller/product/productController.php', true);
+        xhr.open('POST', '../controller/product/Createdetail.php', true);
         xhr.onload = function() {
             if (xhr.status === 200) {
                 console.log(xhr.responseText);
@@ -102,6 +113,7 @@ function handleFormSubmit(event) {
         };
        
         xhr.send(formDataa);
+  
        
     }
     function thongbao() {

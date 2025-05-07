@@ -8,26 +8,26 @@ class DetailProduct {
     private $mausac;
     private $giaban;
     private $soluongton;
-    private $trangthai;
+    
 
     public function __construct($db){
         $this->conn = $db;
     }
 
-    public function setData($masp, $ram, $rom, $mausac, $giaban, $soluongton, $trangthai) {
+    public function setData($masp, $rom, $ram, $mausac, $giaban, $soluongton) {
         $this->masp = $masp;
-        $this->ram = $ram;
         $this->rom = $rom;
+        $this->ram = $ram;
         $this->mausac = $mausac;
         $this->giaban = $giaban;
         $this->soluongton = $soluongton;
-        $this->trangthai = $trangthai;
+       
     }
 
     public function create() {
         $query = "INSERT INTO {$this->table_name}
-                    (masp, ram, rom, mausac, giaban, soluongton, trangthai)
-                  VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    (masp, rom, ram, mausac, giaban, soluongton)
+                  VALUES (?, ?, ?, ?, ?, ?)";
     
         $stmt = $this->conn->prepare($query);
     
@@ -36,14 +36,13 @@ class DetailProduct {
         }
     
         $stmt->bind_param(
-            "iiisdii", // masp, ram, rom, mausac (string), giaban (double), soluongton, trangthai
+            "iiisdi", // masp, ram, rom, mausac (string), giaban (double), soluongton, trangthai
             $this->masp,
-            $this->ram,
             $this->rom,
+            $this->ram,
             $this->mausac,
             $this->giaban,
             $this->soluongton,
-            $this->trangthai
         );
     
         if ($stmt->execute()) {

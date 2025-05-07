@@ -57,7 +57,7 @@ session_write_close();
                         <td><?= $product['thuonghieu'] ?></td>
                         <td style="cursor:pointer;">
                         <div class="button-group">
-                       <button href="#" class="btn btn-primary btn-sm" onclick="editProduct(<?= $product['masp'] ?>); return false;">Sửa</button><button onclick="deleteProduct(<?= $product['masp'] ?>)" class="btn btn-danger btn-sm">Xóa</button> <button class="btn btn-success" style="width:136px;" onclick="dtproduct()">Thêm Phiên Bản</button>
+                       <button href="#" class="btn btn-primary btn-sm" onclick="editProduct(<?= $product['masp'] ?>); return false;">Sửa</button><button onclick="deleteProduct(<?= $product['masp'] ?>)" class="btn btn-danger btn-sm">Xóa</button> <button class="btn btn-success" style="width:136px;" onclick="dtproduct(<?= $product['masp'] ?>)">Thêm Phiên Bản</button>
                         </div>
                         </td>
                     </tr>
@@ -169,11 +169,11 @@ function editProduct(id) {
     document.querySelector(".app-content").style.filter = "blur(5px)";
     $(".container").load("sua1.php?id=" + id);
 }
-function dtproduct(){
+function dtproduct(id){
     $(".container").css("display", "block");
     $(".container").fadeIn();
     document.querySelector(".app-content").style.filter = "blur(5px)";
-    $(".container").load("test2.php");
+    $(".container").load("test2.php?id=" + id);
 }
 function deleteProduct(productId) {
     if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
