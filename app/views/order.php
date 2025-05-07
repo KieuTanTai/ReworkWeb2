@@ -1,5 +1,11 @@
 <?php
+session_start();
 require_once '../controller/order/orderController.php';
+
+// Kiểm tra session hiện tại (chuyển display:block để hiện thông tin session)
+echo "<pre style='display:none'>";
+print_r($_SESSION);
+echo "</pre>";
 
 $controller = new OrderController();
 
@@ -16,7 +22,15 @@ $viewData = $controller->index();
 $ordersToDisplay = $viewData['orders'];
 $currentPage = $viewData['currentPage'];
 $totalPages = $viewData['totalPages'];
-
+$current_page = basename($_SERVER['PHP_SELF']);
+if ($current_page == 'user.php' || $current_page == 'customer.php') {
+    if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
+        header("Location: admin.php");
+        exit();
+    }
+}
+// Giữ nguyên session khi chuyển trang
+session_write_close();
 include("header1.php");
 include("sidebar1.php");
 ?>

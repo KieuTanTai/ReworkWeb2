@@ -1,4 +1,5 @@
 <?php
+session_start();
 include ("header1.php");
 include ("sidebar1.php");
 require_once '../controller/product/productController.php';
@@ -8,6 +9,8 @@ $data = $controller->indexlimit(); // lấy danh sách sản phẩm
 $products = $data['products']; // danh sách sản phẩm
 $currentPage = $data['currentPage']; // trang hiện tại
 $totalPages = $data['totalPages']; // tổng số trang
+
+session_write_close();
 
 ?>
 

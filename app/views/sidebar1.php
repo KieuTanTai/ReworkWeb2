@@ -200,6 +200,7 @@
                   </li>
                 </ul>
               </li> -->
+              
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-table"></i>
@@ -210,25 +211,31 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                  <a href="order.php" class="nav-link">
+                    <a href="order.php" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Quản Lý Đơn Hàng</p>
                     </a>
                   </li>
-                  <li class="nav-item">
-                    <a href="user.php" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Quản Lý Khách Hàng</p>
-                    </a>
-                  </li>
+                  
                   <li class="nav-item">
                     <a href="product.php" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Quản Lý Sản Phẩm</p>
                     </a>
                   </li>
+                  
+                  <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
+                  <li class="nav-item">
+                    <a href="user.php" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Quản Lý Người Dùng</p>
+                    </a>
+                  </li>
+                  <?php endif; ?>
                 </ul>
               </li>
+              
+              <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                 <i class="bi bi-bar-chart-line"></i>
@@ -245,10 +252,9 @@
                       <p>Thống Kê Khách Hàng</p>
                     </a>
                   </li>
-               
-                  
                 </ul>
               </li>
+              <?php endif; ?>
               <!-- <li class="nav-header">EXAMPLES</li>
               <li class="nav-item">
                 <a href="#" class="nav-link">

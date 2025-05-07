@@ -6,7 +6,11 @@ require_once '../config/database.php';
 
 // Nếu người dùng đã đăng nhập, chuyển hướng về trang chủ
 if (isLoggedIn()) {
-    header("Location: ../../public/index.php");
+    if (isStaff()) {
+        header("Location: ../views/admin.php"); // Đường dẫn tới admin.php trong thư mục views
+    } else {
+        header("Location: ../../public/index.php");
+    }
     exit();
 }
 
@@ -21,27 +25,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (empty($password)) {
         $_SESSION['login_error'] = "Vui lòng nhập mật khẩu!";
     } else {
-        // Thực hiện đăng nhập - không cần truyền $conn vì đã được sử dụng toàn cục trong model
-        $result = loginUser($login_input, $password);
+        // Thử đăng nhập với tài khoản nhân viên trước
+        $staff_result = loginStaff($login_input, $password);
+        
+        if ($staff_result['success']) {
+            // Đăng nhập nhân viên thành công
+            header("Location: ../views/admin.php"); // Đường dẫn tới admin.php trong thư mục views
+            exit();
+        } else {
+            // Thử đăng nhập với tài khoản khách hàng
+            $result = loginUser($login_input, $password);
 
-        if ($result['success']) {
-            // Gán thông tin khách hàng để truyền qua JS
-            $_SESSION['login_info'] = [
-                'makh' => $result['user']['makh'],
-                'tenkhachhang' => $result['user']['tenkhachhang'],
-            ];
-
-            if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
-                header("Location: ../admin/admin.php");
-            } else {
+            if ($result['success']) {
+                // Đăng nhập khách hàng thành công
                 $redirect = $_SESSION['redirect_url'] ?? '../../public/index.php';
                 unset($_SESSION['redirect_url']);
                 header("Location: $redirect");
+                exit();
+            } else {
+                // Đăng nhập thất bại
+                $_SESSION['login_error'] = $result['message'];
             }
-            exit();
-        } else {
-            // Đăng nhập thất bại
-            $_SESSION['login_error'] = $result['message'];
         }
     }
 

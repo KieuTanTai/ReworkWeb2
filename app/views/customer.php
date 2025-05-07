@@ -1,4 +1,21 @@
 <?php
+session_start();
+require_once '../model/account.php';
+
+// Kiểm tra đăng nhập
+if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
+    $_SESSION['login_error'] = "Vui lòng đăng nhập để tiếp tục!";
+    header("Location: login.php");
+    exit();
+}
+
+// Kiểm tra quyền admin
+if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
+    // Nếu không phải admin, chuyển hướng về trang admin
+    header("Location: admin.php");
+    exit();
+}
+session_write_close();
 include ("header1.php");
 include ("sidebar1.php");
 ?>

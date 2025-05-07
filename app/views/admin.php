@@ -1,4 +1,24 @@
 <?php
+session_start();
+require_once '../model/account.php';
+// Đảm bảo thông tin vai trò đầy đủ
+if (isset($_SESSION['user_role']) && !isset($_SESSION['is_admin'])) {
+  $_SESSION['is_admin'] = ($_SESSION['user_role'] == 2);
+}
+// Kiểm tra đăng nhập
+if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
+    $_SESSION['login_error'] = "Vui lòng đăng nhập để tiếp tục!";
+    header("Location: ../views/login.php");
+    exit();
+}
+
+// Kiểm tra quyền - chỉ cho phép nhân viên và admin truy cập
+if (!isset($_SESSION['is_staff']) || $_SESSION['is_staff'] !== true) {
+    header("Location: ../../public/index.php");
+    exit();
+}
+// Giữ nguyên session khi chuyển trang
+session_write_close();
   include("header1.php");
   include("sidebar1.php");
 ?>  

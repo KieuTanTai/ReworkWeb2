@@ -212,7 +212,7 @@
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
-                <span class="d-none d-md-inline">Alexander Pierce</span>
+                <span class="d-none d-md-inline"><?php echo isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Admin'; ?></span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
@@ -223,8 +223,12 @@
                     alt="User Image"
                   />
                   <p>
-                    Alexander Pierce
-                    <!-- <small>Member since Nov. 2023</small> -->
+                  <?php echo isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Admin'; ?>
+    <?php if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
+    <small>Administrator</small>
+    <?php elseif(isset($_SESSION['is_staff']) && $_SESSION['is_staff']): ?>
+    <small>Staff</small>
+    <?php endif; ?>
                   </p>
                 </li>
                 <!--end::User Image-->
@@ -241,8 +245,11 @@
                 <!--end::Menu Body-->
                 <!--begin::Menu Footer-->
                 <li class="user-footer">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
-                  <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
+                
+                  <!-- <a href="#" class="btn btn-default btn-flat">Profile</a> -->
+
+
+                  <a href="../controller/logout_controller.php" class="btn btn-default btn-flat float-end">Sign out</a>
                 </li>
                 <!--end::Menu Footer-->
               </ul>
