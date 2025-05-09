@@ -10,6 +10,8 @@ $products = $data['products']; // danh sách sản phẩm
 $currentPage = $data['currentPage']; // trang hiện tại
 $totalPages = $data['totalPages']; // tổng số trang
 
+$products2 = $controller ->index(); // danh sách sản phẩm
+
 session_write_close();
 
 ?>
@@ -22,8 +24,17 @@ session_write_close();
     <br>
     <div class="card mb-4 ">
         <div class="card-header">
-            <button type="button" class="btn btn-primary" onclick="addproduct()">Thêm Sản Phẩm</button>
+            <div class="button-group">
+            <button type="button" class="btn btn-primary" onclick="addproduct()">Thêm Sản Phẩm</button> 
+            <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm sản phẩm..."  style="width: 300px; margin-left: 10px;" >
+            <button type="button" class="btn btn-primary" onclick="searchProduct()" style="margin-left: 10px;">Tìm Kiếm</button>
+            <button type="button" class="btn btn-success" onclick="document.getElementById('searchInput').value=''; resetSearchProduct()" style="margin-left: 10px;">Làm Mới</button>
+            </div>
+      
 
+        </div>
+        <div>
+            
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -70,6 +81,8 @@ session_write_close();
                     <?php endif; ?>
                 </tbody>
             </table>
+            <div id="customPagination" class="mt-3"></div>
+
         </div>
         <!-- /.card-body -->
         <div class="card-footer"> 
@@ -156,6 +169,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script>
+    let filteredProducts = [];
+let currentSearchPage = 1;
+const searchItemsPerPage = 5;
+
+        const allProducts = <?= json_encode($products2) ?>;
+
 function addproduct() {
     $(".container").css("display", "block");
     $(".container").fadeIn();
@@ -195,6 +214,128 @@ function deleteProduct(productId) {
         });
     }
 }
+function searchProduct() {
+    const input = document.getElementById("searchInput").value.trim().toUpperCase();
+    const cardFooter = document.querySelector(".card-footer");
+
+    cardFooter.style.display = "none"; // Ẩn phân trang gốc
+
+    filteredProducts = allProducts.filter(p =>
+        Object.values(p).some(val =>
+            String(val).toUpperCase().includes(input)
+        )
+    );
+
+    currentSearchPage = 1;
+    renderSearchResults();
+}
+
+
+function renderSearchResults() {
+    const tbody = document.querySelector("table tbody");
+    tbody.innerHTML = "";
+
+    if (filteredProducts.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="11" class="text-center">Không tìm thấy sản phẩm.</td></tr>`;
+        document.getElementById("customPagination").innerHTML = "";
+        return;
+    }
+
+    const start = (currentSearchPage - 1) * searchItemsPerPage;
+    const end = start + searchItemsPerPage;
+    const currentPageItems = filteredProducts.slice(start, end);
+
+    currentPageItems.forEach(p => {
+        const row = `
+        <tr class="align-middle">
+            <td>${p.masp}</td>
+            <td>${p.tensp}</td>
+            <td><img src="../../public/assets/images/${p.hinhanh}" style="width: 50px; height: 50px;" /></td>
+            <td>${p.chipxuly}</td>
+            <td>${p.dungluongpin} mAh</td>
+            <td>${p.kichthuocman} inch</td>
+            <td>${p.hedieuhanh}</td>
+            <td>${p.camerasau}</td>
+            <td>${p.cameratruoc}</td>
+            <td>${p.thuonghieu}</td>
+            <td>
+                <div class="button-group">
+                    <button class="btn btn-primary btn-sm" onclick="editProduct(${p.masp})">Sửa</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.masp})">Xóa</button>
+                    <button class="btn btn-success" style="width:136px;" onclick="dtproduct(${p.masp})">Thêm Phiên Bản</button>
+                </div>
+            </td>
+        </tr>`;
+        tbody.innerHTML += row;
+    });
+
+    renderSearchPagination();
+}
+function renderSearchPagination() {
+    const totalPages = Math.ceil(filteredProducts.length / searchItemsPerPage);
+    let paginationHTML = `<ul class="pagination float-end m-0">`;
+
+    if (currentSearchPage > 1) {
+        paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="gotoSearchPage(${currentSearchPage - 1})">&laquo;</a></li>`;
+    }
+
+    for (let i = 1; i <= totalPages; i++) {
+        paginationHTML += `<li class="page-item ${i === currentSearchPage ? 'active' : ''}">
+            <a class="page-link" href="#" onclick="gotoSearchPage(${i})">${i}</a></li>`;
+    }
+
+    if (currentSearchPage < totalPages) {
+        paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="gotoSearchPage(${currentSearchPage + 1})">&raquo;</a></li>`;
+    }
+
+    paginationHTML += `</ul>`;
+
+    document.getElementById("customPagination").innerHTML = paginationHTML;
+}
+function gotoSearchPage(page) {
+    currentSearchPage = page;
+    renderSearchResults();
+}
+
+
+function renderFullTable() {
+    const tbody = document.querySelector("table tbody");
+    tbody.innerHTML = "";
+    allProducts.forEach(p => {
+        const row = `
+        <tr class="align-middle">
+            <td>${p.masp}</td>
+            <td>${p.tensp}</td>
+            <td><img src="../../public/assets/images/${p.hinhanh}" style="width: 50px; height: 50px;" /></td>
+            <td>${p.chipxuly}</td>
+            <td>${p.dungluongpin} mAh</td>
+            <td>${p.kichthuocman} inch</td>
+            <td>${p.hedieuhanh}</td>
+            <td>${p.camerasau}</td>
+            <td>${p.cameratruoc}</td>
+            <td>${p.thuonghieu}</td>
+            <td>
+                <div class="button-group">
+                    <button class="btn btn-primary btn-sm" onclick="editProduct(${p.masp})">Sửa</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.masp})">Xóa</button>
+                    <button class="btn btn-success" style="width:136px;" onclick="dtproduct(${p.masp})">Thêm Phiên Bản</button>
+                </div>
+            </td>
+        </tr>`;
+        tbody.innerHTML += row;
+    });
+}
+
+
+function resetSearchProduct() {
+   window.location.reload();
+    const cardFooter = document.querySelector(".card-footer");
+    cardFooter.style.display = "block"; // Hiện lại phân trang gốc
+    document.getElementById("customPagination").innerHTML = ""; // Xóa phân trang tìm kiếm
+    renderFullTable(); // Hiện lại bảng đầy đủ
+    document.getElementById("searchInput").value = ""; // Xóa giá trị tìm kiếm
+}
+
 </script>
 <script src="https://kit.fontawesome.com/95a272230e.js" crossorigin="anonymous"></script>
 
