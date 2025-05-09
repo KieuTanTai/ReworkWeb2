@@ -27,8 +27,20 @@ session_write_close();
             <div class="button-group">
             <button type="button" class="btn btn-primary" onclick="addproduct()">Thêm Sản Phẩm</button> 
             <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm sản phẩm..."  style="width: 300px; margin-left: 10px;" >
+               <select class="form-select" id="inputGroupSelect01" name="type" style="width: 300px; margin-left: 10px;">
+            <option value="all">Tất cả</option>
+            <option value="tensp">Tên Sản Phẩm</option>
+            <option value="chipxuly">Chip Xử Lý</option>
+            <option value="dungluongpin">Dung Lượng Pin</option>
+            <option value="kichthuocman">Kích Thước Màn </option>
+            <option value="hedieuhanh">Hệ Điều Hành</option>
+            <option value="camerasau">Camera Sau</option>
+            <option value="cameratruoc">Camera Trước</option>
+            <option value="thuonghieu">Thương Hiệu</option>
+            </select>
             <button type="button" class="btn btn-primary" onclick="searchProduct()" style="margin-left: 10px;">Tìm Kiếm</button>
-            <button type="button" class="btn btn-success" onclick="document.getElementById('searchInput').value=''; resetSearchProduct()" style="margin-left: 10px;">Làm Mới</button>
+      
+                <button type="button" class="btn btn-success" onclick="document.getElementById('searchInput').value=''; resetSearchProduct()" style="margin-left: 10px;">Làm Mới</button>
             </div>
       
 
@@ -216,15 +228,22 @@ function deleteProduct(productId) {
 }
 function searchProduct() {
     const input = document.getElementById("searchInput").value.trim().toUpperCase();
+    const selectedColumn = document.getElementById("inputGroupSelect01").value;
     const cardFooter = document.querySelector(".card-footer");
 
     cardFooter.style.display = "none"; // Ẩn phân trang gốc
 
-    filteredProducts = allProducts.filter(p =>
-        Object.values(p).some(val =>
-            String(val).toUpperCase().includes(input)
-        )
-    );
+    if (selectedColumn === "all") {
+        filteredProducts = allProducts.filter(p =>
+            Object.values(p).some(val =>
+                String(val).toUpperCase().includes(input)
+            )
+        );
+    } else {
+        filteredProducts = allProducts.filter(p =>
+            String(p[selectedColumn]).toUpperCase().includes(input)
+        );
+    }
 
     currentSearchPage = 1;
     renderSearchResults();

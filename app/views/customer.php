@@ -1,7 +1,12 @@
 <?php
 session_start();
 require_once '../model/account.php';
+// Đảm bảo đường dẫn đúng
+require_once '../controller/user/userController.php';
 
+$controller = new UserController();
+$data = $controller->index();
+$customer = $data['users'];
 // Kiểm tra đăng nhập
 if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
     $_SESSION['login_error'] = "Vui lòng đăng nhập để tiếp tục!";
@@ -47,7 +52,10 @@ include ("sidebar1.php");
       <div class="card-body">
         <table class="table table-bordered">
           <thead>
+  
+
             <tr>
+                
               <th style="width: 10px">ID</th>
               <th>Tên Khách Hàng</th>
               <th>Tổng Mua</th>
@@ -56,9 +64,10 @@ include ("sidebar1.php");
             </tr>
           </thead>
           <tbody>
+             <?php foreach ($customer as $u): ?>
             <tr class="align-middle">
-              <td></td>
-              <td></td>
+              <td><?= htmlspecialchars($u['makh'])?></td>
+              <td><?= htmlspecialchars($u['tenkhachhang'])?></td>
               <td></td>
               <td></td>
              
@@ -66,43 +75,12 @@ include ("sidebar1.php");
               <td style=" cursor:pointer;">
               <button type="button" class="btn btn-primary " onclick="orderdetails()">Chi Tiết</button>
             </tr>
-            <tr class="align-middle">
-              <td></td>
-              <td></td>
-              <td> 
-              </td>
-              <td></td>
-          
-              
-              <td style=" cursor:pointer;">
-              <button type="button" class="btn btn-primary" onclick="orderdetails()">Chi Tiết</button>
+         
             </tr>
-            <tr class="align-middle">
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-             
-             
-              <td style=" cursor:pointer;">
-              <button type="button" class="btn btn-primary" onclick="orderdetails()">Chi Tiết</button>            </tr>
-            <tr class="align-middle">
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-   
-             
-              <td style=" cursor:pointer;">
-              <button type="button" class="btn btn-primary" onclick="orderdetails">Chi Tiết</button>            </tr>
+<?php endforeach; ?>
+          
           </tbody>
-           <tr class="align-middle">
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td style=" cursor:pointer;">
-              <button type="button" class="btn btn-primary" onclick="orderdetails()">Chi Tiết</button>            </tr>
+           
         </table>
       </div>
       <div class="card-footer clearfix" id="pagelink">
@@ -179,4 +157,3 @@ background: white;
 
 
 </style>
-
