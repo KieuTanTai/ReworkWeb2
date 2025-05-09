@@ -57,7 +57,7 @@ include("sidebar1.php");
     for (let i = 1; i < rows.length; i++) {
       let addressCell = rows[i].getElementsByTagName("td")[3];
       let statusCell = rows[i].getElementsByTagName("td")[5];
-      let dateCell = rows[i].getElementsByTagName("td")[5];
+      let dateCell = rows[i].getElementsByTagName("td")[2];
 
       let matchesAddress = true;
       let matchesStatus = true;
@@ -84,7 +84,7 @@ include("sidebar1.php");
           matchesDate = orderDate >= fromTimestamp;
         }
         if (toTimestamp !== null) {
-          matchesDate = matchesDate && orderDate <= fromTimestamp;
+          matchesDate = matchesDate && orderDate <= toTimestamp;
         }
       }
 
@@ -140,7 +140,7 @@ include("sidebar1.php");
                     <option value="1">Chưa xác nhận</option>
                     <option value="2">Đã xác nhận</option>
                     <option value="3">Đã giao</option>
-                    <option value="4">Huỷ đơn</option>
+                    <option value="4">Đã huỷ</option>
                   </select>
                 </div>
               </div>
