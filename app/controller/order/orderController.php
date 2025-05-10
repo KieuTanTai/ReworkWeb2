@@ -36,9 +36,23 @@ class OrderController
         return $this->order->update();
     }
 
+    public function index1()
+    {
+        $result = $this->order->getAll();
+
+        $orders = [];
+
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $orders[] = $row;
+            }
+        }
+
+        return ($orders); // Trả mảng sản phẩm cho view xử lý
+    }
     public function index(): array
     {
-        $itemsPerPage = 10; 
+        $itemsPerPage = 10;
         $totalOrders = $this->order->getTotalOrdersCount();
 
         $totalPages = ceil($totalOrders / $itemsPerPage);
@@ -55,11 +69,11 @@ class OrderController
         $result = $this->order->getOrdersPaginated($itemsPerPage, $offset);
 
         $ordersToDisplay = [];
-        if ($result instanceof mysqli_result) { 
+        if ($result instanceof mysqli_result) {
             while ($row = $result->fetch_assoc()) {
                 $ordersToDisplay[] = $row;
             }
-            $result->free(); 
+            $result->free();
         } elseif ($result === false) {
             error_log("Lỗi khi lấy dữ liệu người dùng phân trang từ Controller.");
         }
@@ -70,7 +84,8 @@ class OrderController
         ];
     }
 
-    public function updateStatus(array $data){
+    public function updateStatus(array $data)
+    {
 
         $orderID = (int) $data['madonhang'];
         $newStatus = (int) $data['new_status'];
@@ -83,25 +98,25 @@ class OrderController
     {
         $orderId = null;
         if (isset($_GET['id'])) {
-            $orderId = (int)$_GET['id'];
+            $orderId = (int) $_GET['id'];
         }
 
         if ($orderId === null || $orderId <= 0) {
             error_log("Yêu cầu xem chi tiết đơn hàng với ID không hợp lệ.");
-            return ['order' => null, 'items' => []]; 
+            return ['order' => null, 'items' => []];
         }
 
         $orderData = $this->order->getOrderById($orderId);
 
         if ($orderData === null) {
-            return ['order' => null, 'items' => []]; 
+            return ['order' => null, 'items' => []];
         }
 
         $orderItems = $this->order->getOrderItems($orderId);
 
         return [
-            'order' => $orderData, 
-            'items' => $orderItems  
+            'order' => $orderData,
+            'items' => $orderItems
         ];
     }
 

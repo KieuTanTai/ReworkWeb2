@@ -1,5 +1,11 @@
 <?php
+session_start();
 require_once '../controller/order/orderController.php';
+
+// Kiểm tra session hiện tại (chuyển display:block để hiện thông tin session)
+echo "<pre style='display:none'>";
+print_r($_SESSION);
+echo "</pre>";
 
 $controller = new OrderController();
 
@@ -10,18 +16,94 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $success = $controller->updateStatus($_POST);
     header("Location: order.php?status=" . ($success ? 'add_success' : 'add_error'));
     exit;
+  }
 }
-}  
+$orders2 = $controller->index1();
 $viewData = $controller->index();
 $ordersToDisplay = $viewData['orders'];
 $currentPage = $viewData['currentPage'];
 $totalPages = $viewData['totalPages'];
-
+$current_page = basename($_SERVER['PHP_SELF']);
+if ($current_page == 'user.php' || $current_page == 'customer.php') {
+  if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
+    header("Location: admin.php");
+    exit();
+  }
+}
+// Giữ nguyên session khi chuyển trang
+session_write_close();
 include("header1.php");
 include("sidebar1.php");
 ?>
 <script>
+  let filteredOrders = [];
+  let currentSearchPage = 1;
+  const searchItemsPerPage = 10;
+  const allOrders = <?= json_encode($orders2) ?>;
+
+  function getStatusOptions(currentStatus) {
+    const statuses = [
+      { value: 1, label: "Chưa xác nhận" },
+      { value: 2, label: "Đã xác nhận" },
+      { value: 3, label: "Đã giao" },
+      { value: 4, label: "Đã huỷ" }
+    ];
+
+    return statuses.map(status => {
+      const isSelected = Number(currentStatus) === status.value ? "selected" : "";
+      let isDisabled = "";
+
+      if (status.value < currentStatus) {
+        isDisabled = "disabled";
+      }
+
+      return `<option value="${status.value}" ${isSelected} ${isDisabled}>${status.label}</option>`;
+    }).join("");
+  }
+
+  function renderSearchResults() {
+    const tbody = document.getElementById('orderBody');
+    tbody.innerHTML = "";
+
+    const start = (currentSearchPage - 1) * searchItemsPerPage;
+    const end = start + searchItemsPerPage;
+    const currentPageItems = filteredOrders.slice(start, end);
+
+    currentPageItems.forEach(order => {
+      const row = `
+        <tr class="align-middle">
+            <td>${order.madonhang}</td>
+            <td>${order.makh}</td>
+            <td>${order.thoigian}</td>
+            <td>${order.diachi}</td>
+            <td>${order.tongtien}</td>
+            <td>
+                      <form method="POST"
+                        action="order.php<?= isset($_GET['page']) ? '?page=' . (int) $_GET['page'] : '' ?>">
+                        <input type="hidden" name="action" value="update_status">
+                        <input type="hidden" name="madonhang" value="${order.madonhang}">
+
+                        <select name="new_status" class="form-select"
+                          onchange="this.form.submit();" ?>>
+                          ${getStatusOptions(order.trangthai)}
+                        </select>
+                      </form>
+            </td>
+            <td>
+                      <a href="order_detail.php?id=${order.madonhang}">
+                        <button class="btn btn-primary">Xem chi tiết</button>
+                      </a>
+                    </td>
+        </tr>`;
+      tbody.innerHTML += row;
+    });
+
+    renderSearchPagination();
+  }
   function filterOrder() {
+    const cardFooter = document.querySelector(".card-footer");
+    cardFooter.style.display = "none";
+
     let table = document.getElementById("dataTable");
     let rows = table.getElementsByTagName("tr");
 
@@ -34,53 +116,116 @@ include("sidebar1.php");
     let toTimestamp = null;
 
     if (fromDate) {
-      fromTimestamp = new Date(fromDate).getTime();
+      let tempFromDate = new Date(fromDate);
+      tempFromDate.setHours(0, 0, 0, 0); 
+      fromTimestamp = tempFromDate.getTime();
     }
     if (toDate) {
-      toTimestamp = new Date(toDate).getTime();
+      let tempToDate = new Date(toDate);
+      tempToDate.setHours(23, 59, 59, 999);
+      toTimestamp = tempToDate.getTime();
     }
 
-    for (let i = 1; i < rows.length; i++) {
-      let addressCell = rows[i].getElementsByTagName("td")[3];
-      let statusCell = rows[i].getElementsByTagName("td")[5];
-      let dateCell = rows[i].getElementsByTagName("td")[2];
-
+    filteredOrders = allOrders.filter(order => {
       let matchesAddress = true;
       let matchesStatus = true;
       let matchesDate = true;
 
-      if (address && addressCell) {
-        let addressInput = addressCell.textContent.toLowerCase().trim();
+      if (address) {
+        let addressInput = order.diachi.toLowerCase().trim();
         matchesAddress = addressInput.includes(address);
       }
 
-      if (status !== "0" && statusCell) {
-        let selectElement = statusCell.getElementsByTagName("select")[0];
-        let statusValue = "";
-        if (selectElement) {
-          statusValue = selectElement.value;
-        }
-        matchesStatus = statusValue === status;
+      if (status !== "0") {
+        matchesStatus = String(order.trangthai) === status;
       }
 
-      if (dateCell) {
-        let orderDate = new Date(dateCell.textContent.trim()).getTime();
+      let orderDate = new Date(order.thoigian.trim()).getTime();
 
-        if (fromTimestamp !== null) {
-          matchesDate = orderDate >= fromTimestamp;
-        }
-        if (toTimestamp !== null) {
-          matchesDate = matchesDate && orderDate <= toTimestamp;
-        }
+      if (fromTimestamp !== null) {
+        matchesDate = orderDate >= fromTimestamp;
+      }
+      if (toTimestamp !== null) {
+        matchesDate = matchesDate && orderDate <= toTimestamp;
       }
 
-      if (matchesAddress && matchesStatus && matchesDate) {
-        rows[i].style.display = "";
-      }
-      else {
-        rows[i].style.display = "none";
-      }
+      return matchesAddress && matchesStatus && matchesDate;
+    });
+
+    currentSearchPage = 1;
+    renderSearchResults();
+  }
+
+  function renderSearchPagination() {
+    const totalPages = Math.ceil(filteredOrders.length / searchItemsPerPage);
+    let paginationHTML = `<ul class="pagination float-end m-0">`;
+
+    if (currentSearchPage > 1) {
+      paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="goToSearchPage(${currentSearchPage - 1})">&laquo;</a></li>`;
     }
+
+    for (let i = 1; i <= totalPages; i++) {
+      paginationHTML += `<li class="page-item ${i === currentSearchPage ? 'active' : ''}">
+            <a class="page-link" href="#" onclick="goToSearchPage(${i})">${i}</a></li>`;
+    }
+
+    if (currentSearchPage < totalPages) {
+      paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="goToSearchPage(${currentSearchPage + 1})">&raquo;</a></li>`;
+    }
+
+    paginationHTML += `</ul>`;
+
+    document.getElementById("customPagination").innerHTML = paginationHTML;
+  }
+  function goToSearchPage(page) {
+    currentSearchPage = page;
+    renderSearchResults();
+  }
+
+  function renderFullTable() {
+    const tbody = document.getElementById('orderBody');
+    tbody.innerHTML = "";
+
+    allOrders.forEach(order => {
+      const row = `
+        <tr class="align-middle">
+            <td>${order.madonhang}</td>
+            <td>${order.makh}</td>
+            <td>${order.thoigian}</td>
+            <td>${order.diachi}</td>
+            <td>${order.tongtien}</td>
+            <td>
+                      <form method="POST"
+                        action="order.php<?= isset($_GET['page']) ? '?page=' . (int) $_GET['page'] : '' ?>">
+                        <input type="hidden" name="action" value="update_status">
+                        <input type="hidden" name="madonhang" value="${order.madonhang}">
+
+                        <select name="new_status" class="form-select"
+                          onchange="this.form.submit();" ?>>
+                          ${getStatusOptions(order.trangthai)}
+                        </select>
+                      </form>
+            </td>
+            <td>
+                      <a href="order_detail.php?id=${order.madonhang}">
+                        <button class="btn btn-primary">Xem chi tiết</button>
+                      </a>
+                    </td>
+        </tr>`;
+      tbody.innerHTML += row;
+    });
+  }
+
+  function refresh() {
+    window.location.reload();
+    const cardFooter = document.querySelector(".card-footer");
+    cardFooter.style.display = "block"; 
+    document.getElementById("customPagination").innerHTML = "";
+    renderFullTable();
+    document.getElementById("statusButton1").value = 0;
+    document.getElementById("fromDate").value = "";
+    document.getElementById("toDate").value = "";
+    document.getElementById("address").value = "";
   }
 </script>
 <!--begin::App Main-->
@@ -154,6 +299,7 @@ include("sidebar1.php");
                 <div class="col-md-2">
                   <div class="mb-3">
                     <button class="btn btn-primary" onclick="filterOrder()">Lọc Đơn Hàng</button>
+                    <button class="btn btn-primary" onclick="refresh()">Làm Mới</button>
                   </div>
                 </div>
               </div>
@@ -175,7 +321,7 @@ include("sidebar1.php");
                   <th>Hành Động</th>
                 </tr>
               </thead>
-              <tbody style="vertical-align: middle;">
+              <tbody style="vertical-align: middle;" id="orderBody">
                 <?php foreach ($ordersToDisplay as $order): ?>
                   <tr>
                     <td><?= htmlspecialchars($order['madonhang']) ?></td>
@@ -189,8 +335,7 @@ include("sidebar1.php");
                         <input type="hidden" name="action" value="update_status">
                         <input type="hidden" name="madonhang" value="<?= htmlspecialchars($order['madonhang']) ?>">
 
-                        <select name="new_status" class="form-select"
-                          onchange="this.form.submit();" ?>>
+                        <select name="new_status" class="form-select" onchange="this.form.submit();" ?>>
                           <option value="1" <?= $order['trangthai'] == 1 ? 'selected disabled' : ($order['trangthai'] > 1 ? 'disabled' : '') ?>>
                             Chưa xác nhận
                           </option>
@@ -215,6 +360,7 @@ include("sidebar1.php");
                 <?php endforeach; ?>
               </tbody>
             </table>
+            <div id="customPagination" class="mt-3"></div>
             <div class="card-footer">
               <?php if ($totalPages > 1): ?>
                 <nav aria-label="Page navigation">
