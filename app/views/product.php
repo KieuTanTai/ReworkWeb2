@@ -153,10 +153,12 @@ session_write_close();
 </div>
 
 
-<script src="../../public/assets/js/adminlte.js"></script>
-<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.3.0/browser/overlayscrollbars.browser.es6.min.js"></script>
+<script src="../../public/assets/js/adminlte.js"></script>
+<!-- <script src="https://kit.fontawesome.com/95a272230e.js" crossorigin="anonymous"></script> -->
 
 
 
@@ -227,6 +229,10 @@ function deleteProduct(productId) {
     }
 }
 function searchProduct() {
+    if(document.getElementById("searchInput").value.trim() === "") {
+        alert("Vui lòng nhập từ khóa tìm kiếm.");
+        return;
+    }
     const input = document.getElementById("searchInput").value.trim().toUpperCase();
     const selectedColumn = document.getElementById("inputGroupSelect01").value;
     const cardFooter = document.querySelector(".card-footer");
@@ -348,15 +354,18 @@ function renderFullTable() {
 
 function resetSearchProduct() {
    window.location.reload();
+   window.location.href = "product.php?page=1";
     const cardFooter = document.querySelector(".card-footer");
     cardFooter.style.display = "block"; // Hiện lại phân trang gốc
-    document.getElementById("customPagination").innerHTML = ""; // Xóa phân trang tìm kiếm
     renderFullTable(); // Hiện lại bảng đầy đủ
+    document.getElementById("customPagination").innerHTML = ""; // Xóa phân trang tìm kiếm
     document.getElementById("searchInput").value = ""; // Xóa giá trị tìm kiếm
+    document.getElementById("inputGroupSelect01").value = "all"; // Đặt lại giá trị select về "all"
+
 }
 
 </script>
-<script src="https://kit.fontawesome.com/95a272230e.js" crossorigin="anonymous"></script>
+
 
 <style>
 .container {
