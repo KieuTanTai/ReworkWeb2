@@ -4,7 +4,9 @@ require_once '../model/account.php';
 // Đảm bảo đường dẫn đúng
 require_once '../controller/user/userController.php';
 
-
+$controller = new UserController();
+$data = $controller->index();
+$customer = $data['users'];
 // Kiểm tra đăng nhập
 if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
     $_SESSION['login_error'] = "Vui lòng đăng nhập để tiếp tục!";
@@ -31,23 +33,11 @@ include ("sidebar1.php");
       
      <div class="d-flex align-items-center">
      <div class="btn-group">
-     <select name="" id="statusButton1" class="form-control">
-            <option value="0">Tất cả Khách Hàng</option>
-            <option value="1">Top 5 Khách Hàng có doanh thu cao nhất</option>
-    </select> 
+ 
   </ul>
 </div>
-<div style="display:none;" class="input-time">
-<div class="d-flex align-items-center ms-3" >
-  <label for="startdate" class="ms-3">Từ:</label>
-  <input type="date" id="startdate" style="width:150px;" class="form-control ms-2">
-
-  <label for="enddate" class="ms-3">Đến:</label>
-  <input type="date" id="enddate" style="width:150px;" class="form-control ms-2">
-
-  <button type="button" class="btn btn-primary ms-3" style="width:65px;" onclick="filter()">Lọc</button>
-</div>
-</div>
+    
+      <button type="button" class="btn btn-primary ms-3 "  style="width:65x;" onclick="filter()">Lọc</button>
 
 
       </div>
@@ -60,20 +50,19 @@ include ("sidebar1.php");
 
             <tr>
                 
-                 <th style="width: 10px">ID</th>
+              <th style="width: 10px">ID</th>
               <th>Tên Khách Hàng</th>
               <th>Số Điện Thoại </th>
               <th>Email</th>
               <th>Tổng Tiền Mua Hàng</th>
-              <th style="width: 94px;">Đơn Mua</th>
+              <th style="width: 94px;">Label</th>
             </tr>
           </thead>
           <tbody>
-           
+             <?php foreach ($customer as $u): ?>
             <tr class="align-middle">
-              <td></td>
-              <td></td>
-              <td></td>
+              <td><?= htmlspecialchars($u['makh'])?></td>
+              <td><?= htmlspecialchars($u['tenkhachhang'])?></td>
               <td></td>
               <td></td>
              
@@ -83,7 +72,7 @@ include ("sidebar1.php");
             </tr>
          
             </tr>
-
+<?php endforeach; ?>
           
           </tbody>
            
@@ -132,21 +121,6 @@ scrollbars: {
 </script>
 
 <script>
-  document.getElementById("statusButton1").addEventListener("change", function() {
-    const selectedValue = this.value;
-    if(selectedValue === "1"){
-      document.querySelector(".input-time").style.display = "block";
-    
-        
-    }
-    else{
-      document.querySelector(".input-time").style.display = "none";
-    }
-    
-   
-  });
-
-
 function orderdetails() {
     window.location.href = "order.php";
 }
@@ -175,7 +149,6 @@ transform: translate(-50%, -50%);
 background: white;
 
 }
-
 
 
 </style>
