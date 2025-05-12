@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../config/database.php';
+
 class Order {
     private $conn;
     private $table_name = "donhang";

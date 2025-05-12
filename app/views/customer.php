@@ -2,7 +2,13 @@
 session_start();
 require_once '../model/account.php';
 // Đảm bảo đường dẫn đúng
-require_once '../controller/user/userController.php';
+require_once '../controller/thongkeController.php';
+
+$controller = new thongke($conn);
+$startDate = "2024-01-01";
+$endDate = "2025-12-31";
+$cus= $controller->getKhachHang($startDate, $endDate);
+
 
 
 // Kiểm tra đăng nhập
@@ -25,6 +31,7 @@ include ("sidebar1.php");
 <div class="app-content">
 <br>
 <div class="col-sm-6"><h3 class="mb-0 ms-3">Thống Kê Khách Hàng</h3></div>
+
 <br>
   <div class="card mb-4 ">
       <div class="card-header">
@@ -35,8 +42,14 @@ include ("sidebar1.php");
             <option value="0">Tất cả Khách Hàng</option>
             <option value="1">Top 5 Khách Hàng có doanh thu cao nhất</option>
     </select> 
-  </ul>
-</div>
+    <div class="input">
+      <div class="btn-group ms-2">
+            <input type="text" class="form-control" id="searchInput" placeholder="Tìm Kiếm Khách Hàng...."  style="width: 300px; margin-left: 10px;" >
+            <button type="button" class="btn btn-primary ms-2" style="width:65px; border-radius:5px;" onclick="filter()">Tìm</button>
+          
+    </div>
+    </div>
+    </div>
 <div style="display:none;" class="input-time">
 <div class="d-flex align-items-center ms-3" >
   <label for="startdate" class="ms-3">Từ:</label>
@@ -69,20 +82,26 @@ include ("sidebar1.php");
             </tr>
           </thead>
           <tbody>
-           
+             <?php foreach ($cus as $cust): ?>
             <tr class="align-middle">
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td><?= $cust['makh']?></td>
+              <td><?= $cust['tenkhachhang']?></td>
+              <td><?= $cust['sdt']?></td>
+              <td><?= $cust['email']?></td>
+              <td><?= $cust['tongtienmuahang'] ?></td>
              
         
               <td style=" cursor:pointer;">
-              <button type="button" class="btn btn-primary " onclick="orderdetails()">Chi Tiết</button>
+<button type="button" class="btn btn-primary " onclick="orderdetails(<?= $cust['makh'] ?>)">Xem</button>
             </tr>
-         
+                             <?php endforeach; ?>
+
             </tr>
+             <?php if (empty($cus)): ?>
+                    <tr>
+                        <td colspan="11" class="text-center">Không có khách hàng nào.</td>
+                    </tr>
+                    <?php endif; ?>
 
           
           </tbody>
@@ -136,28 +155,34 @@ scrollbars: {
     const selectedValue = this.value;
     if(selectedValue === "1"){
       document.querySelector(".input-time").style.display = "block";
-    
+      document.querySelector(".input").style.display = "none"; 
+
         
     }
     else{
       document.querySelector(".input-time").style.display = "none";
+      document.querySelector(".input").style.display = "block";
     }
     
    
   });
 
 
-function orderdetails() {
-    window.location.href = "order.php";
+function orderdetails(makh) {
+    window.location.href = "detailcustomer.php?makh=" + makh;
 }
-function filter(){
-   const tmp= document.getElementById("statusButton1").value;
-   if(tmp==="1"){
-    document.querySelector("#pagelink").style.display="none";
-   }
-   else{
-    document.querySelector("#pagelink").style.display="block";
-   }
+function filter() {
+    const startdate = document.getElementById("startdate").value;
+    const enddate = document.getElementById("enddate").value;
+    
+    // Thay vì cố gọi PHP trực tiếp, hãy sử dụng AJAX để gửi dữ liệu đến server
+    fetch('gettopcustomers.php?startDate=' + startdate + '&endDate=' + enddate)
+        .then(response => response.json())
+        .then(data => {
+            // Xử lý dữ liệu trả về từ PHP ở đây
+            console.log(data);
+            // Hiển thị dữ liệu khách hàng
+        });
 }
 
 </script>
