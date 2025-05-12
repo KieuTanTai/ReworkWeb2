@@ -8,6 +8,7 @@ class Order {
     private $dlrom_table_name = "dungluongrom";
     private $dlram_table_name = "dungluongram";
     private $ms_table_name = "mausac";
+    private $kh_table_name = "khachhang";
 
     public $madonhang;
     public $makh;
@@ -21,7 +22,10 @@ class Order {
     }
 
     public function getAll(){
-        $query = "SELECT * FROM ".$this->table_name." ORDER BY madonhang DESC";
+        $query = "SELECT dh.*, tenkhachhang 
+                  FROM ".$this->table_name." dh, ".$this->kh_table_name." kh
+                  WHERE dh.makh = kh.makh
+                  ORDER BY madonhang DESC";
         $result = $this->conn->query($query);
 
         if(!$result){
@@ -120,7 +124,10 @@ class Order {
 
     public function getOrdersPaginated(int $limit, int $offset)
     {
-        $query = "SELECT * FROM " . $this->table_name . " ORDER BY madonhang DESC LIMIT ?, ?";
+        $query = "SELECT dh.*, tenkhachhang 
+                  FROM " . $this->table_name . " dh, " . $this->kh_table_name . " kh
+                  WHERE dh.makh = kh.makh
+                  ORDER BY madonhang DESC LIMIT ?, ?";
         $stmt = $this->conn->prepare($query);
 
         $bindResult = $stmt->bind_param("ii", $offset, $limit);

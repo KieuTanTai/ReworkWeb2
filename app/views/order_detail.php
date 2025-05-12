@@ -49,7 +49,6 @@ include("sidebar1.php");
                     <thead>
                         <tr>
                             <th>Hình Ảnh</th>
-                            <!-- <th>Mã Phiên Bản Sản Phẩm</th> -->
                             <th>Tên Sản Phẩm</th>
                             <th>Dung Lượng Rom</th>
                             <th>Dung Lượng Ram</th>

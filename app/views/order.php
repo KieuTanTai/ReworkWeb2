@@ -8,21 +8,23 @@ print_r($_SESSION);
 echo "</pre>";
 
 $controller = new OrderController();
+$orders2 = $controller->index1();
+$viewData = $controller->index();
+$ordersToDisplay = $viewData['orders'];
+$currentPage = $viewData['currentPage'];
+$totalPages = $viewData['totalPages'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
   $action = $_POST['action'];
 
   if ($action === 'update_status') {
     $success = $controller->updateStatus($_POST);
-    header("Location: order.php?status=" . ($success ? 'add_success' : 'add_error'));
+    header("Location: order.php?page=$currentPage&status=" . ($success ? 'add_success' : 'add_error'));
+    //header("Location: order.php?page=$currentPage");
     exit;
   }
 }
-$orders2 = $controller->index1();
-$viewData = $controller->index();
-$ordersToDisplay = $viewData['orders'];
-$currentPage = $viewData['currentPage'];
-$totalPages = $viewData['totalPages'];
+
 $current_page = basename($_SERVER['PHP_SELF']);
 if ($current_page == 'user.php' || $current_page == 'customer.php') {
   if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
@@ -74,6 +76,7 @@ include("sidebar1.php");
         <tr class="align-middle">
             <td>${order.madonhang}</td>
             <td>${order.makh}</td>
+            <td>${order.tenkhachhang}</td>
             <td>${order.thoigian}</td>
             <td>${order.diachi}</td>
             <td>${order.tongtien}</td>
@@ -191,6 +194,7 @@ include("sidebar1.php");
         <tr class="align-middle">
             <td>${order.madonhang}</td>
             <td>${order.makh}</td>
+            <td>${order.tenkhachhang}</td>
             <td>${order.thoigian}</td>
             <td>${order.diachi}</td>
             <td>${order.tongtien}</td>
@@ -314,6 +318,7 @@ include("sidebar1.php");
                 <tr>
                   <th>Mã Đơn Hàng</th>
                   <th>Mã Khách Hàng</th>
+                  <th>Tên Khách Hàng</th>
                   <th>Thời Gian</th>
                   <th>Địa Chỉ</th>
                   <th>Tổng Tiền</th>
@@ -326,6 +331,7 @@ include("sidebar1.php");
                   <tr>
                     <td><?= htmlspecialchars($order['madonhang']) ?></td>
                     <td><?= htmlspecialchars($order['makh']) ?></td>
+                    <td><?= htmlspecialchars($order['tenkhachhang']) ?></td>
                     <td><?= htmlspecialchars($order['thoigian']) ?></td>
                     <td><?= htmlspecialchars($order['diachi']) ?></td>
                     <td><?= htmlspecialchars($order['tongtien']) ?></td>
