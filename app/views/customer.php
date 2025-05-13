@@ -67,12 +67,9 @@ include ("sidebar1.php");
       </div>
       <!-- /.card-header -->
       <div class="card-body">
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="customer-table">
           <thead>
-  
-
             <tr>
-                
                  <th style="width: 10px">ID</th>
               <th>Tên Khách Hàng</th>
               <th>Số Điện Thoại </th>
@@ -81,19 +78,19 @@ include ("sidebar1.php");
               <th style="width: 94px;">Đơn Mua</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="customer-table-tbody">
              <?php foreach ($cus as $cust): ?>
-            <tr class="align-middle">
-              <td><?= $cust['makh']?></td>
-              <td><?= $cust['tenkhachhang']?></td>
-              <td><?= $cust['sdt']?></td>
-              <td><?= $cust['email']?></td>
-              <td><?= $cust['tongtienmuahang'] ?></td>
-             
-        
-              <td style=" cursor:pointer;">
-<button type="button" class="btn btn-primary " onclick="orderdetails(<?= $cust['makh'] ?>)">Xem</button>
-            </tr>
+           <tr class="align-middle">
+    <td><?= $cust['makh']?></td>
+    <td><?= $cust['tenkhachhang']?></td>
+    <td><?= $cust['sdt']?></td>
+    <td><?= $cust['email']?></td>
+    <td><?= $cust['tongtienmuahang'] ?></td>
+    <td>
+        <button type="button" class="btn btn-primary" onclick="orderdetails(<?= $cust['makh'] ?>)">Xem</button>
+    </td>
+</tr>
+
                              <?php endforeach; ?>
 
             </tr>
@@ -174,19 +171,59 @@ function orderdetails(makh) {
 function filter() {
     const startdate = document.getElementById("startdate").value;
     const enddate = document.getElementById("enddate").value;
-    
-    // Thay vì cố gọi PHP trực tiếp, hãy sử dụng AJAX để gửi dữ liệu đến server
-    fetch('gettopcustomers.php?startDate=' + startdate + '&endDate=' + enddate)
-        .then(response => response.json())
+
+    if (!startdate || !enddate) {
+        alert("Vui lòng chọn đầy đủ ngày bắt đầu và ngày kết thúc!");
+        return;
+    }
+
+fetch(`../controller/gettopcustomer.php?startDate=${startdate}&endDate=${enddate}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Lỗi khi gọi server");
+            }
+            return response.json();
+        })
         .then(data => {
-            // Xử lý dữ liệu trả về từ PHP ở đây
             console.log(data);
-            // Hiển thị dữ liệu khách hàng
+            render(data);
+        })
+        .catch(error => {
+            console.error("Lỗi:", error);
         });
 }
 
+function render(data) {
+    const tbody = document.getElementById("customer-table-tbody");
+    tbody.innerHTML = "";
+
+    if (data.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" class="text-center">Không có khách hàng nào.</td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    data.forEach(item => {
+        const row = `
+        <tr class="align-middle">
+            <td>${item.makh}</td>
+            <td>${item.tenkhachhang}</td>
+            <td>${item.sdt}</td>
+            <td>${item.email}</td>
+            <td>${item.tongtienmuahang}</td>
+            <td>
+                <button type="button" class="btn btn-primary" onclick="orderdetails(${item.makh})">Xem</button>
+            </td>
+        </tr>`;
+        tbody.innerHTML += row;
+    });
+    document.querySelector("#pagelink").style.display = "none";
+}
 </script>
-<script src="https://kit.fontawesome.com/95a272230e.js" crossorigin="anonymous"></script>
 
 <style>
 .container
