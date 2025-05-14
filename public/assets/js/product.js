@@ -46,7 +46,7 @@ async function dynamicDetail(product) {
   let quantity = 1 //product.quantity ;
   let productSale = 0.29, productPrice = await GetDetailPRoducts(product.masp);
   productPrice = productPrice.giaban;
-  let srcImage = "assets/images/Phone/RedMagics/vn-11134207-7ras8-m2nn2bl6q4922e.jpg" //product.hinhanh;
+  let srcImage = `${'assets/images/' + product.hinhanh}`;
   let productName = product.tensp, id = product.masp;
   // let productCategories = product.category;
 
@@ -68,6 +68,10 @@ async function dynamicDetail(product) {
   currentTitle.innerText = productName;
   // img
   imageContainer.setAttribute("src", srcImage);
+  imageContainer.onerror = function() {
+    this.onerror = null; // Ngăn chặn lặp vô hạn nếu ảnh mặc định cũng lỗi
+    this.src = 'assets/images/vn-11134207-7ras8-m2nn2bl6q4922e.jpg'; // Thay đổi đường dẫn ảnh mặc định tại đây
+  };
   imageContainer.setAttribute("alt", productName);
   imageContainer.style.width = 80 + "%";
   // other details
