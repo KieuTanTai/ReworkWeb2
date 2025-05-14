@@ -10,7 +10,6 @@ $endDate = "2025-12-31";
 $cus= $controller->getKhachHang($startDate, $endDate);
 
 
-
 // Kiểm tra đăng nhập
 if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
     $_SESSION['login_error'] = "Vui lòng đăng nhập để tiếp tục!";
