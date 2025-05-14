@@ -1,3 +1,4 @@
+
 const USER_API = '../../../app/api/userAPI.php';
 const ORDER_API = '../../../app/api/orderAPI.php';
 const DETAIL_API = '../../../app/api/detailOrderAPI.php';
@@ -252,7 +253,6 @@ async function GetOrderById(madonhang) {
 async function CreateOrder(order) {
      try {
           console.log(order);
-          console.log(JSON.stringify(order));
           const res = await fetch(ORDER_API, {
                method: 'POST',
                headers: { 'Content-Type': 'application/json' },
@@ -441,4 +441,3 @@ export {
      UpdateOrderDetail,
      DeleteOrderDetail
 };
-

@@ -33,25 +33,25 @@ function loadDefaultHomepage()
                                         <div class="ad-banner grid-col col-l-12 col-m-12 col-s-12 no-gutter">
                                              <div class="banner-item">
                                                   <a href=" ">
-                                                       <img src="./assets/images/ads/demo5.webp" alt="Demo 1" />
+                                                       <img src="./assets/images/ads/demo7.webp" alt="Demo 1" />
                                                   </a>
                                              </div>
 
                                              <div class="banner-item">
                                                   <a href=" ">
-                                                       <img src="./assets/images/ads/demo6.webp" alt="Demo 2" />
+                                                       <img src="./assets/images/ads/demo8.webp" alt="Demo 2" />
                                                   </a>
                                              </div>
 
                                              <div class="banner-item">
                                                   <a href=" ">
-                                                       <img src="./assets/images/ads/demo3.webp" alt="Demo 3" />
+                                                       <img src="./assets/images/ads/demo9.webp" alt="Demo 3" />
                                                   </a>
                                              </div>
 
                                              <div class="banner-item">
                                                   <a href=" ">
-                                                       <img src="./assets/images/ads/demo4.webp" alt="Demo 4" />
+                                                       <img src="./assets/images/ads/demo10.webp" alt="Demo 4" />
                                                   </a>
                                              </div>
                                         </div>

@@ -140,11 +140,11 @@ async function renderProducts(list, wrapper) {
 
     let productDetails = await GetDetailPRoducts(product.masp);
     let discountedPrice = Math.round(productDetails.giaban * (1 - 0.29));
-    html += `
+html += `
       <div class="product-item grid-col col-l-2-4 col-m-3 col-s-6">
         <div class="block-product product-resize">
           <span class="product-image js-item">
-            <img src="assets/images/Phone/RedMagics/vn-11134207-7ras8-m2nn2bl6q4922e.jpg" alt="${product.tensp}">
+            <img src="${'assets/images/' + product.hinhanh}" alt="${product.tensp}" onerror="this.onerror=null; this.src='assets/images/vn-11134207-7ras8-m2nn2bl6q4922e.jpg';">
           </span>
 
           <div class="product-detail-hidden disable selected">

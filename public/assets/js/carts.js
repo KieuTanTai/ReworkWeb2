@@ -287,7 +287,7 @@ function displayCartItems(elementsObj) {
             <div class="block-product block-cart">
                 <input type="checkbox" name="select-block-product" id="block-product-${index}" class="grid-col col-l-1 col-m-1 col-s-1"/>
                 <div class="product-cart grid-col col-l-1 col-m-1 col-s-1 no-gutter full-width">
-                    <img class="mini-image" src="${'assets/images/Phone/RedMagics/red-magic-supernova_1_2_2_2.webp'}" alt="${item.name}" />
+                    <img class="mini-image" src="${'assets/images/' + item.image}" onerror="this.onerror=null; this.src='assets/images/vn-11134207-7ras8-m2nn2bl6q4922e.jpg' alt="${item.name}" />
                 </div>
                 <div class="detail-id disable">${item.id}</div>
                 <div class="grid-col col-l-10 col-m-10 col-s-10 no-gutter flex align-center">
@@ -462,7 +462,7 @@ function handleDefaultAddressCheckbox() {
 
 async function handleOrderPlacement(elementsObj) {
   const checkoutButton = document.querySelector(".checkout-btn");
-  let accountLogin = await GetUserById(JSON.parse(sessionStorage.getItem("loginAccount"))["makh"]);
+  let accountLogin = await GetUserById(JSON.parse(sessionStorage.getItem("loginAccount"))["user_id"]);
   if (!checkoutButton) {
     console.warn("Không tìm thấy nút 'checkout-btn'.");
     return;
@@ -555,16 +555,14 @@ async function handleOrderPlacement(elementsObj) {
       alert("error userID");
       return;
     }
-
-    console.log(formattedDate)
-
     // !NEED TO CHANGE HERE
     // Create donhang and chitiet_donhang
     const donHang = createDonHang(userId, userAddress, totalOrderPrice, formattedDate, status);
     
-    CreateOrder(donHang);
+    await CreateOrder(donHang);
     const listOrders = await GetOrders();
-    const chiTietDonHang = await createChiTietDonHang(listOrders[listOrders.length - 1].madonhang, selectedItems);
+    console.log(listOrders)
+    const chiTietDonHang = await createChiTietDonHang(listOrders[0].madonhang, selectedItems);
     for(let d of chiTietDonHang)
       CreateOrderDetail(d);
 

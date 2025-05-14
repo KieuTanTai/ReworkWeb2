@@ -1,6 +1,7 @@
 "use strict";
+import { getCurrentUser } from "./auth.js";
 import * as Bridge from "./bridges.js";
-import { GetDetailPRoducts, GetOrderDetail, GetOrderDetails, GetOrdersByCustomer, GetProducts, UpdateOrder } from "./getdata.js";
+import { GetDetailPRoducts, GetOrderDetail, GetOrderDetails, GetOrdersByCustomer, GetProducts, GetUserById, UpdateOrder } from "./getdata.js";
 import { disableSiblingContainer, formatPrices, headerUserInfo, hiddenException, scrollView } from "./interfaces.js";
 import { getDetailPhones, getProductPhones } from "./product.js";
 
@@ -51,10 +52,10 @@ async function trackingNavigate(elementsObj) {
      // navigate to index.html if not have any container
      const buttons = elementsObj.getOrderTrackingBtn();
      if (!buttons) return;
-     const trackers = await GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["makh"]);
+     const trackers = await GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["user_id"]);
      buttons.forEach((btn) =>
           btn.addEventListener("click", Bridge.throttle(() => showTracking(trackers), 200, "statusNav")));
-     if (trackers) orderInfo();
+     if (trackers) orderInfo(trackers);
 }
 
 function showTracking(trackers) {
@@ -83,23 +84,26 @@ function showTracking(trackers) {
      }
 }
 
-function orderInfo() {
-     if (!sessionStorage.getItem("hasLogin")) return;
-     let ordersList = JSON.parse(localStorage.getItem("donhang"));
-     let loginAccount = JSON.parse(sessionStorage.getItem("hasLoginAccount"));
-     let customer = ordersList.find((order) => order.id_khachhang === loginAccount.userID);
+async function orderInfo(trackers) {
+     // if (!sessionStorage.getItem("hasLogin")) return;
+     // let ordersList = JSON.parse(localStorage.getItem("donhang"));
+     // let loginAccount = JSON.parse(sessionStorage.getItem("hasLoginAccount"));
+     if (!trackers) return;
+     let customer = await GetUserById(trackers[0].makh);
+     console.log(customer);
      let container = Bridge.$$(".order-info .block-order-info span");
      container.forEach((block) => {
           if (!customer) return;
-          if (block.classList.contains("order-code")) block.innerHTML = customer.id_donhang;
-          if (block.classList.contains("order-time")) block.innerHTML = customer.date;
+          if (block.classList.contains("order-code")) block.innerHTML = customer.makh;
+          if (block.classList.contains("order-time")) block.innerHTML = trackers[0].thoigian;
+          if(block.classList.contains("tracking-code")) block.innerHTML = trackers[0].madonhang + customer.makh;
           if (block.classList.contains("expected-delivery-date"))
                block.innerHTML = "3 ngày sau xác nhận đơn";
-          if (block.classList.contains("Consignee")) block.innerHTML = customer.ten_khach_hang;
+          if (block.classList.contains("Consignee")) block.innerHTML = customer.tenkhachhang;
           if (block.classList.contains("Consignee-phone"))
-               block.innerHTML = customer.phonenumber;
+               block.innerHTML = customer.sdt;
           if (block.classList.contains("Consignee-address"))
-               block.innerHTML = customer.dia_chi;
+               block.innerHTML = customer.diachi;
      });
 }
 
@@ -114,7 +118,7 @@ function historyNavigate(elementsObj) {
 async function showOrderContent() {
      let elementsObj = Bridge.default();
      let historyContainer = elementsObj.getHistoryOrder();
-     let lists = await GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["makh"]);
+     let lists = await GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["user_id"]);
      let orderContainer = elementsObj.getOrderContent();
      hiddenException("order-content");
      disableSiblingContainer(orderContainer);
@@ -137,21 +141,21 @@ async function showOrderContent() {
      renderOrder(elementsObj);
 }
 
-async function scriptOrder(customer) {
+async function scriptOrder(order) {
      let productsList = await getProductPhones();
-     let details = await GetOrderDetails(customer.madonhang);
+     let details = await GetOrderDetails(order.madonhang);
      let idProduct = (await getDetailPhones()).find((detail) => detail.maphienbansp == details[0].maphienbansp).masp;
      let product = productsList.find((product) => product.masp === idProduct);
      let status;
 
      // get status of this order (cập nhật trạng thái cho đơn hàng)
-     if (customer.trangthai === 1) status = "chờ xử lý";
-     else if (customer.trangthai === 2) status = "chờ giao hàng";
-     else if (customer.trangthai === 3) {
+     if (order.trangthai === 1) status = "chờ xử lý";
+     else if (order.trangthai === 2) status = "chờ giao hàng";
+     else if (order.trangthai === 3) {
           status = "đã hủy";
           return;
      }
-     // else if (customer.trangthai === 4) status = "đã giao hàng";
+     // else if (order.trangthai === 4) status = "đã giao hàng";
 
 
      // get script html and append it (render đơn hàng)
@@ -159,19 +163,19 @@ async function scriptOrder(customer) {
 <div class="block-product">
               <div class="cart-content">
                   <div class="completed-order-info margin-bottom-8">
-                        <img src="${`/public/assets/images/Phone/RedMagics/red-magic-supernova_1_2_2_2.webp`}">
+                        <img src="${`src="${'assets/images/' + product.hinhanh}" alt="${product.tensp}" onerror="this.onerror=null; this.src='assets/images/vn-11134207-7ras8-m2nn2bl6q4922e.jpg'`}">
                         <div class="full-width padding-left-12">
                             <p class="capitalize padding-bottom-8">${product.tensp}</p>
                             <div class="block-product-price text-end">
                                   <div class="quantity-cart">x${details.length}</div>
-                                  <div class="new-price price">${customer.tongtien}</div>
+                                  <div class="new-price price">${order.tongtien}</div>
                             </div>
                         </div>
                   </div>
                   <div
                         class="flex justify-space-between padding-bottom-8 padding-top-8">
                         <div class="total-item opacity-0-6">${details.length} item</div>
-                        <div class="price total-price font-bold text-end">${customer.tongtien}</div>
+                        <div class="price total-price font-bold text-end">${order.tongtien}</div>
                   </div>
                   <div class="order-status flex justify-space-between padding-top-8 padding-bottom-8">
                         <span class="opacity-0-8 font-size-13 ${status === "đã giao hàng" ? "success-color" : "waiting-color"}">${status ? status : "chờ xử lý"}</span>
@@ -182,7 +186,7 @@ async function scriptOrder(customer) {
                         </span>
 
                         <div class="flex">
-                          <span class="remove-btn button ${customer.trangthai != 4 ? "" : "disable"}">
+                          <span class="remove-btn button ${order.trangthai != 4 ? "" : "disable"}">
                                 <div class="capitalize"> Hủy Đơn</div>
                           </span>
                         </div>
@@ -195,11 +199,9 @@ async function scriptOrder(customer) {
 
 async function renderOrder(elementsObj) {
      let container = elementsObj.getHistoryOrderTable();
-     let ordersList = await GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["makh"]);
-     let loginAccount = JSON.parse(sessionStorage.getItem("loginAccount"));
-     let orders = ordersList.filter((order) => order.makh === loginAccount.makh);
+     let orders = await GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["user_id"]);
      let details = [];
-
+     console.log(orders);
 
      for (let item of orders) {
           const orderDetails = await GetOrderDetails(item.madonhang);
@@ -327,19 +329,19 @@ function scrollToHandler(nameStaticPage) {
 
 // func for click nav btn on sub header or click to scroll top btn
 function staticContents(elementsObj) {
-     const newsButtons = elementsObj.getNewsBtn();
+     // const newsButtons = elementsObj.getNewsBtn();
      const scrollTopButtons = elementsObj.getScrollTop();
      const servicesButtons = elementsObj.getServicesBtn();
 
      // add event listener
-     if (newsButtons) {
-          newsButtons.forEach((btn) => {
-               btn.addEventListener(
-                    "click",
-                    Bridge.throttle(() => scrollToHandler("news"), 200, "newsBtn")
-               );
-          });
-     }
+     // if (newsButtons) {
+     //      newsButtons.forEach((btn) => {
+     //           btn.addEventListener(
+     //                "click",
+     //                Bridge.throttle(() => scrollToHandler("news"), 200, "newsBtn")
+     //           );
+     //      });
+     // }
 
      if (servicesButtons) {
           servicesButtons.forEach((btn) => {
