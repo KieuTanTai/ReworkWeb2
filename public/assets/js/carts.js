@@ -287,7 +287,7 @@ function displayCartItems(elementsObj) {
             <div class="block-product block-cart">
                 <input type="checkbox" name="select-block-product" id="block-product-${index}" class="grid-col col-l-1 col-m-1 col-s-1"/>
                 <div class="product-cart grid-col col-l-1 col-m-1 col-s-1 no-gutter full-width">
-                    <img class="mini-image" src="${'assets/images/Phone/RedMagics/red-magic-supernova_1_2_2_2.webp'}" alt="${item.name}" />
+                    <img class="mini-image" src="${'assets/images/' + item.image}" onerror="this.onerror=null; this.src='assets/images/vn-11134207-7ras8-m2nn2bl6q4922e.jpg' alt="${item.name}" />
                 </div>
                 <div class="detail-id disable">${item.id}</div>
                 <div class="grid-col col-l-10 col-m-10 col-s-10 no-gutter flex align-center">

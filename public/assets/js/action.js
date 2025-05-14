@@ -141,21 +141,21 @@ async function showOrderContent() {
      renderOrder(elementsObj);
 }
 
-async function scriptOrder(customer) {
+async function scriptOrder(order) {
      let productsList = await getProductPhones();
-     let details = await GetOrderDetails(customer.madonhang);
+     let details = await GetOrderDetails(order.madonhang);
      let idProduct = (await getDetailPhones()).find((detail) => detail.maphienbansp == details[0].maphienbansp).masp;
      let product = productsList.find((product) => product.masp === idProduct);
      let status;
 
      // get status of this order (cập nhật trạng thái cho đơn hàng)
-     if (customer.trangthai === 1) status = "chờ xử lý";
-     else if (customer.trangthai === 2) status = "chờ giao hàng";
-     else if (customer.trangthai === 3) {
+     if (order.trangthai === 1) status = "chờ xử lý";
+     else if (order.trangthai === 2) status = "chờ giao hàng";
+     else if (order.trangthai === 3) {
           status = "đã hủy";
           return;
      }
-     // else if (customer.trangthai === 4) status = "đã giao hàng";
+     // else if (order.trangthai === 4) status = "đã giao hàng";
 
 
      // get script html and append it (render đơn hàng)
@@ -168,14 +168,14 @@ async function scriptOrder(customer) {
                             <p class="capitalize padding-bottom-8">${product.tensp}</p>
                             <div class="block-product-price text-end">
                                   <div class="quantity-cart">x${details.length}</div>
-                                  <div class="new-price price">${customer.tongtien}</div>
+                                  <div class="new-price price">${order.tongtien}</div>
                             </div>
                         </div>
                   </div>
                   <div
                         class="flex justify-space-between padding-bottom-8 padding-top-8">
                         <div class="total-item opacity-0-6">${details.length} item</div>
-                        <div class="price total-price font-bold text-end">${customer.tongtien}</div>
+                        <div class="price total-price font-bold text-end">${order.tongtien}</div>
                   </div>
                   <div class="order-status flex justify-space-between padding-top-8 padding-bottom-8">
                         <span class="opacity-0-8 font-size-13 ${status === "đã giao hàng" ? "success-color" : "waiting-color"}">${status ? status : "chờ xử lý"}</span>
@@ -186,7 +186,7 @@ async function scriptOrder(customer) {
                         </span>
 
                         <div class="flex">
-                          <span class="remove-btn button ${customer.trangthai != 4 ? "" : "disable"}">
+                          <span class="remove-btn button ${order.trangthai != 4 ? "" : "disable"}">
                                 <div class="capitalize"> Hủy Đơn</div>
                           </span>
                         </div>
