@@ -209,7 +209,7 @@ function renderSubHeader()
                                    </div>
                               </div>
 
-                              <div class="sub-menu-item grid-col col-l-2-4 news-nav">
+                              <div class="sub-menu-item grid-col col-l-2-4 news-nav" style="cursor: default;">
                                    <div class="full-width full-height">
                                         <span><i class="fa-regular fa-newspaper fa-lg"
                                                   style="color: var(--main-color)"></i></span>
@@ -217,7 +217,7 @@ function renderSubHeader()
                                    </div>
                               </div>
 
-                              <div class="sub-menu-item grid-col col-l-2-4 lnw-store light-novel-world-test">
+                              <div class="sub-menu-item grid-col col-l-2-4 lnw-store light-novel-world-test" style="cursor: default;">
                                    <div class="full-height full-width">
                                         <span><i class="fa-brands fa-fantasy-flight-games fa-lg"
                                                   style="color: var(--main-color)"></i></span>

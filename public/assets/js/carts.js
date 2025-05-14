@@ -462,7 +462,7 @@ function handleDefaultAddressCheckbox() {
 
 async function handleOrderPlacement(elementsObj) {
   const checkoutButton = document.querySelector(".checkout-btn");
-  let accountLogin = await GetUserById(JSON.parse(sessionStorage.getItem("loginAccount"))["makh"]);
+  let accountLogin = await GetUserById(JSON.parse(sessionStorage.getItem("loginAccount"))["user_id"]);
   if (!checkoutButton) {
     console.warn("Không tìm thấy nút 'checkout-btn'.");
     return;
@@ -555,16 +555,14 @@ async function handleOrderPlacement(elementsObj) {
       alert("error userID");
       return;
     }
-
-    console.log(formattedDate)
-
     // !NEED TO CHANGE HERE
     // Create donhang and chitiet_donhang
     const donHang = createDonHang(userId, userAddress, totalOrderPrice, formattedDate, status);
     
-    CreateOrder(donHang);
+    await CreateOrder(donHang);
     const listOrders = await GetOrders();
-    const chiTietDonHang = await createChiTietDonHang(listOrders[listOrders.length - 1].madonhang, selectedItems);
+    console.log(listOrders)
+    const chiTietDonHang = await createChiTietDonHang(listOrders[0].madonhang, selectedItems);
     for(let d of chiTietDonHang)
       CreateOrderDetail(d);
 

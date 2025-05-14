@@ -327,19 +327,19 @@ function scrollToHandler(nameStaticPage) {
 
 // func for click nav btn on sub header or click to scroll top btn
 function staticContents(elementsObj) {
-     const newsButtons = elementsObj.getNewsBtn();
+     // const newsButtons = elementsObj.getNewsBtn();
      const scrollTopButtons = elementsObj.getScrollTop();
      const servicesButtons = elementsObj.getServicesBtn();
 
      // add event listener
-     if (newsButtons) {
-          newsButtons.forEach((btn) => {
-               btn.addEventListener(
-                    "click",
-                    Bridge.throttle(() => scrollToHandler("news"), 200, "newsBtn")
-               );
-          });
-     }
+     // if (newsButtons) {
+     //      newsButtons.forEach((btn) => {
+     //           btn.addEventListener(
+     //                "click",
+     //                Bridge.throttle(() => scrollToHandler("news"), 200, "newsBtn")
+     //           );
+     //      });
+     // }
 
      if (servicesButtons) {
           servicesButtons.forEach((btn) => {

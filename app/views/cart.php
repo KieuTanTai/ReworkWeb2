@@ -7,7 +7,7 @@ function renderCart()
      <section id="cart-content" class="root-session-content cart grid-col col-l-12 col-m-12 col-s-12 margin-y-12 disable">
           <div class="cart-title padding-bottom-8">
                <span class="uppercase font-size-20">giỏ hàng</span>
-               <span class="cart-count font-size-16 padding-left-8">(0 sản phẩm)</span>
+               <!-- <span class="cart-count item-count font-size-16 padding-left-8">(0 sản phẩm)</span> -->
           </div>
 
           <div class="cart-ui-content">
@@ -53,7 +53,7 @@ function renderCartWidthProduct()
                          class="grid-col col-l-1 col-m-1 col-s-1" />
                     <div class="grid-col col-l-6 col-m-11 col-s-11">
                          chọn sản phẩm
-                         <span class="item-count">(0 sản phẩm)</span>
+                         <!-- <span class="item-count">(0 sản phẩm)</span> -->
                     </div>
 
                     <div class="grid-col col-l-2 s-m-hidden text-center">
