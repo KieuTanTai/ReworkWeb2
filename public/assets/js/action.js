@@ -1,6 +1,7 @@
 "use strict";
+import { getCurrentUser } from "./auth.js";
 import * as Bridge from "./bridges.js";
-import { GetDetailPRoducts, GetOrderDetail, GetOrderDetails, GetOrdersByCustomer, GetProducts, UpdateOrder } from "./getdata.js";
+import { GetDetailPRoducts, GetOrderDetail, GetOrderDetails, GetOrdersByCustomer, GetProducts, GetUserById, UpdateOrder } from "./getdata.js";
 import { disableSiblingContainer, formatPrices, headerUserInfo, hiddenException, scrollView } from "./interfaces.js";
 import { getDetailPhones, getProductPhones } from "./product.js";
 
@@ -51,10 +52,10 @@ async function trackingNavigate(elementsObj) {
      // navigate to index.html if not have any container
      const buttons = elementsObj.getOrderTrackingBtn();
      if (!buttons) return;
-     const trackers = await GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["makh"]);
+     const trackers = await GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["user_id"]);
      buttons.forEach((btn) =>
           btn.addEventListener("click", Bridge.throttle(() => showTracking(trackers), 200, "statusNav")));
-     if (trackers) orderInfo();
+     if (trackers) orderInfo(trackers);
 }
 
 function showTracking(trackers) {
@@ -83,23 +84,26 @@ function showTracking(trackers) {
      }
 }
 
-function orderInfo() {
-     if (!sessionStorage.getItem("hasLogin")) return;
-     let ordersList = JSON.parse(localStorage.getItem("donhang"));
-     let loginAccount = JSON.parse(sessionStorage.getItem("hasLoginAccount"));
-     let customer = ordersList.find((order) => order.id_khachhang === loginAccount.userID);
+async function orderInfo(trackers) {
+     // if (!sessionStorage.getItem("hasLogin")) return;
+     // let ordersList = JSON.parse(localStorage.getItem("donhang"));
+     // let loginAccount = JSON.parse(sessionStorage.getItem("hasLoginAccount"));
+     if (!trackers) return;
+     let customer = await GetUserById(trackers[0].makh);
+     console.log(customer);
      let container = Bridge.$$(".order-info .block-order-info span");
      container.forEach((block) => {
           if (!customer) return;
-          if (block.classList.contains("order-code")) block.innerHTML = customer.id_donhang;
-          if (block.classList.contains("order-time")) block.innerHTML = customer.date;
+          if (block.classList.contains("order-code")) block.innerHTML = customer.makh;
+          if (block.classList.contains("order-time")) block.innerHTML = trackers[0].thoigian;
+          if(block.classList.contains("tracking-code")) block.innerHTML = trackers[0].madonhang + customer.makh;
           if (block.classList.contains("expected-delivery-date"))
                block.innerHTML = "3 ngày sau xác nhận đơn";
-          if (block.classList.contains("Consignee")) block.innerHTML = customer.ten_khach_hang;
+          if (block.classList.contains("Consignee")) block.innerHTML = customer.tenkhachhang;
           if (block.classList.contains("Consignee-phone"))
-               block.innerHTML = customer.phonenumber;
+               block.innerHTML = customer.sdt;
           if (block.classList.contains("Consignee-address"))
-               block.innerHTML = customer.dia_chi;
+               block.innerHTML = customer.diachi;
      });
 }
 
@@ -114,7 +118,7 @@ function historyNavigate(elementsObj) {
 async function showOrderContent() {
      let elementsObj = Bridge.default();
      let historyContainer = elementsObj.getHistoryOrder();
-     let lists = await GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["makh"]);
+     let lists = await GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["user_id"]);
      let orderContainer = elementsObj.getOrderContent();
      hiddenException("order-content");
      disableSiblingContainer(orderContainer);
@@ -159,7 +163,7 @@ async function scriptOrder(customer) {
 <div class="block-product">
               <div class="cart-content">
                   <div class="completed-order-info margin-bottom-8">
-                        <img src="${`/public/assets/images/Phone/RedMagics/red-magic-supernova_1_2_2_2.webp`}">
+                        <img src="${`src="${'assets/images/' + product.hinhanh}" alt="${product.tensp}" onerror="this.onerror=null; this.src='assets/images/vn-11134207-7ras8-m2nn2bl6q4922e.jpg'`}">
                         <div class="full-width padding-left-12">
                             <p class="capitalize padding-bottom-8">${product.tensp}</p>
                             <div class="block-product-price text-end">
@@ -195,11 +199,9 @@ async function scriptOrder(customer) {
 
 async function renderOrder(elementsObj) {
      let container = elementsObj.getHistoryOrderTable();
-     let ordersList = await GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["makh"]);
-     let loginAccount = JSON.parse(sessionStorage.getItem("loginAccount"));
-     let orders = ordersList.filter((order) => order.makh === loginAccount.makh);
+     let orders = await GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["user_id"]);
      let details = [];
-
+     console.log(orders);
 
      for (let item of orders) {
           const orderDetails = await GetOrderDetails(item.madonhang);
