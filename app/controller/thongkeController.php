@@ -74,7 +74,7 @@ class thongke {
 
 
     public function getKhachHang($startDate, $endDate, $keyword = '', $page = 1) {
-        $limit = 10;
+        $limit = 5;
         $offset = ($page - 1) * $limit;
         $likeKeyword = '%' . strtolower($keyword) . '%';
     

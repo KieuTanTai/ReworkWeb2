@@ -7,7 +7,11 @@ require_once '../controller/thongkeController.php';
 $controller = new thongke($conn);
 $startDate = "2024-01-01";
 $endDate = "2025-12-31";
-$cus= $controller->getKhachHang($startDate, $endDate);
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$data = $controller->getKhachHang($startDate, $endDate, "", $page);
+$cus= $data['data'];
+$currentPage = $data['current_page']; // trang hiện tại
+$totalPages = $data['total_pages']; // tổng số trang
 
 
 // Kiểm tra đăng nhập
@@ -15,6 +19,7 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
     $_SESSION['login_error'] = "Vui lòng đăng nhập để tiếp tục!";
     header("Location: login.php");
     exit();
+
 }
 
 // Kiểm tra quyền admin
@@ -104,16 +109,55 @@ include ("sidebar1.php");
            
         </table>
       </div>
-      <div class="card-footer clearfix" id="pagelink">
-                    <ul class="pagination pagination-sm m-0 float-end">
-                      <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                      <li class="page-item"><a class="page-link" href="#">1</a></li>
-                      <li class="page-item"><a class="page-link" href="#">2</a></li>
-                      <li class="page-item"><a class="page-link" href="#">3</a></li>
-                      <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-                    </ul>
-                  </div>
-                </div>
+      <div class="card-footer" id="pagelink"> 
+                            <?php if ($totalPages > 1): ?>
+                              
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination float-end m-0">
+                                        <li class="page-item <?= ($currentPage <= 1) ? 'disabled' : '' ?>">
+                                            <a class="page-link" href="customer.php?page=<?= $currentPage - 1 ?>"
+                                                aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+
+                                        <?php
+                                        $range = 2;
+                                        $start = max(1, $currentPage - $range);
+                                        $end = min($totalPages, $currentPage + $range);
+
+                                        if ($start > 1) {
+                                            echo '<li class="page-item"><a class="page-link" href="customer.php?page=1">1</a></li>';
+                                            if ($start > 2) {
+                                                echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                            }
+                                        }
+
+                                        for ($i = $start; $i <= $end; $i++): ?>
+                                            <li class="page-item <?= ($i == $currentPage) ? 'active' : '' ?>">
+                                                <a class="page-link" href="customer.php?page=<?= $i ?>"><?= $i ?></a>
+                                            </li>
+                                        <?php endfor;
+
+                                        if ($end < $totalPages) {
+                                            if ($end < $totalPages - 1) {
+                                                echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                            }
+                                            echo '<li class="page-item"><a class="page-link" href="customer.php?page=' . $totalPages . '">' . $totalPages . '</a></li>';
+                                        }
+                                        ?>
+
+                                        <li class="page-item <?= ($currentPage >= $totalPages) ? 'disabled' : '' ?>">
+                                            <a class="page-link" href="customer.php?page=<?= $currentPage + 1 ?>"
+                                                aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                                
+                            <?php endif; ?>
+                        </div>
       <!-- /.card-body -->
       
     </div>
