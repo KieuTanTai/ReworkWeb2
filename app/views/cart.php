@@ -31,12 +31,12 @@ function renderBlankCart()
      ?>
      <section id="blank-cart" class="margin-y-12 cart-ui active">
           <img src="./assets/images/BackGrounds/kettle-desaturated._CB445243794_.svg" />
-          <span class="font-size-16 padding-left-16 margin-y-12">Không có sản phẩm
+          <span class="font-size-16 padding-left-16 margin-y-12 capitalize">Không có sản phẩm
                nào trong giỏ hàng. Quay lại
                cửa hàng
                để tiếp tục mua sắm.</span>
           <section class="flex justify-center align-center font-bold capitalize margin-y-12">
-               <a href=" " target="_blank" class="category-btn button">trang chủ</a>
+               <a href=" " target="_blank" class="category-btn button capitalize">trang chủ</a>
           </section>
      </section>
      <?php
@@ -51,18 +51,18 @@ function renderCartWidthProduct()
                <div class="header-cart-content cart-ui">
                     <input type="checkbox" name="selection-item" id="selection-item"
                          class="grid-col col-l-1 col-m-1 col-s-1" />
-                    <div class="grid-col col-l-6 col-m-11 col-s-11">
+                    <div class="grid-col col-l-6 col-m-11 col-s-11 capitalize">
                          chọn sản phẩm
                          <!-- <span class="item-count">(0 sản phẩm)</span> -->
                     </div>
 
-                    <div class="grid-col col-l-2 s-m-hidden text-center">
+                    <div class="grid-col col-l-2 s-m-hidden text-center capitalize">
                          số lượng
                     </div>
-                    <div class="grid-col col-l-2 s-m-hidden text-center">
+                    <div class="grid-col col-l-2 s-m-hidden text-center capitalize">
                          thành tiền
                     </div>
-                    <div class="grid-col col-l-1 s-m-hidden text-center">
+                    <div class="grid-col col-l-1 s-m-hidden text-center capitalize">
                          xóa
                     </div>
                </div>
@@ -107,13 +107,13 @@ function renderCartWidthProduct()
                          </p>
                          <form action="" method="post" class="flex justify-space-between">
                               <input type="text" name="voucher-code" id="voucher-code" placeholder="nhập mã khuyến mãi" />
-                              <button type="submit" class="font-size-14 button">
+                              <button type="submit" class="font-size-14 button capitalize">
                                    sử dụng
                               </button>
                          </form>
                     </div>
                     <div class="payment-methods margin-bottom-12">
-                         <h4 class="capitalize margin-bottom-8">
+                         <h4 class="capitalize margin-bottom-8 capitalize">
                               phương thức thanh toán
                          </h4>
                          <ul>
@@ -121,14 +121,14 @@ function renderCartWidthProduct()
                                    <input type="radio" name="payment-option" id="payment-option-1" class="margin-right-8"
                                         checked />
                                    <img src="./assets/images/icons/payment_methods/ico_cashondelivery.svg" />
-                                   <p class="padding-left-8 font-size-14">
+                                   <p class="padding-left-8 font-size-14 capitalize">
                                         thanh toán khi nhận hàng (COD)
                                    </p>
                               </li>
                               <li class="flex align-center">
                                    <input type="radio" name="payment-option" id="payment-option-2" class="margin-right-8" />
                                    <img src="./assets/images/icons/payment_methods/ico_momopay.svg" />
-                                   <p class="padding-left-8 font-size-14">Ví Momo</p>
+                                   <p class="padding-left-8 font-size-14 capitalize">Ví Momo</p>
                                    <div class="qr-code-container" id="qr-code-momo"
                                         style="display: none; text-align: center; margin-top: 10px;">
                                         <img src="./assets/images/ads/mm.jpg" alt="QR Code Momo"
@@ -156,7 +156,7 @@ function renderCartWidthProduct()
                          <div class="margin-bottom-8">
                               <input type="checkbox" name="selection-address" id="selection-address"
                                    class="capitalize margin-bottom-8" />
-                              <label class="font-size-14"> địa chỉ mặc định</label>
+                              <label class="font-size-14 capitalize"> địa chỉ mặc định</label>
                          </div>
                          <ul>
                               <li class="flex flex-direction-y justify-center">
@@ -172,19 +172,19 @@ function renderCartWidthProduct()
                               chi tiết thanh toán
                          </h4>
                          <div>
-                              <p class="font-size-14">thành tiền</p>
+                              <p class="capitalize font-size-14">thành tiền</p>
                               <span class="price prices font-size-14"></span>
                          </div>
                          <div>
-                              <p class="font-size-14">tổng tiền phí vận chuyển</p>
+                              <p class="font-size-14 capitalize">tổng tiền phí vận chuyển</p>
                               <span class="price shipping-fee font-size-14"></span>
                          </div>
                          <div>
-                              <p class="font-size-14">giảm giá phí vận chuyển</p>
+                              <p class="font-size-14 capitalize">giảm giá phí vận chuyển</p>
                               <span class="price shipping-discount font-size-14"></span>
                          </div>
                          <div>
-                              <p class="font-size-14">voucher giảm giá</p>
+                              <p class="font-size-14 capitalize">voucher giảm giá</p>
                               <span class="price voucher-discount font-size-14"></span>
                          </div>
                          <div>

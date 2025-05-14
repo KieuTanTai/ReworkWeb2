@@ -276,7 +276,7 @@ function displayCartItems(elementsObj) {
   const cartContainer = document.querySelector(".list-carts");
   if (!cartContainer) return;
   if (cart.length === 0) {
-    cartContainer.innerHTML = "<p>Giỏ hàng trống</p>";
+    cartContainer.innerHTML = "<p class=capitalize>Giỏ Hàng Trống</p>";
     return;
   }
   cartContainer.innerHTML = "";
