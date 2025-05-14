@@ -122,7 +122,7 @@ class User
 
     public function getUsersPaginated(int $limit, int $offset)
     {
-        $query = "SELECT * FROM " . $this->table_name . " ORDER BY makh ASC LIMIT ?, ?";
+        $query = "SELECT * FROM " . $this->table_name . " ORDER BY makh DESC LIMIT ?, ?";
         $stmt = $this->conn->prepare($query);
 
         $bindResult = $stmt->bind_param("ii", $offset, $limit);

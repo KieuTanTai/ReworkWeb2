@@ -6,6 +6,11 @@ class Order {
     private $table_name = "donhang";
     private $ctdonhang_table_name = "chitietdonhang";
     private $pbsp_table_name = "phienbansanpham";
+    private $sp_table_name = "sanpham";
+    private $dlrom_table_name = "dungluongrom";
+    private $dlram_table_name = "dungluongram";
+    private $ms_table_name = "mausac";
+    private $kh_table_name = "khachhang";
 
     public $madonhang;
     public $makh;
@@ -19,7 +24,10 @@ class Order {
     }
 
     public function getAll(){
-        $query = "SELECT * FROM ".$this->table_name;
+        $query = "SELECT dh.*, tenkhachhang 
+                  FROM ".$this->table_name." dh, ".$this->kh_table_name." kh
+                  WHERE dh.makh = kh.makh
+                  ORDER BY madonhang DESC";
         $result = $this->conn->query($query);
 
         if(!$result){
@@ -118,7 +126,10 @@ class Order {
 
     public function getOrdersPaginated(int $limit, int $offset)
     {
-        $query = "SELECT * FROM " . $this->table_name . " ORDER BY madonhang DESC LIMIT ?, ?";
+        $query = "SELECT dh.*, tenkhachhang 
+                  FROM " . $this->table_name . " dh, " . $this->kh_table_name . " kh
+                  WHERE dh.makh = kh.makh
+                  ORDER BY madonhang DESC LIMIT ?, ?";
         $stmt = $this->conn->prepare($query);
 
         $bindResult = $stmt->bind_param("ii", $offset, $limit);
@@ -171,10 +182,14 @@ class Order {
 
     public function getOrderItems(int $orderId): array
     {
-        $query = "SELECT ct.*
-                  FROM " . $this->ctdonhang_table_name . " ct
-                  LEFT JOIN " . $this->pbsp_table_name . " sp ON ct.maphienbansp = sp.maphienbansp
-                  WHERE ct.madonhang = ?";
+        // $query = "SELECT ct.*
+        //           FROM " . $this->ctdonhang_table_name . " ct
+        //           LEFT JOIN " . $this->pbsp_table_name . " sp ON ct.maphienbansp = sp.maphienbansp
+        //           WHERE ct.madonhang = ?";
+
+        $query = "SELECT ct.*, tensp, hinhanh, kichthuocrom, kichthuocram, tenmau
+                  FROM " . $this->ctdonhang_table_name . " ct, " . $this->sp_table_name . " sp, " . $this->pbsp_table_name . " pbsp, " . $this->dlrom_table_name . " dlrom, " . $this->dlram_table_name . " dlram, " . $this->ms_table_name . " ms
+                  WHERE ct.madonhang = ? AND ct.maphienbansp = pbsp.maphienbansp AND sp.masp = pbsp.masp AND pbsp.rom = dlrom.madlrom AND pbsp.ram = dlram.madlram AND pbsp.mausac = ms.mamau";
 
         $stmt = $this->conn->prepare($query);
          if (!$stmt) {

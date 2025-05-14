@@ -18,16 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $success = $controller->update($_POST['makh'], $_POST);
             header("Location: user.php?page=" . ($_GET['page'] ?? 1) . "&status=" . ($success ? 'edit_success' : 'edit_error')); // Giữ lại trang hiện tại
             exit;
-        } 
+        }
     } else if ($action === 'toggle_status') { // Đổi tên action trong JS và form cho nhất quán
         if (isset($_POST['makh'])) {
             $success = $controller->updateStatus($_POST);
-            exit; 
-        } 
+            exit;
+        }
     }
 }
 
-$viewData = $controller->index(); 
+$viewData = $controller->index();
 $usersToDisplay = $viewData['users'];
 $currentPage = $viewData['currentPage'];
 $totalPages = $viewData['totalPages'];
@@ -78,20 +78,17 @@ include("sidebar1.php");
         let email = row.cells[4].innerText;
         let date = row.cells[6].innerText;
 
-        let formattedDate = "";
-        if (date) {
-            let parts = date.split('/');
-            if (parts.length === 3) {
-                formattedDate = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-            }
-        }
+        const [ngayPhan, gioPhan] = date.split(' ');
+        const [ngay, thang, nam] = ngayPhan.split('/');
+        const dinhDangValue = `${nam}-${thang}-${ngay}T${gioPhan}`;
 
         document.getElementById("userID").value = userID;
         document.getElementById("username").value = userName;
+        document.getElementById("matKhauInput").style.display = "none";
         document.getElementById("address").value = address;
         document.getElementById("phoneNum").value = phoneNum;
         document.getElementById("email").value = email;
-        document.getElementById("date").value = formattedDate;
+        document.getElementById("date").value = dinhDangValue;
 
         document.getElementById("formAction").value = "edit";
 
@@ -127,7 +124,7 @@ include("sidebar1.php");
         btn.disabled = true;
         btn.innerHTML = 'Đang xử lý...';
 
-        fetch('user.php', { 
+        fetch('user.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -163,7 +160,8 @@ include("sidebar1.php");
                 <div class="card-header py-3">
                     <br>
                     <div id="overlay" class="overlay" onclick="closeForm()"></div>
-                    <button type="button" class="btn btn-primary mb-1" onclick="openForm2('add')">Thêm Khách Hàng</button>
+                    <button type="button" class="btn btn-primary mb-1" onclick="openForm2('add')">Thêm Khách
+                        Hàng</button>
 
                     <div class="col-md-6" style="display:none;" id="userForm">
                         <div class="card card-primary card-outline mb-4">
@@ -204,8 +202,9 @@ include("sidebar1.php");
                                     </div>
                                     <div class="mb-3">
                                         <label for="date" class="form-label">Ngày Tham Gia (mm/dd/yyyy)</label>
-                                        <input type="date" class="form-control" id="date" aria-describedby="date"
-                                            name="ngaythamgia" value="<?= date('Y-m-d') ?>" />
+                                        <input type="datetime-local" class="form-control" id="date"
+                                            aria-describedby="date" step="1" name="ngaythamgia"
+                                            value="<?= date('Y-m-d H:i:s') ?>" />
                                     </div>
                                 </div>
                                 <div class="card-footer">
@@ -221,18 +220,23 @@ include("sidebar1.php");
                                     let diaChi = document.getElementById('address').value;
                                     let sdt = document.getElementById('phoneNum').value;
                                     let email = document.getElementById('email').value;
+                                    let ngayThamGia = document.getElementById('date').value;
+
+                                    let dateNgayThamGia = new Date(ngayThamGia).getTime();
 
                                     let isValid = true;
                                     let errorMsg = "";
 
-                                    if (tenKH === "") {
+                                    const tenKHRegex = /^[a-zA-ZÀ-Ỹà-ỹ\s]+$/;
+                                    if (!tenKHRegex.test(tenKH)) {
                                         isValid = false;
-                                        errorMsg += "Không được để trống tên khách hàng\n";
+                                        errorMsg += "Tên khách hàng không hợp lệ\n";
                                     }
 
-                                    if (diaChi === "") {
+                                    const diaChiRegex = /^[0-9a-zA-ZÀ-Ỹà-ỹ\s]+$/;
+                                    if (!diaChiRegex.test(diaChi)) {
                                         isValid = false;
-                                        errorMsg += "Không được để trống địa chỉ\n";
+                                        errorMsg += "Địa chỉ không hợp lệ\n";
                                     }
 
                                     const sdtRegex = /^0[0-9]{9}$/;
@@ -245,6 +249,11 @@ include("sidebar1.php");
                                     if (!emailRegex.test(email)) {
                                         isValid = false;
                                         errorMsg += "Địa chỉ email không hợp lệ\n";
+                                    }
+
+                                    if (dateNgayThamGia > new Date().getTime()) {
+                                        isValid = false;
+                                        errorMsg += "Ngày tham gia không hợp lệ\n";
                                     }
 
                                     if (!isValid) {
@@ -289,7 +298,7 @@ include("sidebar1.php");
                                                 }
                                                 ?>
                                             </td>
-                                            <td><?= htmlspecialchars(date('d/m/Y', strtotime($u['ngaythamgia']))) ?></td>
+                                            <td><?= htmlspecialchars(date('d/m/Y H:i:s', strtotime($u['ngaythamgia']))) ?></td>
                                             <td>
                                                 <button type="button" class="btn btn-primary mb-1"
                                                     onclick="openForm(this)">Sửa</button>
@@ -309,7 +318,7 @@ include("sidebar1.php");
                             </tbody>
                         </table>
 
-                        <div class="card-footer"> 
+                        <div class="card-footer">
                             <?php if ($totalPages > 1): ?>
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination float-end m-0">
