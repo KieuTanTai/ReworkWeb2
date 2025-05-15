@@ -119,12 +119,29 @@ include("sidebar1.php");
     let fromDate = document.getElementById("fromDate").value;
     let toDate = document.getElementById("toDate").value;
 
+    let dateFromDate = new Date(fromDate).getTime();
+    let dateToDate = new Date(toDate).getTime();
+    if(dateFromDate > dateToDate){
+      alert("Từ ngày phải nhỏ hơn đến ngày!");
+      return;
+    }
+    if(dateFromDate > new Date().getTime()){
+      alert("Từ ngày phải nhỏ hơn ngày hiện tại!");
+      return;
+    }
+
+    const diaChiRegex = /^[0-9a-zA-ZÀ-Ỹà-ỹ\s]+$/;
+    if (!diaChiRegex.test(address)) {
+      alert("Địa chỉ không hợp lệ!");
+      return;
+    }
+
     let fromTimestamp = null;
     let toTimestamp = null;
 
     if (fromDate) {
       let tempFromDate = new Date(fromDate);
-      tempFromDate.setHours(0, 0, 0, 0); 
+      tempFromDate.setHours(0, 0, 0, 0);
       fromTimestamp = tempFromDate.getTime();
     }
     if (toDate) {
@@ -227,7 +244,7 @@ include("sidebar1.php");
   function refresh() {
     window.location.reload();
     const cardFooter = document.querySelector(".card-footer");
-    cardFooter.style.display = "block"; 
+    cardFooter.style.display = "block";
     document.getElementById("customPagination").innerHTML = "";
     renderFullTable();
     document.getElementById("statusButton1").value = 0;
