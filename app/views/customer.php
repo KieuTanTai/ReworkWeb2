@@ -322,6 +322,10 @@ function filter() {
         alert("Vui lòng chọn đầy đủ ngày bắt đầu và ngày kết thúc!");
         return;
     }
+    if (new Date(enddate) < new Date(startdate)) {
+    alert("Ngày kết thúc phải sau hoặc bằng ngày bắt đầu!");
+    return;
+}
 
 fetch(`../controller/gettopcustomer.php?startDate=${startdate}&endDate=${enddate}`)
         .then(response => {
