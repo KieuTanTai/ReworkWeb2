@@ -78,14 +78,14 @@ class thongke {
         $offset = ($page - 1) * $limit;
         $likeKeyword = '%' . strtolower($keyword) . '%';
     
-        // 1. Truy vấn tổng số khách hàng thỏa điều kiện để tính tổng số trang
+        // 1. Truy vấn tổng số khách hàng
         $countQuery = "
             SELECT COUNT(DISTINCT kh.makh) AS total
             FROM khachhang kh
             INNER JOIN donhang dh ON kh.makh = dh.makh
-            WHERE dh.thoigian BETWEEN ? AND ? 
-                AND dh.trangthai = 2
-                " . (!empty($keyword) ? "AND LOWER(kh.tenkhachhang) LIKE ?" : "")
+            WHERE dh.thoigian BETWEEN ? AND ?
+            AND dh.trangthai IN (2, 3)
+            " . (!empty($keyword) ? "AND LOWER(kh.tenkhachhang) LIKE ?" : "")
         ;
     
         $stmtCount = $this->conn->prepare($countQuery);
@@ -100,7 +100,7 @@ class thongke {
         $totalItems = $totalRow['total'];
         $totalPages = ceil($totalItems / $limit);
     
-        // 2. Truy vấn danh sách khách hàng phân trang
+        // 2. Truy vấn danh sách khách hàng có mua đơn trạng thái 2 hoặc 3
         $query = "
             SELECT 
                 kh.makh,
@@ -110,9 +110,9 @@ class thongke {
                 SUM(dh.tongtien) AS tongtienmuahang
             FROM khachhang kh
             INNER JOIN donhang dh ON kh.makh = dh.makh
-            WHERE dh.thoigian BETWEEN ? AND ? 
-                AND dh.trangthai = 2
-                " . (!empty($keyword) ? "AND LOWER(kh.tenkhachhang) LIKE ?" : "") . "
+            WHERE dh.thoigian BETWEEN ? AND ?
+            AND dh.trangthai IN (2, 3)
+            " . (!empty($keyword) ? "AND LOWER(kh.tenkhachhang) LIKE ?" : "") . "
             GROUP BY kh.makh, kh.tenkhachhang, kh.sdt, kh.email
             ORDER BY tongtienmuahang DESC
             LIMIT ? OFFSET ?
@@ -132,11 +132,11 @@ class thongke {
         while ($row = $result->fetch_assoc()) {
             $makh = $row['makh'];
     
-            // 3. Truy vấn đơn hàng của khách này trong khoảng thời gian
+            // 3. Lấy danh sách đơn hàng trạng thái 2 hoặc 3 của khách
             $queryOrders = "
                 SELECT madonhang, thoigian, tongtien, trangthai 
                 FROM donhang 
-                WHERE makh = ? AND thoigian BETWEEN ? AND ? AND trangthai = 2
+                WHERE makh = ? AND thoigian BETWEEN ? AND ? AND trangthai IN (2, 3)
             ";
     
             $stmtOrders = $this->conn->prepare($queryOrders);
@@ -154,7 +154,7 @@ class thongke {
             $data[] = $row;
         }
     
-        // 4. Trả về kết quả có cả phân trang
+        // 4. Trả về kết quả có phân trang
         return [
             'current_page' => $page,
             'total_pages' => $totalPages,
@@ -163,6 +163,7 @@ class thongke {
             'data' => $data
         ];
     }
+    
     
 
 }

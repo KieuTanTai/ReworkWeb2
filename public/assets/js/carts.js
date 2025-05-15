@@ -287,7 +287,7 @@ function displayCartItems(elementsObj) {
             <div class="block-product block-cart">
                 <input type="checkbox" name="select-block-product" id="block-product-${index}" class="grid-col col-l-1 col-m-1 col-s-1"/>
                 <div class="product-cart grid-col col-l-1 col-m-1 col-s-1 no-gutter full-width">
-                    <img class="mini-image" src="${'assets/images/' + item.image}" onerror="this.onerror=null; this.src='assets/images/vn-11134207-7ras8-m2nn2bl6q4922e.jpg' alt="${item.name}" />
+                    <img class="mini-image" src="${'assets/images/' + item.image}" onerror="this.onerror=null; this.src='assets/images/vn-11134207-7ras8-m2nn2bl6q4922e.jpg'" alt="${item.name}" />
                 </div>
                 <div class="detail-id disable">${item.id}</div>
                 <div class="grid-col col-l-10 col-m-10 col-s-10 no-gutter flex align-center">
@@ -444,8 +444,8 @@ function handleDefaultAddressCheckbox() {
     return;
   }
 
-  checkbox.addEventListener("change", () => {
-    const user = JSON.parse(sessionStorage.getItem("loginAccount"));
+  checkbox.addEventListener("change", async () => {
+    const user = await GetUserById(JSON.parse(sessionStorage.getItem("loginAccount"))["user_id"]);
 
     if (checkbox.checked) {
       if (user && user.diachi) {
@@ -461,6 +461,7 @@ function handleDefaultAddressCheckbox() {
 }
 
 async function handleOrderPlacement(elementsObj) {
+  const checkbox = document.querySelector("#selection-address");
   const checkoutButton = document.querySelector(".checkout-btn");
   let accountLogin = await GetUserById(JSON.parse(sessionStorage.getItem("loginAccount"))["user_id"]);
   if (!checkoutButton) {
@@ -520,7 +521,7 @@ async function handleOrderPlacement(elementsObj) {
     const userAddress = document.querySelector("#user-address").value.trim();
     const userNote = document.querySelector("#user-note").value.trim();
 
-    if (!userAddress && !accountLogin.diachi) {
+    if ((!userAddress || userAddress === "" ) && !checkbox?.checked) {
       alert("Hãy nhập địa chỉ giao hàng.");
       return;
     }
@@ -557,7 +558,7 @@ async function handleOrderPlacement(elementsObj) {
     }
     // !NEED TO CHANGE HERE
     // Create donhang and chitiet_donhang
-    const donHang = createDonHang(userId, userAddress, totalOrderPrice, formattedDate, status);
+    const donHang = createDonHang(userId, userAddress !== "" ? userAddress : accountLogin.diachi, totalOrderPrice, formattedDate, status);
     
     await CreateOrder(donHang);
     const listOrders = await GetOrders();
