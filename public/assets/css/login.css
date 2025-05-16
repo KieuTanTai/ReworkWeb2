@@ -12,6 +12,7 @@ body {
     min-height: 100vh;
 }
 
+
 .user-box {
     position: relative;
     background-color: #ffffff;
@@ -21,7 +22,15 @@ body {
     width: 360px;
     max-width: 90%;
 }
-
+.user-box-admin {
+    position: relative;
+    background-color: #ffffff;
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px #002df7; /* Đổ bóng màu xanh */
+    width: 360px;
+    max-width: 90%;
+}
 /* Nút quay về trang chủ */
 .close-btn {
     position: absolute;
