@@ -150,8 +150,9 @@ async function scriptOrder(order) {
 
      // get status of this order (cập nhật trạng thái cho đơn hàng)
      if (order.trangthai === 1) status = "chờ xử lý";
-     else if (order.trangthai === 2) status = "chờ giao hàng";
-     else if (order.trangthai === 3) {
+     else if (order.trangthai === 2) status = "đã xác nhận";
+     else if (order.trangthai === 3) status = "đã giao";
+     else if (order.trangthai === 4) {
           status = "đã hủy";
           return;
      }
@@ -178,7 +179,7 @@ async function scriptOrder(order) {
                         <div class="price total-price font-bold text-end">${order.tongtien}</div>
                   </div>
                   <div class="order-status flex justify-space-between padding-top-8 padding-bottom-8">
-                        <span class="opacity-0-8 font-size-13 ${status === "đã giao hàng" ? "success-color" : "waiting-color"}">${status ? status : "chờ xử lý"}</span>
+                        <span class="opacity-0-8 font-size-13 ${status === "đã giao" ? "success-color" : "waiting-color"}">${status ? status : "chờ xử lý"}</span>
                         <div><i class="fa-solid fa-chevron-right fa-xs" style="color: var(--main-color);"></i></div></div>
                   <div class="flex align-center justify-space-between padding-top-8">
                         <span class="delivered-day flex opacity-0-8">
@@ -186,7 +187,7 @@ async function scriptOrder(order) {
                         </span>
 
                         <div class="flex">
-                          <span class="remove-btn button ${order.trangthai != 4 ? "" : "disable"}">
+                          <span class="remove-btn button ${(order.trangthai == 1) ? "" : "disable"}">
                                 <div class="capitalize"> Hủy Đơn</div>
                           </span>
                         </div>
@@ -219,8 +220,7 @@ async function renderOrder(elementsObj) {
 
                     // Cập nhật lại danh sách đơn hàng sau khi xóa
                     orders = orders.find((o) => o.madonhang === order.madonhang);
-                    console.log(orders);
-                    orders.trangthai = 3;
+                    orders.trangthai = 4;
                     UpdateOrder(orders);
                     // Thay đổi container khi không còn sản phẩm
                     if (container.childNodes.length === 0) blankOrder(elementsObj);
