@@ -201,7 +201,6 @@ async function renderOrder(elementsObj) {
      let container = elementsObj.getHistoryOrderTable();
      let orders = await GetOrdersByCustomer(JSON.parse(sessionStorage.getItem("loginAccount"))["user_id"]);
      let details = [];
-     console.log(orders);
 
      for (let item of orders) {
           const orderDetails = await GetOrderDetails(item.madonhang);
@@ -219,9 +218,10 @@ async function renderOrder(elementsObj) {
                     container.removeChild(removeBtn.offsetParent);
 
                     // Cập nhật lại danh sách đơn hàng sau khi xóa
-                    ordersList = ordersList.find((o) => o.madonhang === order.madonhang);
-                    ordersList.trangthai = 3;
-                    UpdateOrder(ordersList);
+                    orders = orders.find((o) => o.madonhang === order.madonhang);
+                    console.log(orders);
+                    orders.trangthai = 3;
+                    UpdateOrder(orders);
                     // Thay đổi container khi không còn sản phẩm
                     if (container.childNodes.length === 0) blankOrder(elementsObj);
                });
