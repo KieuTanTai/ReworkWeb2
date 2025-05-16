@@ -1,0 +1,106 @@
+<?php
+session_start();
+
+// Nếu người dùng đã đăng nhập, chuyển hướng về trang chủ
+if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
+    if (isset($_SESSION['is_staff']) && $_SESSION['is_staff'] === true){
+    header("Location: admin.php");
+    exit();
+    }
+    exit();
+}
+?>
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Mobile Phone Store</title>
+    <link rel="shortcut icon" href="../../public/assets/images/icons/web_logo/main-logo.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../../public/assets/fonts/fontawesome-6.6.0/css/all.min.css" />
+    <link rel="stylesheet" href="../../public/assets/css/index.css" />
+    <link rel="stylesheet" href="../../public/assets/css/responsive.css" />
+    <link rel="stylesheet" href="/public/assets/css/login.css">
+</head>
+<body>
+    <div id="account-content">
+        <section id="login-registration-form">
+            <div class="user-box-admin">
+                
+                <div id="login">
+                    <div class="font-size-20">Đăng nhập</div>
+                    <?php if (isset($_SESSION['login_error'])): ?>
+                        <div class="error-message">
+                            <?php 
+                                echo htmlspecialchars($_SESSION['login_error']); 
+                                unset($_SESSION['login_error']);
+                            ?>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <?php if (isset($_SESSION['login_message'])): ?>
+                        <div class="success-message">
+                            <?php 
+                                echo htmlspecialchars($_SESSION['login_message']); 
+                                unset($_SESSION['login_message']);
+                            ?>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <form action="../controller/adminlogin_controller.php" method="POST">
+                        <div>
+                            <label for="customer-login-admin">Tài khoản</label>
+                            <input type="text" id="customer-login" name="customer-login" placeholder="Email hoặc Số điện thoại" required>
+                        </div>
+                        <div>
+                            <label for="customer-password-login-admin">Mật khẩu</label>
+                            <input type="password" id="customer-password-login" name="customer-password-login" placeholder="Mật khẩu" required>
+                        </div>
+                        <button type="submit" name="login-btn">Đăng nhập</button>
+                    </form>
+                    
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        // Các validation client-side có thể thêm vào đây
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.querySelector('#login form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    const loginInput = document.getElementById('customer-login');
+                    const passwordInput = document.getElementById('customer-password-login');
+                    
+                    if (!loginInput.value.trim()) {
+                        e.preventDefault();
+                        showError('Vui lòng nhập email hoặc số điện thoại!');
+                        return;
+                    }
+                    
+                    if (!passwordInput.value) {
+                        e.preventDefault();
+                        showError('Vui lòng nhập mật khẩu!');
+                        return;
+                    }
+                });
+            }
+            
+            function showError(message) {
+                let errorElement = document.querySelector('.error-message');
+                if (!errorElement) {
+                    errorElement = document.createElement('div');
+                    errorElement.className = 'error-message';
+                    const form = document.querySelector('form');
+                    form.insertBefore(errorElement, form.firstChild);
+                }
+                
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
