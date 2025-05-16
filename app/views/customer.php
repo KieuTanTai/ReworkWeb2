@@ -7,7 +7,11 @@ require_once '../controller/thongkeController.php';
 $controller = new thongke($conn);
 $startDate = "2024-01-01";
 $endDate = "2025-12-31";
-$cus= $controller->getKhachHang($startDate, $endDate);
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$data = $controller->getKhachHang($startDate, $endDate, "", $page);
+$cus= $data['data'];
+$currentPage = $data['current_page']; // trang hiện tại
+$totalPages = $data['total_pages']; // tổng số trang
 
 
 // Kiểm tra đăng nhập
@@ -15,6 +19,7 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
     $_SESSION['login_error'] = "Vui lòng đăng nhập để tiếp tục!";
     header("Location: login.php");
     exit();
+
 }
 
 // Kiểm tra quyền admin
@@ -44,8 +49,8 @@ include ("sidebar1.php");
     <div class="input">
       <div class="btn-group ms-2">
             <input type="text" class="form-control" id="searchInput" placeholder="Tìm Kiếm Khách Hàng...."  style="width: 300px; margin-left: 10px;" >
-            <button type="button" class="btn btn-primary ms-2" style="width:65px; border-radius:5px;" onclick="filter()">Tìm</button>
-          
+            <button type="button" class="btn btn-primary ms-2" style="width:65px; border-radius:5px;" onclick="searchCustomer()">Tìm</button>
+          <button type="button" class="btn btn-success" onclick="document.getElementById('searchInput').value=''; resetSearchProduct()" style="margin-left: 10px; width:83px;">Làm Mới</button>
     </div>
     </div>
     </div>
@@ -103,17 +108,58 @@ include ("sidebar1.php");
           </tbody>
            
         </table>
+        <div id="customPagination" class="mt-3"></div>
+
       </div>
-      <div class="card-footer clearfix" id="pagelink">
-                    <ul class="pagination pagination-sm m-0 float-end">
-                      <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                      <li class="page-item"><a class="page-link" href="#">1</a></li>
-                      <li class="page-item"><a class="page-link" href="#">2</a></li>
-                      <li class="page-item"><a class="page-link" href="#">3</a></li>
-                      <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-                    </ul>
-                  </div>
-                </div>
+      <div class="card-footer" id="pagelink"> 
+                            <?php if ($totalPages > 1): ?>
+                              
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination float-end m-0">
+                                        <li class="page-item <?= ($currentPage <= 1) ? 'disabled' : '' ?>">
+                                            <a class="page-link" href="customer.php?page=<?= $currentPage - 1 ?>"
+                                                aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+
+                                        <?php
+                                        $range = 2;
+                                        $start = max(1, $currentPage - $range);
+                                        $end = min($totalPages, $currentPage + $range);
+
+                                        if ($start > 1) {
+                                            echo '<li class="page-item"><a class="page-link" href="customer.php?page=1">1</a></li>';
+                                            if ($start > 2) {
+                                                echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                            }
+                                        }
+
+                                        for ($i = $start; $i <= $end; $i++): ?>
+                                            <li class="page-item <?= ($i == $currentPage) ? 'active' : '' ?>">
+                                                <a class="page-link" href="customer.php?page=<?= $i ?>"><?= $i ?></a>
+                                            </li>
+                                        <?php endfor;
+
+                                        if ($end < $totalPages) {
+                                            if ($end < $totalPages - 1) {
+                                                echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                            }
+                                            echo '<li class="page-item"><a class="page-link" href="customer.php?page=' . $totalPages . '">' . $totalPages . '</a></li>';
+                                        }
+                                        ?>
+
+                                        <li class="page-item <?= ($currentPage >= $totalPages) ? 'disabled' : '' ?>">
+                                            <a class="page-link" href="customer.php?page=<?= $currentPage + 1 ?>"
+                                                aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                                
+                            <?php endif; ?>
+                        </div>
       <!-- /.card-body -->
       
     </div>
@@ -163,6 +209,107 @@ scrollbars: {
    
   });
 
+    let filteredProducts = [];
+let currentSearchPage = 1;
+const searchItemsPerPage = 5;
+
+        const allProducts = <?= json_encode($cus) ?>;
+
+function searchCustomer() {
+    const inputValue = document.getElementById("searchInput").value.trim();
+
+    if (inputValue === "") {
+        alert("Vui lòng nhập từ khóa tìm kiếm.");
+        return;
+    }
+
+    const input = inputValue.toUpperCase();
+    const cardFooter = document.querySelector(".card-footer");
+    cardFooter.style.display = "none"; // Ẩn phân trang gốc
+
+    // Chỉ lọc theo tên khách hàng
+    filteredProducts = allProducts.filter(p =>
+        String(p.tenkhachhang).toUpperCase().includes(input)
+    );
+
+    currentSearchPage = 1;
+    renderSearchResults();
+}
+
+function renderSearchResults() {
+    const tbody = document.getElementById("customer-table-tbody");
+    tbody.innerHTML = "";
+
+    if (filteredProducts.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" class="text-center">Không tìm thấy kết quả nào.</td>
+            </tr>
+        `;
+        return;
+    }
+
+    const start = (currentSearchPage - 1) * searchItemsPerPage;
+    const end = start + searchItemsPerPage;
+    const paginatedProducts = filteredProducts.slice(start, end);
+
+    paginatedProducts.forEach(item => {
+        const row = `
+        <tr class="align-middle">
+            <td>${item.makh}</td>
+            <td>${item.tenkhachhang}</td>
+            <td>${item.sdt}</td>
+            <td>${item.email}</td>
+            <td>${item.tongtienmuahang}</td>
+            <td>
+                <button type="button" class="btn btn-primary" onclick="orderdetails(${item.makh})">Xem</button>
+            </td>
+        </tr>`;
+        tbody.innerHTML += row;
+    });
+
+    // Hiện phân trang tìm kiếm
+    document.getElementById("customPagination").innerHTML = generatePagination(filteredProducts.length);
+}
+function generatePagination(totalItems) {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    let paginationHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        paginationHTML += `
+            <li class="page-item ${i === currentSearchPage ? 'active' : ''}">
+                <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+            </li>
+        `;
+    }
+
+    return `
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                ${paginationHTML}
+            </ul>
+        </nav>
+    `;
+}
+function renderFullTable() {
+    const tbody = document.getElementById("customer-table-tbody");
+    tbody.innerHTML = "";
+
+    allProducts.forEach(cust => {
+        const row = `
+        <tr class="align-middle">
+            <td>${cust.makh}</td>
+            <td>${cust.tenkhachhang}</td>
+            <td>${cust.sdt}</td>
+            <td>${cust.email}</td>
+            <td>${cust.tongtienmuahang}</td>
+            <td>
+                <button type="button" class="btn btn-primary" onclick="orderdetails(${cust.makh})">Xem</button>
+            </td>
+        </tr>`;
+        tbody.innerHTML += row;
+    });
+}
 
 function orderdetails(makh) {
     window.location.href = "detailcustomer.php?makh=" + makh;
@@ -175,6 +322,10 @@ function filter() {
         alert("Vui lòng chọn đầy đủ ngày bắt đầu và ngày kết thúc!");
         return;
     }
+    if (new Date(enddate) < new Date(startdate)) {
+    alert("Ngày kết thúc phải sau hoặc bằng ngày bắt đầu!");
+    return;
+}
 
 fetch(`../controller/gettopcustomer.php?startDate=${startdate}&endDate=${enddate}`)
         .then(response => {
@@ -222,6 +373,16 @@ function render(data) {
     });
     document.querySelector("#pagelink").style.display = "none";
 }
+function resetSearchProduct() {
+    document.getElementById("searchInput").value = "";
+    filteredProducts = allProducts;
+    currentSearchPage = 1;
+    renderFullTable();
+
+    document.querySelector(".card-footer").style.display = "block"; // Hiện lại phân trang gốc
+    document.getElementById("customPagination").innerHTML = ""; // Xóa phân trang tìm kiếm
+}
+
 </script>
 
 <style>
