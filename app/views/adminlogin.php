@@ -4,13 +4,10 @@ session_start();
 // Nếu người dùng đã đăng nhập, chuyển hướng về trang chủ
 if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
     if (isset($_SESSION['is_staff']) && $_SESSION['is_staff'] === true){
-        header("Location: admin.php");
-        exit();
-    }
-    else {
-    header("Location: ../../public/index.php");
+    header("Location: admin.php");
     exit();
     }
+    exit();
 }
 ?>
 
@@ -29,8 +26,8 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
 <body>
     <div id="account-content">
         <section id="login-registration-form">
-            <div class="user-box">
-                <a href="../../public/index.php" class="close-btn">×</a>
+            <div class="user-box-admin">
+                
                 <div id="login">
                     <div class="font-size-20">Đăng nhập</div>
                     <?php if (isset($_SESSION['login_error'])): ?>
@@ -51,25 +48,18 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
                         </div>
                     <?php endif; ?>
                     
-                    <form action="../controller/login_controller.php" method="POST">
+                    <form action="../controller/adminlogin_controller.php" method="POST">
                         <div>
-                            <label for="customer-login">Tài khoản</label>
+                            <label for="customer-login-admin">Tài khoản</label>
                             <input type="text" id="customer-login" name="customer-login" placeholder="Email hoặc Số điện thoại" required>
                         </div>
                         <div>
-                            <label for="customer-password-login">Mật khẩu</label>
+                            <label for="customer-password-login-admin">Mật khẩu</label>
                             <input type="password" id="customer-password-login" name="customer-password-login" placeholder="Mật khẩu" required>
                         </div>
                         <button type="submit" name="login-btn">Đăng nhập</button>
                     </form>
-                    <div class="font-size-14 js-register">
-                        <div></div>
-                        <span>Không có tài khoản?</span>
-                        <span><a href="register.php">Đăng ký</a></span>
-                    </div>
-                    <div class="font-size-14 margin-y-12">
-                        <a href="../../public/index.php">← Trở về trang chủ</a>
-                    </div>
+                    
                 </div>
             </div>
         </section>
