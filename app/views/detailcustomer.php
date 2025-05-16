@@ -65,7 +65,7 @@ include ("sidebar1.php");
               <td><?= $o['thoigian']?></td>
               <td><?= $o['tongtien']?></td>
             <td style=" cursor:pointer;">
-<button type="button" class="btn btn-primary " onclick="back()">Chi Tiết</button>
+<button type="button" class="btn btn-primary" onclick="orderdetail(<?php echo $o['madonhang']; ?>)">Chi Tiết</button>
             </tr>
              
         
@@ -114,6 +114,10 @@ scrollbars: {
 <script>
 function back() {
     window.location.href = "customer.php";
+}
+function orderdetail(id) {
+    // Chuyển hướng đến trang chi tiết đơn hàng với mã đơn hàng
+    window.location.href = "order_detail.php?id=" + id;
 }
 
 

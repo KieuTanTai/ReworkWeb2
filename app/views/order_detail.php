@@ -1,5 +1,5 @@
 <?php 
-
+session_start();
 require_once '../controller/order/OrderController.php'; // Giả sử đường dẫn là vậy
 
 $controller = new OrderController();
@@ -10,7 +10,7 @@ $viewData = $controller->showDetails();
 // Giải nén dữ liệu
 $order = $viewData['order'] ?? null; // Lấy thông tin đơn hàng (hoặc null nếu không tìm thấy)
 $items = $viewData['items'] ?? [];   // Lấy danh sách sản phẩm (hoặc mảng rỗng)
-
+session_write_close();
 include("header1.php"); 
 include("sidebar1.php");
 ?>
