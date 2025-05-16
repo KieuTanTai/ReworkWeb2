@@ -1,5 +1,15 @@
 <?php
 session_start();
+if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
+     if (isset($_SESSION['is_staff']) && $_SESSION['is_staff'] === true){
+         header("Location: ../app/views/admin.php");
+         exit();
+     }
+     else {
+     header("Location: index.php");
+     exit();
+     }
+ }
 ?>
 
 <!DOCTYPE html>
