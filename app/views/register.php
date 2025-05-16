@@ -6,6 +6,26 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
     header("Location: ../../public/index.php");
     exit();
 }
+// Lấy thông báo lỗi từ session (nếu có) và sau đó xóa nó
+$error_message_for_display = ''; // Đổi tên biến để tránh trùng nếu bạn đã có
+if (isset($_SESSION['register_error'])) {
+    $error_message_for_display = $_SESSION['register_error'];
+    unset($_SESSION['register_error']); // Xóa để không hiển thị lại
+}
+
+// Lấy dữ liệu form đã nhập trước đó từ session (nếu có) và sau đó xóa nó
+$form_data_to_fill = []; // Đổi tên biến
+if (isset($_SESSION['register_form_data'])) {
+    $form_data_to_fill = $_SESSION['register_form_data'];
+    unset($_SESSION['register_form_data']); // Xóa để form trống ở lần truy cập mới
+}
+
+// Hàm tiện ích để lấy giá trị và xử lý HTML an toàn
+function get_persistent_form_value($field_name_key, $default_value_if_empty = '') {
+    global $form_data_to_fill; // Sử dụng biến $form_data_to_fill
+    $value = $form_data_to_fill[$field_name_key] ?? $default_value_if_empty;
+    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+}
 ?>
 
 <!DOCTYPE html>
@@ -25,16 +45,10 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
         <section id="login-registration-form">
             <div class="user-box">
                 <a href="../../public/index.php" class="close-btn">×</a>
+                
                 <div id="register">
                     <div class="font-size-20">Đăng ký</div>
-                    <?php if (isset($_SESSION['register_error'])): ?>
-                        <div class="error-message">
-                            <?php 
-                                echo htmlspecialchars($_SESSION['register_error']); 
-                                unset($_SESSION['register_error']);
-                            ?>
-                        </div>
-                    <?php endif; ?>
+                    
                     <form action="../controller/register_controller.php" method="POST">
                         <!-- <div>
                             <label for="customer-first-name">Họ</label>
@@ -42,15 +56,15 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
                         </div> -->
                         <div>
                             <label for="customer-full-name">Tên</label>
-                            <input type="text" id="customer-full-name" name="customer-full-name" placeholder="Tên" required>
+                            <input type="text" id="customer-full-name" name="customer-full-name" placeholder="Tên" value="<?php echo get_persistent_form_value('customer-full-name'); ?>" required>
                         </div>
                         <div>
                             <label for="customer-phone">Số điện thoại</label>
-                            <input type="text" id="customer-phone" name="customer-phone" placeholder="Số điện thoại" required>
+                            <input type="text" id="customer-phone" name="customer-phone" placeholder="Số điện thoại" value="<?php echo get_persistent_form_value('customer-phone'); ?>" required>
                         </div>
                         <div>
                             <label for="customer-email-register">Email</label>
-                            <input type="email" id="customer-email-register" name="customer-email-register" placeholder="Email" required>
+                            <input type="email" id="customer-email-register" name="customer-email-register" placeholder="Email" value="<?php echo get_persistent_form_value('customer-email-register'); ?>" required>
                         </div>
                         <div>
                             <label for="customer-password-register">Mật khẩu</label>
@@ -60,6 +74,11 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
                             <label for="customer-confirm-password-register">Xác nhận mật khẩu</label>
                             <input type="password" id="customer-confirm-password-register" name="customer-confirm-password-register" placeholder="Xác nhận mật khẩu" required>
                         </div>
+                        <?php if (!empty($error_message_for_display)): ?>
+            <div class="your-error-message-class" style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 15px;">
+                <?php echo $error_message_for_display; // Không cần htmlspecialchars vì controller đã xử lý hoặc là thông báo an toàn ?>
+            </div>
+        <?php endif; ?>
                         <button type="submit" name="register-btn">Đăng ký</button>
                     </form>
                     <div class="font-size-14 js-login">

@@ -1,5 +1,5 @@
 <?php 
-
+session_start();
 require_once '../controller/order/OrderController.php'; // Giả sử đường dẫn là vậy
 
 $controller = new OrderController();
@@ -10,7 +10,7 @@ $viewData = $controller->showDetails();
 // Giải nén dữ liệu
 $order = $viewData['order'] ?? null; // Lấy thông tin đơn hàng (hoặc null nếu không tìm thấy)
 $items = $viewData['items'] ?? [];   // Lấy danh sách sản phẩm (hoặc mảng rỗng)
-
+session_write_close();
 include("header1.php"); 
 include("sidebar1.php");
 ?>
@@ -48,11 +48,8 @@ include("sidebar1.php");
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Hình Ảnh</th>
-                            <th>Tên Sản Phẩm</th>
-                            <th>Dung Lượng Rom</th>
-                            <th>Dung Lượng Ram</th>
-                            <th>Màu Sắc</th>
+                            <th>Mã Đơn Hàng</th>
+                            <th>Mã Phiên Bản Sản Phẩm</th>
                             <th>Số Lượng</th>
                             <th>Đơn Giá</th>
                         </tr>
@@ -60,11 +57,8 @@ include("sidebar1.php");
                     <tbody style="vertical-align: middle;">
                     <?php foreach ($items as $item): ?>
                   <tr>
-                    <td><img src="../../public/assets/images/<?php echo $item['hinhanh']; ?>" style="width: 50px; height: 50px;" alt="<?php echo $item['hinhanh']; ?>"/></td>
-                    <td><?= htmlspecialchars($item['tensp']) ?></td>
-                    <td><?= htmlspecialchars($item['kichthuocrom']) ?></td>
-                    <td><?= htmlspecialchars($item['kichthuocram']) ?></td>
-                    <td><?= htmlspecialchars($item['tenmau']) ?></td>
+                    <td><?= htmlspecialchars($item['madonhang']) ?></td>
+                    <td><?= htmlspecialchars($item['maphienbansp']) ?></td>
                     <td><?= htmlspecialchars($item['soluong']) ?></td>
                     <td><?= htmlspecialchars($item['dongia']) ?></td>
                   </tr>
