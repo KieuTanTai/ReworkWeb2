@@ -12,6 +12,7 @@ $data = $controller->getKhachHang($startDate, $endDate, "", $page);
 $cus= $data['data'];
 $currentPage = $data['current_page']; // trang hiện tại
 $totalPages = $data['total_pages']; // tổng số trang
+$cus2 = $controller->getKhachHangNoPaginate($startDate, $endDate,"");
 
 
 // Kiểm tra đăng nhập
@@ -213,7 +214,8 @@ scrollbars: {
 let currentSearchPage = 1;
 const searchItemsPerPage = 5;
 
-        const allProducts = <?= json_encode($cus) ?>;
+        const allProducts = <?= json_encode($cus2) ?>;
+        const allProduct2= <?= json_encode($cus) ?>;
 
 function searchCustomer() {
     const inputValue = document.getElementById("searchInput").value.trim();
@@ -295,7 +297,7 @@ function renderFullTable() {
     const tbody = document.getElementById("customer-table-tbody");
     tbody.innerHTML = "";
 
-    allProducts.forEach(cust => {
+    allProduct2.forEach(cust => {
         const row = `
         <tr class="align-middle">
             <td>${cust.makh}</td>
@@ -375,7 +377,7 @@ function render(data) {
 }
 function resetSearchProduct() {
     document.getElementById("searchInput").value = "";
-    filteredProducts = allProducts;
+    filteredProducts = allProduct2;
     currentSearchPage = 1;
     renderFullTable();
 

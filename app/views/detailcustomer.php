@@ -34,7 +34,7 @@ include ("sidebar1.php");
 <br>
   <div class="card mb-4 ">
       <div class="card-header">
-      
+<button type="button" class="btn btn-primary " onclick="back()">Quay Về</button>
      <div class="d-flex align-items-center">
      <div class="btn-group">
  
@@ -48,7 +48,7 @@ include ("sidebar1.php");
       <div class="card-body">
         <table class="table table-bordered">
           <thead>
-  
+            
 
             <tr>
                 
@@ -65,7 +65,7 @@ include ("sidebar1.php");
               <td><?= $o['thoigian']?></td>
               <td><?= $o['tongtien']?></td>
             <td style=" cursor:pointer;">
-<button type="button" class="btn btn-primary " onclick="orderdetails(<?= $o['madonhang'] ?>)">Chi Tiết</button>
+<button type="button" class="btn btn-primary " onclick="back()">Chi Tiết</button>
             </tr>
              
         
@@ -112,8 +112,8 @@ scrollbars: {
 </script>
 
 <script>
-function orderdetails(id) {
-    window.location.href = "order_detail.php?id=" + id;
+function back() {
+    window.location.href = "customer.php";
 }
 
 
