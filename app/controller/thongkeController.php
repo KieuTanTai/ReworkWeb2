@@ -164,6 +164,66 @@ class thongke {
         ];
     }
     
+
+    public function getKhachHangNoPaginate($startDate, $endDate, $keyword = "") {
+        $query = "
+            SELECT 
+                kh.makh,
+                kh.tenkhachhang,
+                kh.sdt,
+                kh.email,
+                COALESCE(SUM(CASE 
+                    WHEN dh.thoigian BETWEEN ? AND ? AND dh.trangthai IN (2, 3) THEN dh.tongtien
+                    ELSE 0 
+                END), 0) AS tongtienmuahang
+            FROM 
+                khachhang kh
+            LEFT JOIN 
+                donhang dh ON kh.makh = dh.makh
+            WHERE 
+                kh.tenkhachhang LIKE ?
+            GROUP BY 
+                kh.makh, kh.tenkhachhang, kh.sdt, kh.email
+            ORDER BY 
+                tongtienmuahang DESC
+        ";
+    
+        $likeKeyword = "%{$keyword}%";
+    
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("sss", $startDate, $endDate, $likeKeyword);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $makh = $row['makh'];
+    
+            // Lấy danh sách đơn hàng trạng thái 2 hoặc 3
+            $queryOrders = "
+                SELECT madonhang, thoigian, tongtien, trangthai 
+                FROM donhang 
+                WHERE makh = ? AND thoigian BETWEEN ? AND ? AND trangthai IN (2, 3)
+            ";
+    
+            $stmtOrders = $this->conn->prepare($queryOrders);
+            $stmtOrders->bind_param("sss", $makh, $startDate, $endDate);
+            $stmtOrders->execute();
+            $resultOrders = $stmtOrders->get_result();
+    
+            $orders = [];
+            while ($order = $resultOrders->fetch_assoc()) {
+                $order['url'] = "http://localhost:8000/app/api/orderAPI.php?madonhang=" . $order['madonhang'];
+                $orders[] = $order;
+            }
+    
+            $row['donhang'] = $orders;
+            $data[] = $row;
+        }
+    
+        return $data;
+    }
+    
     
 
 }
