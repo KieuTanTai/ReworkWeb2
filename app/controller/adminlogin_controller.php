@@ -26,35 +26,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['login_error'] = "Vui lòng nhập mật khẩu!";
     } else {
         // Thử đăng nhập với tài khoản nhân viên trước
-        // $staff_result = loginStaff($login_input, $password);
+        $staff_result = loginStaff($login_input, $password);
         
-        // if ($staff_result['success']) {
-        //     // Đăng nhập nhân viên thành công
-        //     header("Location: ../views/admin.php"); // Đường dẫn tới admin.php trong thư mục views
-        //     exit();
-        // } else {
-            // Thử đăng nhập với tài khoản khách hàng
-            $result = loginUser($login_input, $password);
+        if ($staff_result['success']) {
+            // Đăng nhập nhân viên thành công
+            header("Location: ../views/admin.php"); // Đường dẫn tới admin.php trong thư mục views
+            exit();
+        } 
+        // else {
+        //     // Thử đăng nhập với tài khoản khách hàng
+        //     $result = loginUser($login_input, $password);
 
-            if ($result['success']) {
-                // Đăng nhập khách hàng thành công
-                $redirect = $_SESSION['redirect_url'] ?? '../../public/index.php';
-                unset($_SESSION['redirect_url']);
-                header("Location: $redirect");
-                exit();
-            } else {
+        //     if ($result['success']) {
+        //         // Đăng nhập khách hàng thành công
+        //         $redirect = $_SESSION['redirect_url'] ?? '../../public/index.php';
+        //         unset($_SESSION['redirect_url']);
+        //         header("Location: $redirect");
+        //         exit();
+        //    }
+             else {
                 // Đăng nhập thất bại
-                $_SESSION['login_error'] = $result['message'];
-            // }
-        }
+                $_SESSION['login_error'] = $staff_result['message'];
+            }
+        // }
     }
 
     // Nếu có lỗi, chuyển hướng lại form đăng nhập
-    header("Location: ../views/login.php");
+    header("Location: ../views/adminlogin.php");
     exit();
 }
 
 // Chuyển hướng về trang đăng nhập nếu truy cập trực tiếp
-header("Location: ../views/login.php");
+header("Location: ../views/adminlogin.php");
 exit();
 ?>
